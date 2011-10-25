@@ -11,7 +11,7 @@
 
 ==============================================================================*/
 
-#include "SampleMath.h"
+#include "MathOps.h"
 
 #include <math.h>
 #include <stdlib.h>

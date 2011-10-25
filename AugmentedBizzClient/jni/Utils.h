@@ -12,8 +12,8 @@
 ==============================================================================*/
 
 
-#ifndef _QCAR_SAMPLEUTILS_H_
-#define _QCAR_SAMPLEUTILS_H_
+#ifndef _UTILS_H_
+#define _UTILS_H_
 
 // Includes:
 #include <stdio.h>
@@ -63,4 +63,4 @@ public:
         const char* fragmentShaderBuffer);
 };
 
-#endif // _QCAR_SAMPLEUTILS_H_
+#endif // _UTILS_H_

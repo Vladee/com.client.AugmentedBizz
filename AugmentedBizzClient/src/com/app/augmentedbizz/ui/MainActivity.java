@@ -1,4 +1,7 @@
-package com.app.augmentedbizz;
+package com.app.augmentedbizz.ui;
+
+import com.app.augmentedbizz.R;
+import com.app.augmentedbizz.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

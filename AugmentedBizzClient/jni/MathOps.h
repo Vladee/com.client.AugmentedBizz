@@ -12,8 +12,8 @@
 ==============================================================================*/
 
 
-#ifndef _QCAR_SAMPLEMATH_H_
-#define _QCAR_SAMPLEMATH_H_
+#ifndef _MATHOPS_H_
+#define _MATHOPS_H_
 
 // Includes:
 #include <QCAR/Tool.h>
@@ -57,4 +57,4 @@ public:
     
 };
 
-#endif // _QCAR_SAMPLEMATH_H_
+#endif // _MATHOPS_H_
