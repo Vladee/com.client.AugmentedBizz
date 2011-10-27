@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/QCAR.jar"/>
 	<classpathentry kind="lib" path="libs/zxing_core.jar"/>
+	<classpathentry kind="lib" path="libs/gson-1.7.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
