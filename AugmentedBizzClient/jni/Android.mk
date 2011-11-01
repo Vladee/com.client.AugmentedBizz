@@ -18,7 +18,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := QCAR-prebuilt
-LOCAL_SRC_FILES = ../../../build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
+LOCAL_SRC_FILES = ../build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../../build/include
 include $(PREBUILT_SHARED_LIBRARY)
 
@@ -88,7 +88,12 @@ LOCAL_SHARED_LIBRARIES := QCAR-prebuilt
 # compute dependencies automatically for you; just list the source files
 # that will be passed directly to a compiler, and you should be good.
 
-LOCAL_SRC_FILES := AugmentedBizzClient.cpp Utils.cpp Texture.cpp
+LOCAL_SRC_FILES := AugmentedBizzClient.cpp \
+	Utils.cpp \
+	Texture.cpp \
+	application/ApplicationStateManager.cpp \
+	application/AugmentedBizzApplication.cpp \
+	logging/DebugLog.cpp
 
 # By default, ARM target binaries will be generated in 'thumb' mode, where
 # each instruction are 16-bit wide. You can define this variable to 'arm'

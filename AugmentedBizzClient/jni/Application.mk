@@ -7,7 +7,7 @@
 
 # Build both ARMv5TE and ARMv7-A machine code.
 
-APP_ABI := armeabi armeabi-v7a 
+APP_ABI := armeabi armeabi-v7a
 
 # This optional variable can be defined to either 'release' or
 # 'debug'. This is used to alter the optimization level when
@@ -24,3 +24,7 @@ APP_ABI := armeabi armeabi-v7a
 # the code difficult, stack traces may not be reliable, etc... 
 
 # APP_OPTIM := release OR debug
+
+# Use C++ Standard Template Libraries
+
+APP_STL := stlport_static

@@ -1,4 +1,4 @@
-package com.app.augmentedbizz.states;
+package com.app.augmentedbizz.application.status;
 
 
 /**
@@ -10,6 +10,6 @@ package com.app.augmentedbizz.states;
  */
 public interface ApplicationStateListener {
 	
-	public void onApplicationStateChange(int nextState);
+	public void onApplicationStateChange(ApplicationState nextState);
 
 }
