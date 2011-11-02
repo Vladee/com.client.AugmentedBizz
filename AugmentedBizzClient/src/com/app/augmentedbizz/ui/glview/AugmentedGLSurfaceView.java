@@ -11,6 +11,7 @@ import com.qualcomm.QCAR.QCAR;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.util.AttributeSet;
 
 public class AugmentedGLSurfaceView extends GLSurfaceView
 {
@@ -18,6 +19,17 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
 	public AugmentedGLSurfaceView(Context context)
 	{
 		super(context);
+	}
+	
+	/**
+	 * XML constructor
+	 * 
+	 * @param context
+	 * @param attrs
+	 */
+	public AugmentedGLSurfaceView(Context context, AttributeSet attrs)
+	{
+		super(context, attrs);
 	}
 
 	/** 

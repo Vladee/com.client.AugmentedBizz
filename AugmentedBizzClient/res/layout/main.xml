@@ -1,7 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-</FrameLayout>
+    
+    <!-- GL surface view -->
+    <!-- 
+    <com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView
+            android:id="@+id/augmentedGLSurfaceView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true">
+    </com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView>
+     -->
+     
+    <!-- Bottom info sliding drawer -->
+    <com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer
+            android:id="@+id/slidingDrawerInfoPanel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:handle="@+id/relativeLayoutInfoHandle"
+            android:content="@+id/relativeLayoutInfoContent"
+            android:orientation="vertical">
+        
+        <!-- Sliding drawer info panel at the bottom -->
+        <RelativeLayout
+                android:id="@id/relativeLayoutInfoHandle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/infopanel_bg">
+            
+            <!-- state indicator symbol -->
+            <ImageView 
+                android:id="@+id/imageViewInfoPanelIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="2dp"
+                android:paddingRight="5dp"
+                android:src="@drawable/blue_indicator"/>
+            
+            <!-- action indicator symbol (loader or arrow) -->
+            <LinearLayout 
+                android:id="@+id/linearLayoutInfoPanelActionSymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="2dp"
+                android:paddingLeft="5dp">
+                
+                <!-- content inserted programatically -->
+                
+            </LinearLayout>
+            
+            <!-- infotext -->
+            <TextView 
+                android:id="@+id/textViewInfoPanel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Info panel text"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="1"
+                android:typeface="sans"
+                android:gravity="center_horizontal"
+                android:layout_toRightOf="@+id/imageViewInfoPanelIndicator"
+                android:layout_toLeftOf="@+id/linearLayoutInfoPanelActionSymbol"/>
+            
+        </RelativeLayout>
+        
+        <!-- Sliding drawer info content -->
+        <RelativeLayout
+                android:id="@id/relativeLayoutInfoContent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/lightgrey_transparent">
+        </RelativeLayout>
+        
+    </com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer>
+    
+    
+</RelativeLayout>

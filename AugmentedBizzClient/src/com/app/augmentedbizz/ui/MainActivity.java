@@ -4,15 +4,18 @@ import android.os.Bundle;
 
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.status.ApplicationState;
+import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer;
+import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer.StateIndicatorValue;
 
 public class MainActivity extends AugmentedBizzActivity {
+	
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.main);
+        setContentView(R.layout.splash);
     }
     
 	@Override
