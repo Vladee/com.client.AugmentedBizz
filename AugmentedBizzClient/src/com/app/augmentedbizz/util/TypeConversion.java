@@ -1,5 +1,9 @@
 package com.app.augmentedbizz.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.graphics.Bitmap;
 
 /**
@@ -95,6 +99,29 @@ public class TypeConversion {
 	}
 	
 	/**
+	 * Converts an input stream to an array of byte.
+	 * 
+	 * @param inStream The input stream where the bytes should be extracted.
+	 * @return Array of bytes holding the data from the input stream.
+	 * @throws IOException Thrown if a reading/writing exception occurs inside the stream.
+	 */
+	public static byte[] toByteArrayFrom(InputStream inStream) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+		int numReadBytes = 0;
+		byte[] data = new byte[1024 * 16];//16 kB buffer
+
+		while((numReadBytes = inStream.read(data, 0, data.length)) != -1) {
+			buffer.write(data, 0, numReadBytes);
+		}
+
+		buffer.flush();
+
+		return buffer.toByteArray();
+
+	}
+	
+	/**
 	 * Converts a regular bitmap to a byte array with its RGBA channels split.
 	 * 
 	 * @param bitmap The bitmap to split.
@@ -119,5 +146,4 @@ public class TypeConversion {
         
         return dataBytes;
 	}
-	
 }

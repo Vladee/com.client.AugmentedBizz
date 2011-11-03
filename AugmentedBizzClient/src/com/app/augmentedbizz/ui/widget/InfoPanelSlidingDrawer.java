@@ -185,6 +185,16 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	}
 	
 	/**
+	 * Checks whether the info panel is locked or not
+	 * 
+	 * @return true, if the info panel is locked and the detail view is unavailable and hidden
+	 */
+	public boolean isPanelLocked()
+	{
+		return locked;
+	}
+	
+	/**
 	 * Unlocks the detail view and sliding drawer so that the user can tap or drag the info panel and see the details
 	 */
 	public void unlockDetailView()
