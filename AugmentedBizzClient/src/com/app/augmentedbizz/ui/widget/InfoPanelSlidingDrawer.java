@@ -114,7 +114,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 		}
 		
 		removeActionSymbol();
-		ProgressBar loader = new ProgressBar(getContext(), null, android.R.attr.progressBarStyle);
+		ProgressBar loader = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleSmallInverse);
 		linearLayoutActionSymbol.addView(loader);
 	}
 	
