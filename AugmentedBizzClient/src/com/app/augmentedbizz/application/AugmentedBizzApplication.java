@@ -1,6 +1,7 @@
 package com.app.augmentedbizz.application;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.app.augmentedbizz.application.status.ApplicationState;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
@@ -63,5 +64,11 @@ public class AugmentedBizzApplication extends Application implements IApplicatio
 	@Override
 	public ApplicationStateManager getApplicationStateManager() {
 		return ApplicationStateManager.getInstance();
+	}
+
+	@Override
+	public Context getContext()
+	{
+		return this;
 	}
 }

@@ -114,7 +114,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 		}
 		
 		removeActionSymbol();
-		ProgressBar loader = new ProgressBar(getContext(), null, android.R.attr.progressBarStyle);
+		ProgressBar loader = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleSmallInverse);
 		linearLayoutActionSymbol.addView(loader);
 	}
 	
@@ -182,6 +182,16 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	public boolean isDetailViewShown()
 	{
 		return isOpened();
+	}
+	
+	/**
+	 * Checks whether the info panel is locked or not
+	 * 
+	 * @return true, if the info panel is locked and the detail view is unavailable and hidden
+	 */
+	public boolean isPanelLocked()
+	{
+		return locked;
 	}
 	
 	/**

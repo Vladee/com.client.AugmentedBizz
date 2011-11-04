@@ -15,7 +15,10 @@ public class MainActivity extends AugmentedBizzActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.splash);
+        setContentView(R.layout.main);
+        
+        InfoPanelSlidingDrawer slider = (InfoPanelSlidingDrawer)findViewById(R.id.slidingDrawerInfoPanel);
+        slider.showLoadingSymbol();
     }
     
 	@Override
