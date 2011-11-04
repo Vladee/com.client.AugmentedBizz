@@ -22,7 +22,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:handle="@+id/relativeLayoutInfoHandle"
-            android:content="@+id/relativeLayoutInfoContent"
+            android:content="@+id/linearLayoutInfoContent"
             android:orientation="vertical">
         
         <!-- Sliding drawer info panel at the bottom -->
@@ -78,12 +78,12 @@
         </RelativeLayout>
         
         <!-- Sliding drawer info content -->
-        <RelativeLayout
-                android:id="@id/relativeLayoutInfoContent"
+        <LinearLayout
+                android:id="@id/linearLayoutInfoContent"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@color/lightgrey_transparent">
-        </RelativeLayout>
+        </LinearLayout>
         
     </com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer>
     
