@@ -1,8 +1,11 @@
 #include "ApplicationStateManager.h"
 #include "AugmentedBizzApplication.h"
 
-ApplicationStateManager::ApplicationStateManager() {
-	this->currentState = UNINITIATED;
+ApplicationStateManager::ApplicationStateManager(ObjectLoader *objectLoader, jobject javaApplicationStateManager) {
+	this->currentState = INITIALIZING;
+
+	this->applicationStateManagerJavaInterface = \
+			new ApplicationStateManagerJavaInterface(objectLoader, javaApplicationStateManager);
 
 	this->applicationStateNames[0] = "Uninitiated";
 	this->applicationStateNames[1] = "Initializing";
@@ -19,42 +22,14 @@ ApplicationStateManager::ApplicationStateManager() {
 	this->applicationStateListeners.push_back(this);
 }
 
-ApplicationStateManager& ApplicationStateManager::getInstance() {
-	static ApplicationStateManager instance;
-	return instance;
+ApplicationStateManager::~ApplicationStateManager() {
+	delete this->applicationStateManagerJavaInterface;
+	this->applicationStateManagerJavaInterface = 0;
 }
 
 void ApplicationStateManager::setApplicationState(ApplicationState nextState) {
-	DebugLog::logi("In setApplicationState()");
 	this->fireApplicationStateChangedEvent(nextState);
-
-	DebugLog::logi("Still in setApplicationState()");
-
-	JNIEnv* env = AugmentedBizzApplication::getInstance().getJNIEnv();
-
-	if(env != 0) {
-		DebugLog::logi("JNIEnv found.");
-	} else {
-		DebugLog::loge("JNIEnv not found.");
-	}
-
-	jclass javaApplicationStateManager = env->FindClass("com/app/augmentedbizz/application/status/ApplicationStateManager");
-
-	if(javaApplicationStateManager != 0) {
-		DebugLog::logi("javaApplicationStateManager found.");
-	} else {
-		DebugLog::loge("javaApplicationStateManager not found.");
-	}
-
-	jmethodID fireApplicationStateChangedEventID = env->GetMethodID(javaApplicationStateManager, "fireApplicationStateChangedEvent", "(I)V");
-
-	if(fireApplicationStateChangedEventID != 0) {
-		DebugLog::logi("fireApplicationStateChangedEventID found.");
-	} else {
-		DebugLog::loge("fireApplicationStateChangedEventID not found.");
-	}
-
-	env->CallVoidMethod(javaApplicationStateManager, fireApplicationStateChangedEventID, nextState);
+	this->applicationStateManagerJavaInterface->setJavaApplicationState(nextState);
 }
 
 void ApplicationStateManager::setNativeApplicationStateOnly(int nextState) {
@@ -85,4 +60,26 @@ void ApplicationStateManager::fireApplicationStateChangedEvent(ApplicationState 
 			 i != this->applicationStateListeners.end(); ++i) {
 		 (*i)->onApplicationStateChange(nextState);
 	 }
+}
+
+
+
+// --------------------------------- Java Interface -----------------------------------
+
+ApplicationStateManagerJavaInterface::ApplicationStateManagerJavaInterface(ObjectLoader *objectLoader, \
+		jobject javaApplicationStateManager) : JavaInterface(objectLoader) {
+	this->javaApplicationStateManager = javaApplicationStateManager;
+}
+
+jclass ApplicationStateManagerJavaInterface::getClass() {
+	return this->getObjectLoader()->getObjectClass(this->javaApplicationStateManager);
+}
+
+jmethodID ApplicationStateManagerJavaInterface::getJavaFireApplicationStateChangedEventMethodID() {
+	return this->getMethodID("fireApplicationStateChangedEvent", "(I)V");
+}
+
+void ApplicationStateManagerJavaInterface::setJavaApplicationState(ApplicationState nextState) {
+	this->getObjectLoader()->callVoidMethod(javaApplicationStateManager, \
+			this->getJavaFireApplicationStateChangedEventMethodID(), nextState);
 }

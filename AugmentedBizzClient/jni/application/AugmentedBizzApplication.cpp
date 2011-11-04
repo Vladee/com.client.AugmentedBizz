@@ -1,32 +1,53 @@
 #include "AugmentedBizzApplication.h"
 #include "../logging/DebugLog.h"
 
-AugmentedBizzApplication& AugmentedBizzApplication::getInstance() {
-	static AugmentedBizzApplication instance;
-	return instance;
+AugmentedBizzApplication::AugmentedBizzApplication(JNIEnv *env, jobject jAugmentedBizzApplication) {
+	this->initializeApplication(env, jAugmentedBizzApplication);
 }
 
-void AugmentedBizzApplication::initializeApplication(JNIEnv *env) {
+void AugmentedBizzApplication::initializeApplication(JNIEnv *env, jobject jAugmentedBizzApplication) {
 	DebugLog::logi("Initializing application.");
-	JavaVM **ptr = &(this->javaVM);
 
-	jint result = env->GetJavaVM(ptr);
-	if(result < 0) {
-		DebugLog::loge("Unable to retrieve JavaVM: GetJavaVM() returned with error code " + result);
-	} else {
-		DebugLog::logi("JavaVM successfully retrieved.");
-	}
+	this->objectLoader = new ObjectLoader(env);
+	this->augmentedBizzApplicationJavaInterface = \
+			new AugmentedBizzApplicationJavaInterface(jAugmentedBizzApplication, this->objectLoader);
+
+	this->applicationStateManager = new ApplicationStateManager(this->objectLoader, \
+			this->augmentedBizzApplicationJavaInterface->getJavaApplicationStateManager());
 }
 
-JavaVM* AugmentedBizzApplication::getJavaVM() {
-	return this->javaVM;
+AugmentedBizzApplication::~AugmentedBizzApplication() {
+	delete this->objectLoader;
+	delete this->applicationStateManager;
+	this->objectLoader = 0;
+	this->applicationStateManager = 0;
 }
 
-JNIEnv* AugmentedBizzApplication::getJNIEnv() {
-	JNIEnv *env;
-	jint result = this->javaVM->GetEnv((void**)&(this->javaVM), 0x00010001);
-	if(result < 0) {
-		DebugLog::loge("Unable to retrieve JNIEnv: GetEnv() returned with error code " + result);
-	}
-	return env;
+ApplicationStateManager* AugmentedBizzApplication::getApplicationStateManager() {
+	return this->applicationStateManager;
+}
+
+AugmentedBizzApplication* AugmentedBizzApplication::getAugmentedBizzApplication() {
+	return this;
+}
+
+// --------------------------------------------------------------------
+
+AugmentedBizzApplicationJavaInterface::AugmentedBizzApplicationJavaInterface(jobject javaAugmentedBizzApplication, \
+		ObjectLoader* objectLoader) : JavaInterface(objectLoader) {
+	this->javaAugmentedBizzApplication = javaAugmentedBizzApplication;
+}
+
+jclass AugmentedBizzApplicationJavaInterface::getClass() {
+	return this->getObjectLoader()->getObjectClass(this->javaAugmentedBizzApplication);
+}
+
+jobject AugmentedBizzApplicationJavaInterface::getJavaApplicationStateManager() {
+	return this->getObjectLoader()->callObjectMethod(this->javaAugmentedBizzApplication, \
+			this->getJavaGetApplicationStateManagerMethodID());
+}
+
+jmethodID AugmentedBizzApplicationJavaInterface::getJavaGetApplicationStateManagerMethodID() {
+	return this->getMethodID("getApplicationStateManager", \
+			"()Lcom/app/augmentedbizz/application/status/ApplicationStateManager;");
 }

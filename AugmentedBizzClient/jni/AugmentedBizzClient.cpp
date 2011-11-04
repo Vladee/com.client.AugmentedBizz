@@ -8,14 +8,22 @@
 extern "C" {
 #endif
 
+IApplicationFacade* application;
+
+
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_ApplicationStateManager_fireApplicationStateChangedEventNative(JNIEnv, jobject, jint jnextState) {
-	ApplicationStateManager::getInstance().setNativeApplicationStateOnly(jnextState);
+	application->getApplicationStateManager()->setNativeApplicationStateOnly(jnextState);
 }
 
-JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_AugmentedBizzApplication_initializeApplicationNative(JNIEnv *env, jobject) {
-	AugmentedBizzApplication::getInstance().initializeApplication(env);
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_AugmentedBizzApplication_initializeApplicationNative(JNIEnv *env, jobject jAugmentedBizzApplication) {
+	application = new AugmentedBizzApplication(env, jAugmentedBizzApplication);
 	// Check if C++ --> Java calls work
-//	ApplicationStateManager::getInstance().setApplicationState(EXITING);
+	//application->getApplicationStateManager()->setApplicationState(EXITING);
+}
+
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_MainActivity_onDestroyNative(JNIEnv, jobject) {
+	delete application;
+	application = 0;
 }
 
 #ifdef __cplusplus

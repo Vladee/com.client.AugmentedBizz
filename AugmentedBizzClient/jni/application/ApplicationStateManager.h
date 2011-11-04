@@ -6,9 +6,11 @@
 #include <list>
 #include <string>
 #include "../logging/DebugLog.h"
+#include "ObjectLoader.h"
 
 class ApplicationStateManager;
 class IApplicationStateListener;
+class ApplicationStateManagerJavaInterface;
 
 // See Java side for state documentation
 // Use struct as a namespace
@@ -36,7 +38,8 @@ class IApplicationStateListener {
 
 class ApplicationStateManager : IApplicationStateListener {
    public:
-    static ApplicationStateManager& getInstance();
+	ApplicationStateManager(ObjectLoader*, jobject);
+	~ApplicationStateManager();
     void setApplicationState(ApplicationState);
     ApplicationState getCurrentApplicationState();
     void setNativeApplicationStateOnly(int);
@@ -48,11 +51,22 @@ class ApplicationStateManager : IApplicationStateListener {
     std::string applicationStateNames[NUMBER_OF_APPLICATION_STATES];
     ApplicationState currentState;
     std::list<IApplicationStateListener*> applicationStateListeners;
+    ApplicationStateManagerJavaInterface* applicationStateManagerJavaInterface;
 
-    ApplicationStateManager();
-    ApplicationStateManager(const ApplicationStateManager&);
     void fireApplicationStateChangedEvent(ApplicationState);
     JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_ApplicationStateManger_fireApplicationStateChangedEventNative(JNIEnv *, jobject, jstring);
+};
+
+class ApplicationStateManagerJavaInterface: JavaInterface {
+	public:
+		ApplicationStateManagerJavaInterface(ObjectLoader*, jobject);
+		void setJavaApplicationState(ApplicationState);
+	protected:
+		virtual jclass getClass();
+	private:
+		jmethodID getJavaFireApplicationStateChangedEventMethodID();
+
+		jobject	javaApplicationStateManager;
 };
 
 #endif // _APPLICATIONSTATEMANAGER_H_

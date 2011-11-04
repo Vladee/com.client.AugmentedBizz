@@ -93,6 +93,7 @@ LOCAL_SRC_FILES := AugmentedBizzClient.cpp \
 	Texture.cpp \
 	application/ApplicationStateManager.cpp \
 	application/AugmentedBizzApplication.cpp \
+	application/ObjectLoader.cpp \
 	logging/DebugLog.cpp
 
 # By default, ARM target binaries will be generated in 'thumb' mode, where
