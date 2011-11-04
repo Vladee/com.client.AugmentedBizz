@@ -30,12 +30,12 @@ public class AugmentedBizzApplication extends Application implements IApplicatio
 	}
 	
     private void initializeApplication() {
+    	this.initializeApplicationNative();
     	
     	// Deinitialization state is set in MainActivity, as Application::onTerminate() is not reliable
     	this.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
     	
     	DummyCacheData.storeDummyModelsInDatabase(this);
-    	this.initializeApplicationNative();
     }
     
     /**

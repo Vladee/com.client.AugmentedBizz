@@ -59,7 +59,11 @@ public class ApplicationStateManager implements ApplicationStateListener {
      */
     public void setApplicationState(ApplicationState nextState) {
     	this.fireApplicationStateChangedEvent(nextState);
-    	this.fireApplicationStateChangedEventNative(nextState.getIndex());
+    	if(nextState != ApplicationState.INITIALIZING) {
+    		// Initializing is the default state in native
+    		// and cannot be changed before it is initialized.
+    		this.fireApplicationStateChangedEventNative(nextState.getIndex());
+    	}
     }
 
 	/* (non-Javadoc)

@@ -141,7 +141,18 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_istream.c \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.c \
- /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c \
+ /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h \
+ /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/map \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_map.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_tree.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_tree.c \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_relops_cont.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/list \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.c \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_carray.h
 
 /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/AugmentedBizzApplication.h:
 
@@ -426,3 +437,25 @@
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.c:
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c:
+
+/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h:
+
+/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/map:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_map.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_tree.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_tree.c:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_relops_cont.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/list:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.c:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_carray.h:
