@@ -12,5 +12,5 @@ public interface ScannerResultListener
 	
 	public void onScanningResultless();
 	
-	public void onScanningFailed(Exception e);
+	public void onScanningFailed();
 }

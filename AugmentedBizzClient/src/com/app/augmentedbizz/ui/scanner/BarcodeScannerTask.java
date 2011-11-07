@@ -77,7 +77,7 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 		}
 		else if(result instanceof Exception)
 		{
-			resultListener.onScanningFailed((Exception)result);
+			resultListener.onScanningFailed();
 		}
 	}
 
@@ -100,9 +100,6 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 		return new BinaryBitmap(binarizer);
 	}
 	
-	/**
-	 * Creates a bitmap from image data
-	 */
 	private void createBitmapFromData(Integer width, Integer height, byte[] bitmapData)
 	{
 		if(cameraImage == null || width != cameraImage.getWidth() || height != cameraImage.getHeight())
