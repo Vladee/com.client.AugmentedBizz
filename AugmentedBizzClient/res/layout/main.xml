@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutMain"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:keepScreenOn="true">
     
     <!-- GL surface view -->
-    <!-- 
     <com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView
             android:id="@+id/augmentedGLSurfaceView"
             android:layout_width="fill_parent"
@@ -12,7 +13,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true">
     </com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView>
-     -->
      
     <!-- Bottom info sliding drawer -->
     <com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer

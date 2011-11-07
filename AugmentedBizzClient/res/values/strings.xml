@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AugmentedBizz Client</string>
+    <string name="infoCaptureTarget">Please capture a target...</string>
+    <string name="infoTargetFoundScanning">Target found. Scan the barcode...</string>
+    <string name="infoScannedLoadingData">Barcode scanned. Loading data...</string>
+    <string name="infoModelCachedCheckingUpdates">Related model is shown. Checking for updates...</string>
+    <string name="infoRetrievingIndicators">Retrieving indicators for \'%1$s\'...</string>
+    <string name="infoTapDetailView">Tap here for detail info...</string>
+    <string name="infoTapCameraView">Tap here for camera view...</string>
 </resources>

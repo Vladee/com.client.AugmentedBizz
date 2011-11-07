@@ -3,6 +3,8 @@ package com.app.augmentedbizz.ui.scanner;
 import java.nio.ByteBuffer;
 import java.util.Formatter.BigDecimalLayoutForm;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
@@ -13,6 +15,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
 import android.graphics.Bitmap;
+import android.text.Html.ImageGetter;
 import android.util.Log;
 
 /**
@@ -23,47 +26,37 @@ import android.util.Log;
  */
 public class QRScanner
 {
-	private QRCodeReader qrReader = null;
-	private int imageWidth = -1;
-	private int imageHeight = -1;
-	private Bitmap cameraImage = null;
-	private Bitmap.Config bitmapConfig;
+	private BarcodeScannerTask scannerTask;
 	
 	public QRScanner(Bitmap.Config bitmapConfig)
 	{
-		qrReader = new QRCodeReader();
-		this.bitmapConfig = bitmapConfig;
+		this.scannerTask = new BarcodeScannerTask(bitmapConfig);
 	}
 	
-	public String scanRGBBitmapForQRCode(int width, int height, byte[] pixelData) throws NoBarcodeFoundException
-	{
-		try
+	/**
+	 * Initiates the scanning for a QR barcode in a bitmap specified by the width, height and image data.
+	 * Returns the scanning result by invocation of a result listener.
+	 * 
+	 * @param width of the image to be scanned
+	 * @param height of the image to be scanned
+	 * @param bitmapData image data
+	 * @param listener Gets invoked when the asynchronous processing is finished a result is available
+	 */
+	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener)
+	{	
+		if(bitmapData != null && listener != null)
 		{
-			updateBuffer(width, height, pixelData);
-			BinaryBitmap binaryBitmap = createBinaryBitmapFromRGBLuminanceSource(cameraImage);
-			
-			Result result = qrReader.decode(binaryBitmap);
-			return result.getText();
-		} 
-		catch(Exception e)
-		{
-			throw new NoBarcodeFoundException(e.getMessage());
+			ByteArrayBuffer dataBuffer = new ByteArrayBuffer(bitmapData.length);
+			dataBuffer.append(bitmapData, 0, bitmapData.length);
+			scannerTask.execute(new Integer(width), new Integer(height), dataBuffer, listener);
 		}
 	}
 	
-	private void updateBuffer(int width, int height, byte[] pixelData)
+	/**
+	 * @return true, if scanner is currently scanning and decoding an image
+	 */
+	public boolean isScanning()
 	{
-		if(imageWidth != width || imageHeight != height || cameraImage == null)
-		{
-			cameraImage = Bitmap.createBitmap(width, height, bitmapConfig);
-		}
-		cameraImage.copyPixelsFromBuffer(ByteBuffer.wrap(pixelData));
+		return scannerTask.isProcessing();
 	}
-	
-	private BinaryBitmap createBinaryBitmapFromRGBLuminanceSource(Bitmap bitmap)
-	{
-		HybridBinarizer binarizer = new HybridBinarizer(new RGBLuminanceSource(cameraImage));
-		return new BinaryBitmap(binarizer);
-	}
-	
 }

@@ -3,8 +3,9 @@ package com.app.augmentedbizz.application;
 import android.content.Context;
 
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
+import com.app.augmentedbizz.ui.UIManager;
 
-public interface IApplicationFacade
+public interface ApplicationFacade
 {
 	
 	/**
@@ -20,4 +21,11 @@ public interface IApplicationFacade
 	 * @return The application state manager.
 	 */
 	public ApplicationStateManager getApplicationStateManager();
+	
+	/**
+	 * Returns the application UI manager.
+	 * 
+	 * @return The application UI manager.
+	 */
+	public UIManager getUIManager();
 }

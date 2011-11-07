@@ -15,7 +15,7 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_Application
 	application->getApplicationStateManager()->setNativeApplicationStateOnly(jnextState);
 }
 
-JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_AugmentedBizzApplication_initializeApplicationNative(JNIEnv *env, jobject jAugmentedBizzApplication) {
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_init_Initializer_initializeApplicationNative(JNIEnv *env, jobject jAugmentedBizzApplication) {
 	application = new AugmentedBizzApplication(env, jAugmentedBizzApplication);
 	// Check if C++ --> Java calls work
 	//application->getApplicationStateManager()->setApplicationState(EXITING);

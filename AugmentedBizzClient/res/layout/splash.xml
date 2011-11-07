@@ -4,5 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scaleType="fitXY"
-    android:src="@drawable/splash_screen">
+    android:src="@drawable/splash_screen"
+    android:keepScreenOn="true">
 </ImageView>
