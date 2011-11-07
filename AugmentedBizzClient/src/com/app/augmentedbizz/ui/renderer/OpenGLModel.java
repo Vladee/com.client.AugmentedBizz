@@ -1,4 +1,4 @@
-package com.app.augmentedbizz.model;
+package com.app.augmentedbizz.ui.renderer;
 
 public class OpenGLModel {
 	

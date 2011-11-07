@@ -7,7 +7,8 @@ package com.app.augmentedbizz.application.data;
  * @author Vladi
  *
  */
-public class DataManager
-{
-	//TODO
+public class DataManager {
+	
+	
+	
 }

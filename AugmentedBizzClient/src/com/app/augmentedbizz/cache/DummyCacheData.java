@@ -1,17 +1,14 @@
 package com.app.augmentedbizz.cache;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.app.augmentedbizz.logging.DebugLog;
-import com.app.augmentedbizz.model.OpenGLModel;
-import com.app.augmentedbizz.model.Texture;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
+import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.TypeConversion;
 
 /**
@@ -31,17 +28,9 @@ public class DummyCacheData {
 	 */
 	private static final Texture loadTexture(String fileName, AssetManager assetManager) {
 		InputStream inputStream = null;
-        try
-        {
+        try {
             inputStream = assetManager.open(fileName, AssetManager.ACCESS_BUFFER);
-             
-            BufferedInputStream bufferedStream = new BufferedInputStream(inputStream);
-            Bitmap bitmap = BitmapFactory.decodeStream(bufferedStream);
-            
-            return new Texture(bitmap.getWidth(),
-            		bitmap.getHeight(),
-            		TypeConversion.splitRGBAChannelsOf(bitmap));
-            
+            return TypeConversion.toTextureFrom(inputStream);
         } catch (IOException e) {
             DebugLog.loge("Failed to load texture '" + fileName + "' from APK.Error message: " + e.getMessage());
             return null;

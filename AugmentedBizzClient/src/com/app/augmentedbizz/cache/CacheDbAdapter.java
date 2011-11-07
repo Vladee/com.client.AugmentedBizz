@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.app.augmentedbizz.logging.DebugLog;
-import com.app.augmentedbizz.model.OpenGLModel;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 import com.app.augmentedbizz.util.TypeConversion;
 
 /**

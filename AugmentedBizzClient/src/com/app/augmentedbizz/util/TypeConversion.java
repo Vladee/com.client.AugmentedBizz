@@ -1,10 +1,14 @@
 package com.app.augmentedbizz.util;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.app.augmentedbizz.ui.renderer.Texture;
+
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
  * Utility class that provides methods to convert various
@@ -145,5 +149,20 @@ public class TypeConversion {
         }
         
         return dataBytes;
+	}
+	
+	/**
+	 * Creates a {@link Texture} from an {@link InputStream}.
+	 * 
+	 * @param inputStream The image InputStream.
+	 * @return The bitmap texture representation.
+	 */
+	public static Texture toTextureFrom(InputStream inputStream) {
+		BufferedInputStream bufferedStream = new BufferedInputStream(inputStream);
+        Bitmap bitmap = BitmapFactory.decodeStream(bufferedStream);
+        
+        return new Texture(bitmap.getWidth(),
+        		bitmap.getHeight(),
+        		TypeConversion.splitRGBAChannelsOf(bitmap));
 	}
 }
