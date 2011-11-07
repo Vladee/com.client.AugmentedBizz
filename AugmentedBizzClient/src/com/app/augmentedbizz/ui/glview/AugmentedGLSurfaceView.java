@@ -35,21 +35,12 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
 	/** 
 	 * Initialization of the surface view
 	 */
-    public void init(int flags, boolean translucent, int depth, int stencil)
+    public void init(boolean translucent, int depth, int stencil)
     {
         setTranslucent(translucent);
-        setEGLContextFactory(createContextFactory(flags));
+        setEGLContextFactory(createContextFactory());
 
-        setEGLConfigChooser(createConfigChooser(flags, translucent, depth, stencil));
-    }
-    
-    /**
-     * @param flags
-     * @return Whether OpenGL ES 2.0 can be used or not
-     */
-    public boolean canUseOpenGLES2(final int flags)
-    {
-    	return (flags & QCAR.GL_20) != 0;
+        setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
     }
     
     /**
@@ -66,7 +57,7 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
      * @param flags
      * @return Instance of an OpenGL ES context factory
      */
-    protected GLSurfaceView.EGLContextFactory createContextFactory(final int flags)
+    protected GLSurfaceView.EGLContextFactory createContextFactory()
     {
     	return new GLSurfaceView.EGLContextFactory()
 		{
@@ -74,18 +65,8 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
     		
             public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig)
             {
-                EGLContext context;
-                if(canUseOpenGLES2(flags))
-                {
-                    int[] attribListGL20 = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
-                    context = egl.eglCreateContext(display, eglConfig, EGL10.EGL_NO_CONTEXT, attribListGL20);
-                }
-                else
-                {
-                    int[] attribListGL1x = {EGL_CONTEXT_CLIENT_VERSION, 1, EGL10.EGL_NONE};
-                    context = egl.eglCreateContext(display, eglConfig, EGL10.EGL_NO_CONTEXT, attribListGL1x);
-                }
-                return context;
+            	int[] attribListGL20 = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
+                return egl.eglCreateContext(display, eglConfig, EGL10.EGL_NO_CONTEXT, attribListGL20);
             }
 
             public void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context)
@@ -95,16 +76,16 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
 		};
     }
     
-    protected AbstractConfigChooser createConfigChooser(int flags, boolean transclucent, int depth, int stencil)
+    protected AbstractConfigChooser createConfigChooser(boolean transclucent, int depth, int stencil)
     {
     	AbstractConfigChooser configChooser = null;
     	if(transclucent)
     	{
-    		configChooser = new RGB8888ConfigChooser(depth, stencil, canUseOpenGLES2(flags));
+    		configChooser = new RGB8888ConfigChooser(depth, stencil);
     	}
     	else
     	{
-    		configChooser = new RGB565ConfigChooser(depth, stencil, canUseOpenGLES2(flags));
+    		configChooser = new RGB565ConfigChooser(depth, stencil);
     	}
     	
     	return configChooser;

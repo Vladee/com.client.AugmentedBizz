@@ -7,12 +7,14 @@ import android.widget.RelativeLayout;
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.status.ApplicationState;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
+import com.app.augmentedbizz.ui.renderer.RenderManager;
 import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer;
 import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer.StateIndicatorValue;
 import com.qualcomm.QCAR.QCAR;
 
 public class MainActivity extends AugmentedBizzActivity {
 	
+	private RenderManager renderManager = null;
 	private RelativeLayout mainLayout = null;
 	private AugmentedGLSurfaceView glSurfaceView = null;
 	private InfoPanelSlidingDrawer infoPanelSlider = null;
@@ -22,7 +24,8 @@ public class MainActivity extends AugmentedBizzActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        showMainScreen();
+        renderManager = new RenderManager(this);
+        getAugmentedBizzApplication().getUIManager().setMainActivity(this);
     }
     
 	@Override
@@ -79,4 +82,13 @@ public class MainActivity extends AugmentedBizzActivity {
 		glSurfaceView = (AugmentedGLSurfaceView)findViewById(R.id.augmentedGLSurfaceView);
 		infoPanelSlider = (InfoPanelSlidingDrawer)findViewById(R.id.slidingDrawerInfoPanel);
 	}
+	
+	/**
+	 * @return the renderManager
+	 */
+	public RenderManager getRenderManager()
+	{
+		return renderManager;
+	}
+	
 }

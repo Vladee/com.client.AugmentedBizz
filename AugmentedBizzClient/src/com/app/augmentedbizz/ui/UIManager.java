@@ -14,7 +14,7 @@ import com.app.augmentedbizz.ui.scanner.QRScanner;
 public class UIManager
 {
 	private QRScanner qrScanner;
-	private Activity mainActivity;
+	private volatile MainActivity mainActivity;
 	private ApplicationFacade facade;
 	
 	public UIManager(ApplicationFacade facade)
@@ -41,7 +41,7 @@ public class UIManager
 	/**
 	 * @return the mainActivity
 	 */
-	public Activity getMainActivity()
+	public MainActivity getMainActivity()
 	{
 		return mainActivity;
 	}
@@ -49,7 +49,7 @@ public class UIManager
 	/**
 	 * @param mainActivity the mainActivity to set
 	 */
-	public void setMainActivity(Activity mainActivity)
+	public void setMainActivity(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
 	}

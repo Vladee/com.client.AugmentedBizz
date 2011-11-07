@@ -57,13 +57,20 @@ public class ApplicationStateManager implements ApplicationStateListener {
      * 
      * @param nextState The next application state that should be entered.
      */
-    public void setApplicationState(ApplicationState nextState) {
+    public synchronized void setApplicationState(ApplicationState nextState) {
     	this.fireApplicationStateChangedEvent(nextState);
     	if(nextState != ApplicationState.INITIALIZING) {
     		// Initializing is the default state in native
     		// and cannot be changed before it is initialized.
     		this.fireApplicationStateChangedEventNative(nextState.getIndex());
     	}
+    }
+    
+    /**
+     * @return Current application state.
+     */
+    public synchronized ApplicationState getApplicationState() {
+    	return currentState;
     }
 
 	/* (non-Javadoc)

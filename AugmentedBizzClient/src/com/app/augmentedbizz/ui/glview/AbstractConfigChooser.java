@@ -15,9 +15,8 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
 	protected int alphaSize;
 	protected int depthSize;
 	protected int stencilSize;
-	protected boolean useOpenGLES2;
 	
-	public AbstractConfigChooser(int r, int g, int b, int a, int depth, int stencil, boolean useOpenGLES2)
+	public AbstractConfigChooser(int r, int g, int b, int a, int depth, int stencil)
 	{
 		this.redSize = r;
 		this.greenSize = g;
@@ -25,7 +24,6 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
 		this.alphaSize = a;
 		this.depthSize = depth;
 		this.stencilSize = stencil;
-		this.useOpenGLES2 = useOpenGLES2;
 	}
 	
 	protected EGLConfig getMatchingConfig(EGL10 egl, EGLDisplay display, int[] configAttribs)
@@ -47,32 +45,16 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
 	
 	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display)
     {
-        if(useOpenGLES2)
+        final int[] configAttribsGL20 =
         {
-            final int[] configAttribsGL20 =
-            {
-                EGL10.EGL_RED_SIZE, 4,
-                EGL10.EGL_GREEN_SIZE, 4,
-                EGL10.EGL_BLUE_SIZE, 4,
-                EGL10.EGL_RENDERABLE_TYPE, 0x0004,
-                EGL10.EGL_NONE
-            };
+            EGL10.EGL_RED_SIZE, 4,
+            EGL10.EGL_GREEN_SIZE, 4,
+            EGL10.EGL_BLUE_SIZE, 4,
+            EGL10.EGL_RENDERABLE_TYPE, 0x0004,
+            EGL10.EGL_NONE
+        };
 
-            return getMatchingConfig(egl, display, configAttribsGL20);
-        }
-        else
-        {
-            final int[] configAttribsGL1x =
-            {
-                EGL10.EGL_RED_SIZE, 5,
-                EGL10.EGL_GREEN_SIZE, 6,
-                EGL10.EGL_BLUE_SIZE, 5,
-                EGL10.EGL_RENDERABLE_TYPE, 0x0001,
-                EGL10.EGL_NONE
-            };
-
-            return getMatchingConfig(egl, display, configAttribsGL1x);
-        }
+        return getMatchingConfig(egl, display, configAttribsGL20);
     }
 	
 	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs)
