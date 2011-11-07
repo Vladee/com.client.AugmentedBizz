@@ -43,7 +43,7 @@ jclass AugmentedBizzApplicationJavaInterface::getClass() {
 }
 
 jobject AugmentedBizzApplicationJavaInterface::getJavaApplicationStateManager() {
-	return this->getObjectLoader()->callObjectMethod(this->javaAugmentedBizzApplication, \
+	return this->getObjectLoader()->getJNIEnv()->CallObjectMethod(this->javaAugmentedBizzApplication, \
 			this->getJavaGetApplicationStateManagerMethodID());
 }
 

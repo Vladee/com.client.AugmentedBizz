@@ -37,12 +37,12 @@ class ObjectLoader {
 		~ObjectLoader();
 		jclass findClass(std::string);
 		jclass getObjectClass(jobject);
+		JNIEnv* getJNIEnv();
 		jmethodID getMethodID(jclass, std::string, std::string);
 		void callVoidMethod(jobject, jmethodID, ...);
 		jobject callObjectMethod(jobject, jmethodID, ...);
 	private:
 		JavaVM *javaVM;
-		JNIEnv* getJNIEnv();
 };
 
 class JavaInterface {

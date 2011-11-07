@@ -3,6 +3,7 @@
 
 ApplicationStateManager::ApplicationStateManager(ObjectLoader *objectLoader, jobject javaApplicationStateManager) {
 	this->currentState = INITIALIZING;
+	DebugLog::logi("Current State is: Initializing.");
 
 	this->applicationStateManagerJavaInterface = \
 			new ApplicationStateManagerJavaInterface(objectLoader, javaApplicationStateManager);
@@ -80,6 +81,6 @@ jmethodID ApplicationStateManagerJavaInterface::getJavaFireApplicationStateChang
 }
 
 void ApplicationStateManagerJavaInterface::setJavaApplicationState(ApplicationState nextState) {
-	this->getObjectLoader()->callVoidMethod(javaApplicationStateManager, \
+	this->getObjectLoader()->getJNIEnv()->CallVoidMethod(javaApplicationStateManager, \
 			this->getJavaFireApplicationStateChangedEventMethodID(), nextState);
 }

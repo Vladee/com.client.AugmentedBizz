@@ -1,22 +1,8 @@
 package com.app.augmentedbizz.ui.scanner;
 
-import java.nio.ByteBuffer;
-import java.util.Formatter.BigDecimalLayoutForm;
+import android.graphics.Bitmap;
 
 import org.apache.http.util.ByteArrayBuffer;
-
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.FormatException;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.qrcode.QRCodeReader;
-
-import android.graphics.Bitmap;
-import android.text.Html.ImageGetter;
-import android.util.Log;
 
 /**
  * A QRScanner for bitmaps

@@ -1,18 +1,17 @@
 package com.app.augmentedbizz.ui.widget;
 
-import com.app.augmentedbizz.R;
-
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SlidingDrawer;
-import android.widget.TextView;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
+
+import com.app.augmentedbizz.R;
 
 public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpenListener, OnDrawerCloseListener
 {

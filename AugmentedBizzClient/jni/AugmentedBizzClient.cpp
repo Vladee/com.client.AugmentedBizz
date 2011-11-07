@@ -10,7 +10,6 @@ extern "C" {
 
 IApplicationFacade* application;
 
-
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_ApplicationStateManager_fireApplicationStateChangedEventNative(JNIEnv, jobject, jint jnextState) {
 	application->getApplicationStateManager()->setNativeApplicationStateOnly(jnextState);
 }
