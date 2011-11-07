@@ -99,8 +99,7 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
 	 */
 	private HttpEntity executeHttpGetForEntity(HttpClient client, HttpGet get) throws Exception
 	{
-        HttpResponse httpResponse = null;
-        httpResponse = client.execute(get);
+        HttpResponse httpResponse = client.execute(get);
         
         if(httpResponse == null) 
         {

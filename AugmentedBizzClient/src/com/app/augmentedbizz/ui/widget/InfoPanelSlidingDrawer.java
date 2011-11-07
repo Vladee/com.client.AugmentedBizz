@@ -5,6 +5,7 @@ import com.app.augmentedbizz.R;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -43,6 +44,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	private ImageView imageViewStateIndicator = null;
 	private TextView textViewInfoText = null;
 	private LinearLayout linearLayoutActionSymbol = null;
+	private LinearLayout linearLayoutDetailView = null;
 	private boolean locked = false;
 	
 	public InfoPanelSlidingDrawer(Context context, AttributeSet attrs)
@@ -64,6 +66,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 		imageViewStateIndicator = (ImageView)findViewById(R.id.imageViewInfoPanelIndicator);
 		textViewInfoText = (TextView)findViewById(R.id.textViewInfoPanel);
 		linearLayoutActionSymbol = (LinearLayout)findViewById(R.id.linearLayoutInfoPanelActionSymbol);
+		linearLayoutDetailView = (LinearLayout)findViewById(R.id.linearLayoutInfoContent);
 		
 		//add listeners
 		setOnDrawerOpenListener(this);
@@ -217,8 +220,22 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 			locked = true;
 			close();
 			lock();
+			setDetailViewContent(null);
 			removeActionSymbol();
 		}
 	}
 	
+	/**
+	 * Sets the content of the detail view
+	 * 
+	 * @param view The view to set as the detail view content. null removes the current detail view only.
+	 */
+	public void setDetailViewContent(View view)
+	{
+		linearLayoutDetailView.removeAllViews();
+		if(view != null)
+		{
+			linearLayoutDetailView.addView(view);
+		}
+	}
 }

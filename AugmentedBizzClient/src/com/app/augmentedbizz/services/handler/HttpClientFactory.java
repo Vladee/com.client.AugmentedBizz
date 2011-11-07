@@ -80,12 +80,12 @@ public class HttpClientFactory
             DebugLog.logw("Http retry " + exception.toString() + " " + executionCount);
             
             //do not retry if over max retry count
-            if (executionCount >= 5) 
+            if(executionCount >= 5) 
             {
                 return false;
             }
             //retry if the server dropped connection on us
-            if (exception instanceof NoHttpResponseException) 
+            if(exception instanceof NoHttpResponseException) 
             {
                 
                 return true;
