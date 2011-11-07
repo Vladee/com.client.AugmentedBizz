@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
 
-public interface IApplicationFacade
+public interface ApplicationFacade
 {
 	
 	/**

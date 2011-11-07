@@ -14,7 +14,7 @@ import com.app.augmentedbizz.logging.DebugLog;
  * @author Vladi
  *
  */
-public class AugmentedBizzApplication extends Application implements IApplicationFacade {
+public class AugmentedBizzApplication extends Application implements ApplicationFacade {
 	
 	private static String LIBRARY_QCAR = "QCAR";
 	private static String LIBRARY_AUGBIZZ = "AugmentedBizzClient";
@@ -27,7 +27,6 @@ public class AugmentedBizzApplication extends Application implements IApplicatio
     	this.loadLibrary(AugmentedBizzApplication.LIBRARY_AUGBIZZ);
 		
 		this.initializeApplication();
-		
 	}
 	
     private void initializeApplication() {

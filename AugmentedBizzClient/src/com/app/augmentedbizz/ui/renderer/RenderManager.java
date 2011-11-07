@@ -1,8 +1,8 @@
 package com.app.augmentedbizz.ui.renderer;
 
-import com.app.augmentedbizz.application.IApplicationFacade;
+import com.app.augmentedbizz.application.ApplicationFacade;
 
 public class RenderManager
 {
-	protected IApplicationFacade applicationFacade;
+	protected ApplicationFacade applicationFacade;
 }

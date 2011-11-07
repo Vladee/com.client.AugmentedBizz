@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.renderer.OpenGLModel;
+import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
+import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.TypeConversion;
 
 /**
@@ -29,6 +31,8 @@ public class CacheDbAdapter {
     public static final String KEY_TEXTURE_COORDS = "texture_coords";
     public static final String KEY_INDICES = "indices";
     public static final String KEY_TEXTURE = "texture";
+    public static final String KEY_TEXTURE_WIDTH = "texture_width";
+    public static final String KEY_TEXTURE_HEIGHT = "texture_height";
     public static final String KEY_SCALE_FACTOR = "scale_factor";
 
     private DatabaseHelper dbHelper;
@@ -37,7 +41,7 @@ public class CacheDbAdapter {
     // Db name, version and table name
     private static final String DATABASE_NAME = "arbizz";
     private static final String DATABASE_TABLE = "models";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     /**
      * Database creation SQL statement
@@ -51,6 +55,8 @@ public class CacheDbAdapter {
         		CacheDbAdapter.KEY_TEXTURE_COORDS + " BLOB NOT NULL, " +
         		CacheDbAdapter.KEY_INDICES + " BLOB NOT NULL, " +
         		CacheDbAdapter.KEY_TEXTURE + " BLOB NOT NULL, " +
+        		CacheDbAdapter.KEY_TEXTURE_WIDTH + " INT NOT NULL, " +
+        		CacheDbAdapter.KEY_TEXTURE_HEIGHT + " INT NOT NULL, " +
         		CacheDbAdapter.KEY_SCALE_FACTOR + " REAL NOT NULL);";
     
     /**
@@ -121,13 +127,13 @@ public class CacheDbAdapter {
      * @param model The model information to insert.
      * @return rowId or -1 if failed
      */
-    public long insertModel(OpenGLModel model) {
+    public long insertModel(OpenGLModelConfiguration model) {
         ContentValues initialValues = this.getContentValuesFrom(model);
         
         long result = this.db.insert(CacheDbAdapter.DATABASE_TABLE, null, initialValues);
         
         if(result == -1) {
-        	DebugLog.loge("SQL failure: Could not insert model record no. " + model.getId() + ".");
+        	DebugLog.loge("SQL failure: Could not insert model record no. " + model.getOpenGLModel().getId() + ".");
         }
 
         return result;
@@ -169,7 +175,7 @@ public class CacheDbAdapter {
      * @return Cursor positioned to matching note, if found
      * @throws SQLException if note could not be found/retrieved
      */
-    public Cursor fetchModel(long id) throws SQLException {
+    public OpenGLModelConfiguration fetchModel(long id) throws SQLException {
     	
         Cursor cursor = this.db.query(true,
         	CacheDbAdapter.DATABASE_TABLE,
@@ -179,11 +185,28 @@ public class CacheDbAdapter {
         
         if (cursor != null) {
         	cursor.moveToFirst();
+        } else {
+        	return null;
         }
         
-        return cursor;
+        Texture texture = new Texture(cursor.getInt(7),
+        		cursor.getInt(8),
+        		cursor.getBlob(6));
+        
+        OpenGLModelConfiguration openGLModelConfiguration = new OpenGLModelConfiguration(new OpenGLModel(
+        		cursor.getInt(0),
+        		cursor.getInt(1),
+        		TypeConversion.toFloatArrayFrom(cursor.getBlob(2)),
+        		TypeConversion.toFloatArrayFrom(cursor.getBlob(3)),
+        		TypeConversion.toFloatArrayFrom(cursor.getBlob(4)),
+        		TypeConversion.toShortArrayFrom(cursor.getBlob(5)),
+        		texture), cursor.getFloat(9));
+        
+        cursor.close();
+        
+        return openGLModelConfiguration;
     }
-
+    
     /**
      * Update the {@link OpenGLModel} using the details provided. The model to be updated is
      * specified using the rowId, and it is altered to use the values passed in. This function
@@ -192,12 +215,12 @@ public class CacheDbAdapter {
      * @param model The model information that should be inserted
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateModel(OpenGLModel model) {
+    public boolean updateModel(OpenGLModelConfiguration model) {
         ContentValues contentValues = this.getContentValuesFrom(model);
 
         return this.db.update(CacheDbAdapter.DATABASE_TABLE,
         		contentValues,
-        		CacheDbAdapter.KEY_ID + "=" + model.getId(),
+        		CacheDbAdapter.KEY_ID + "=" + model.getOpenGLModel().getId(),
         		null) > 0;
     }
     
@@ -208,23 +231,27 @@ public class CacheDbAdapter {
      * @param model The model to create the content values from.
      * @return A set of content values containing the model information.
      */
-    private ContentValues getContentValuesFrom(OpenGLModel model) {
+    private ContentValues getContentValuesFrom(OpenGLModelConfiguration model) {
     	ContentValues contentValues = new ContentValues();
     	
     	contentValues.put(CacheDbAdapter.KEY_ID,
-        		model.getId());
+        		model.getOpenGLModel().getId());
     	contentValues.put(CacheDbAdapter.KEY_VERSION,
-        		model.getModelVersion());
+        		model.getOpenGLModel().getModelVersion());
     	contentValues.put(CacheDbAdapter.KEY_VERTICES,
-        		TypeConversion.toByteArrayFrom(model.getVertices()));
+        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getVertices()));
     	contentValues.put(CacheDbAdapter.KEY_NORMALS,
-        		TypeConversion.toByteArrayFrom(model.getNormals()));
+        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getNormals()));
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE_COORDS,
-        		TypeConversion.toByteArrayFrom(model.getTextureCoordinates()));
+        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getTextureCoordinates()));
     	contentValues.put(CacheDbAdapter.KEY_INDICES,
-        		TypeConversion.toByteArrayFrom(model.getIndices()));
+        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getIndices()));
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE,
-        		model.getTexture().getData());
+        		model.getOpenGLModel().getTexture().getData());
+    	contentValues.put(CacheDbAdapter.KEY_TEXTURE_WIDTH,
+        		model.getOpenGLModel().getTexture().getWidth());
+    	contentValues.put(CacheDbAdapter.KEY_TEXTURE_HEIGHT,
+        		model.getOpenGLModel().getTexture().getHeight());
     	contentValues.put(CacheDbAdapter.KEY_SCALE_FACTOR,
         		model.getPreferredScaleFactor());
         
@@ -245,6 +272,8 @@ public class CacheDbAdapter {
                	CacheDbAdapter.KEY_TEXTURE_COORDS,
                	CacheDbAdapter.KEY_INDICES,
                	CacheDbAdapter.KEY_TEXTURE,
+               	CacheDbAdapter.KEY_TEXTURE_WIDTH,
+               	CacheDbAdapter.KEY_TEXTURE_HEIGHT,
                	CacheDbAdapter.KEY_SCALE_FACTOR};
     }
 	

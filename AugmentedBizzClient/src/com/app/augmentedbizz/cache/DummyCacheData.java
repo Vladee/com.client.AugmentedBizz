@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.renderer.OpenGLModel;
+import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.TypeConversion;
 
@@ -41,7 +42,8 @@ public class DummyCacheData {
 		
 		AssetManager assetManager = context.getAssets();
 		
-		OpenGLModel cube = new OpenGLModel(99999, 1, new float[] { // vertices
+		OpenGLModelConfiguration cube = new OpenGLModelConfiguration(
+				new OpenGLModel(99999, 1, new float[] { // vertices
 				    -1.00f,  -1.00f,   1.00f, // front
 				     1.00f,  -1.00f,   1.00f,
 				     1.00f,   1.00f,   1.00f,
@@ -138,9 +140,10 @@ public class DummyCacheData {
 				    12, 14, 13, 12, 15, 14, // right
 				    16, 17, 18, 16, 18, 19, // top
 				    20, 22, 21, 20, 23, 22  // bottom
-				}, DummyCacheData.loadTexture("DummyCube.png", assetManager), 50.f);
+				}, DummyCacheData.loadTexture("DummyCube.png", assetManager)), 50.f);
 		
-		OpenGLModel box = new OpenGLModel(99998, 1, new float[] { // vertices
+		OpenGLModelConfiguration box = new OpenGLModelConfiguration(
+				new OpenGLModel(99998, 1, new float[] { // vertices
 				-3.937000f, -3.937000f, 3.937000f, -3.937000f, -3.937000f, -3.937000f, 3.937000f, -3.937000f, -3.937000f,
 				3.937000f, -3.937000f, -3.937000f, 3.937000f, -3.937000f, 3.937000f, -3.937000f, -3.937000f, 3.937000f,
 				-3.937000f, 3.937000f, 3.937000f, 3.937000f, 3.937000f, 3.937000f, 3.937000f, 3.937000f, -3.937000f,
@@ -177,7 +180,7 @@ public class DummyCacheData {
 				0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4,
 				0, 3, 5, 5, 4, 0, 3, 2, 6, 6, 5, 3,
 				2, 1, 7, 7, 6, 2, 1, 0, 4, 4, 7, 1
-			}, DummyCacheData.loadTexture("DummyBox.png", assetManager), 5.0f);
+			}, DummyCacheData.loadTexture("DummyBox.png", assetManager)), 5.0f);
 		
 		CacheDbAdapter adapter = new CacheDbAdapter(context);
 		adapter.open();

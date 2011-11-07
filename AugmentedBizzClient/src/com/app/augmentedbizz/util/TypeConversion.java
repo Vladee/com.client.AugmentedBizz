@@ -122,7 +122,74 @@ public class TypeConversion {
 		buffer.flush();
 
 		return buffer.toByteArray();
-
+	}
+	
+	public static short toShortFrom(byte[] data) {
+	    if (data == null || data.length != 2) return 0x0;
+	    // ----------
+	    return (short)(
+	            (0xff & data[0]) << 8   |
+	            (0xff & data[1]) << 0
+	            );
+	}
+	 
+	public static short[] toShortArrayFrom(byte[] data) {
+	    if (data == null || data.length % 2 != 0) return null;
+	    // ----------
+	    short[] shts = new short[data.length / 2];
+	    for (int i = 0; i < shts.length; i++) {
+	        shts[i] = toShortFrom( new byte[] {
+	            data[(i*2)],
+	            data[(i*2)+1]
+	        } );
+	    }
+	    return shts;
+	}
+	
+	public static int toIntFrom(byte[] data) {
+	    if (data == null || data.length != 4) return 0x0;
+	    // ----------
+	    return (int)( // NOTE: type cast not necessary for int
+	            (0xff & data[0]) << 24  |
+	            (0xff & data[1]) << 16  |
+	            (0xff & data[2]) << 8   |
+	            (0xff & data[3]) << 0
+	            );
+	}
+	 
+	public static int[] toIntArrayFrom(byte[] data) {
+	    if (data == null || data.length % 4 != 0) return null;
+	    // ----------
+	    int[] ints = new int[data.length / 4];
+	    for (int i = 0; i < ints.length; i++)
+	        ints[i] = toIntFrom( new byte[] {
+	            data[(i*4)],
+	            data[(i*4)+1],
+	            data[(i*4)+2],
+	            data[(i*4)+3],
+	        } );
+	    return ints;
+	}
+	
+	public static float toFloatFrom(byte[] data) {
+	    if (data == null || data.length != 4) return 0x0;
+	    // ---------- simple:
+	    return Float.intBitsToFloat(toIntFrom(data));
+	}
+	 
+	public static float[] toFloatArrayFrom(byte[] data) {
+	    if (data == null || data.length % 4 != 0) return null;
+	    // ----------
+	    float[] flts = new float[data.length / 4];
+	    for (int i = 0; i < flts.length; i++) {
+	        flts[i] = toFloatFrom( new byte[] {
+	            data[(i*4)],
+	            data[(i*4)+1],
+	            data[(i*4)+2],
+	            data[(i*4)+3],
+	        } );
+	    }
+	    return flts;
 	}
 	
 	/**
