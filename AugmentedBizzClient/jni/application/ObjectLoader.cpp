@@ -1,6 +1,7 @@
 #include "ObjectLoader.h"
 #include <stdarg.h>
 #include "../logging/DebugLog.h"
+#include "../Utils.h"
 
 ObjectLoader::ObjectLoader(JNIEnv *env) {
 	JavaVM *javaVM;
@@ -39,22 +40,6 @@ jmethodID ObjectLoader::getMethodID(jclass clazz, std::string methodName, std::s
 	if(methodID == 0) {
 		DebugLog::loge("Method " + methodName + methodSignature + " could not be found.");
 	}
-}
-
-void ObjectLoader::callVoidMethod(jobject object, jmethodID methodID, ...) {
-	// Get parameter list
-	va_list vl;
-	va_start(vl, methodID);
-
-	this->getJNIEnv()->CallVoidMethod(object, methodID, vl);
-}
-
-jobject ObjectLoader::callObjectMethod(jobject object, jmethodID methodID, ...) {
-	// Get parameter list
-	va_list vl;
-	va_start(vl, methodID);
-
-	return this->getJNIEnv()->CallObjectMethod(object, methodID, vl);
 }
 
 JNIEnv* ObjectLoader::getJNIEnv() {

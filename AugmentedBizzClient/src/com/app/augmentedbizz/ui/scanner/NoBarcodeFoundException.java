@@ -1,7 +1,6 @@
 package com.app.augmentedbizz.ui.scanner;
 
-public class NoBarcodeFoundException extends Exception
-{
+public class NoBarcodeFoundException extends Exception {
 	/**
 	 * 
 	 */

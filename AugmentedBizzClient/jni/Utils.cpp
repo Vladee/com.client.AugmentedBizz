@@ -12,6 +12,7 @@
 ==============================================================================*/
 
 #include "Utils.h"
+#include "logging/DebugLog.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -29,7 +30,7 @@ void
 SampleUtils::printMatrix(const float* mat)
 {
     for(int r=0; r<4; r++,mat+=4)
-        LOG("%7.3f %7.3f %7.3f %7.3f", mat[0], mat[1], mat[2], mat[3]);
+        ;//LOG("%7.3f %7.3f %7.3f %7.3f " + mat);
 }
 
 
@@ -37,7 +38,7 @@ void
 SampleUtils::checkGlError(const char* operation)
 { 
     for (GLint error = glGetError(); error; error = glGetError())
-        LOG("after %s() glError (0x%x)", operation, error);
+        ;//LOG("after %s() glError (0x%x)" + operation + error);
 }
 
 
@@ -187,8 +188,7 @@ SampleUtils::initShader(unsigned int shaderType, const char* source)
                 if (buf)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                    LOG("Could not compile shader %d: %s", 
-                        shaderType, buf);
+                    DebugLog::loge("Could not compile shader");// %d: %s", shaderType, buf);
                     free(buf);
                 }
                 glDeleteShader(shader);
@@ -241,7 +241,7 @@ SampleUtils::createProgramFromBuffer(const char* vertexShaderBuffer,
                 if (buf)
                 {
                     glGetProgramInfoLog(program, bufLength, NULL, buf);
-                    LOG("Could not link program: %s", buf);
+                    //DebugLog::loge("Could not link program: " + buf);
                     free(buf);
                 }
             }

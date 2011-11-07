@@ -19,10 +19,6 @@
 #include <stdio.h>
 #include <android/log.h>
 
-// Utility for logging:
-#define LOG_TAG    "QCAR"
-#define LOG(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
-
 /// A utility class used by the QCAR SDK samples.
 class SampleUtils
 {
