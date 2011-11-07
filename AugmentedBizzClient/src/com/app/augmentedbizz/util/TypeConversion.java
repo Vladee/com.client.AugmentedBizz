@@ -1,10 +1,14 @@
 package com.app.augmentedbizz.util;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.app.augmentedbizz.ui.renderer.Texture;
+
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
  * Utility class that provides methods to convert various
@@ -118,7 +122,74 @@ public class TypeConversion {
 		buffer.flush();
 
 		return buffer.toByteArray();
-
+	}
+	
+	public static short toShortFrom(byte[] data) {
+	    if (data == null || data.length != 2) return 0x0;
+	    // ----------
+	    return (short)(
+	            (0xff & data[0]) << 8   |
+	            (0xff & data[1]) << 0
+	            );
+	}
+	 
+	public static short[] toShortArrayFrom(byte[] data) {
+	    if (data == null || data.length % 2 != 0) return null;
+	    // ----------
+	    short[] shts = new short[data.length / 2];
+	    for (int i = 0; i < shts.length; i++) {
+	        shts[i] = toShortFrom( new byte[] {
+	            data[(i*2)],
+	            data[(i*2)+1]
+	        } );
+	    }
+	    return shts;
+	}
+	
+	public static int toIntFrom(byte[] data) {
+	    if (data == null || data.length != 4) return 0x0;
+	    // ----------
+	    return (int)( // NOTE: type cast not necessary for int
+	            (0xff & data[0]) << 24  |
+	            (0xff & data[1]) << 16  |
+	            (0xff & data[2]) << 8   |
+	            (0xff & data[3]) << 0
+	            );
+	}
+	 
+	public static int[] toIntArrayFrom(byte[] data) {
+	    if (data == null || data.length % 4 != 0) return null;
+	    // ----------
+	    int[] ints = new int[data.length / 4];
+	    for (int i = 0; i < ints.length; i++)
+	        ints[i] = toIntFrom( new byte[] {
+	            data[(i*4)],
+	            data[(i*4)+1],
+	            data[(i*4)+2],
+	            data[(i*4)+3],
+	        } );
+	    return ints;
+	}
+	
+	public static float toFloatFrom(byte[] data) {
+	    if (data == null || data.length != 4) return 0x0;
+	    // ---------- simple:
+	    return Float.intBitsToFloat(toIntFrom(data));
+	}
+	 
+	public static float[] toFloatArrayFrom(byte[] data) {
+	    if (data == null || data.length % 4 != 0) return null;
+	    // ----------
+	    float[] flts = new float[data.length / 4];
+	    for (int i = 0; i < flts.length; i++) {
+	        flts[i] = toFloatFrom( new byte[] {
+	            data[(i*4)],
+	            data[(i*4)+1],
+	            data[(i*4)+2],
+	            data[(i*4)+3],
+	        } );
+	    }
+	    return flts;
 	}
 	
 	/**
@@ -145,5 +216,20 @@ public class TypeConversion {
         }
         
         return dataBytes;
+	}
+	
+	/**
+	 * Creates a {@link Texture} from an {@link InputStream}.
+	 * 
+	 * @param inputStream The image InputStream.
+	 * @return The bitmap texture representation.
+	 */
+	public static Texture toTextureFrom(InputStream inputStream) {
+		BufferedInputStream bufferedStream = new BufferedInputStream(inputStream);
+        Bitmap bitmap = BitmapFactory.decodeStream(bufferedStream);
+        
+        return new Texture(bitmap.getWidth(),
+        		bitmap.getHeight(),
+        		TypeConversion.splitRGBAChannelsOf(bitmap));
 	}
 }

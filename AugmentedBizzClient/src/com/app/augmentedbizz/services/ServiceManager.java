@@ -17,8 +17,7 @@ import com.app.augmentedbizz.services.service.repository.TargetHttpService;
  * @author Vladi
  *
  */
-public class ServiceManager
-{
+public class ServiceManager {
 	private HttpServiceHandler serviceHandler;
 	private Context context;
 	

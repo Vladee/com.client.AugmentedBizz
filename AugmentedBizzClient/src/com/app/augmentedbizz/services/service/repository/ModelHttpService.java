@@ -18,10 +18,16 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
 public class ModelHttpService extends BaseHttpService
 {
 	private Context context;
+	private int modelId;
 	
+	public int getModelId() {
+		return modelId;
+	}
+
 	public ModelHttpService(Context context, Long modelId)
 	{
 		this.context = context;
+		this.modelId = modelId.intValue();
 		
 		queryKeyValuePairs.add(new BasicNameValuePair("model", Long.toString(modelId)));
 	}

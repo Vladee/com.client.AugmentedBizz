@@ -1,10 +1,9 @@
-package com.app.augmentedbizz.model;
+package com.app.augmentedbizz.ui.renderer;
 
 public class OpenGLModel {
 	
 	private int id;
 	private int modelVersion;
-	private float preferredScaleFactor;
 	private float[] vertices;
 	private float[] normals;
 	private float[] textureCoordinates;
@@ -18,8 +17,7 @@ public class OpenGLModel {
 			float[] normals,
 			float[] textureCoordinates,
 			short[] indices,
-			Texture texture,
-			float preferredScaleFactor) {
+			Texture texture) {
 		this.id = id;
 		this.modelVersion = modelVersion;
 		this.vertices = vertices;
@@ -27,7 +25,6 @@ public class OpenGLModel {
 		this.textureCoordinates = textureCoordinates;
 		this.indices = indices;
 		this.texture = texture;
-		this.preferredScaleFactor = preferredScaleFactor;
 	}
 
 	public int getId() {
@@ -56,10 +53,6 @@ public class OpenGLModel {
 	
 	public Texture getTexture() {
 		return texture;
-	}
-	
-	public float getPreferredScaleFactor() {
-		return preferredScaleFactor;
 	}
 	
 }

@@ -28,4 +28,5 @@ public interface ApplicationFacade
 	 * @return The application UI manager.
 	 */
 	public UIManager getUIManager();
+
 }

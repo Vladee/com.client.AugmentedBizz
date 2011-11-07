@@ -50,5 +50,4 @@ public class ModelServiceEntity extends ServiceTransferEntity {
 		return base64EncodedTexture;
 	}
 	
-	
 }
