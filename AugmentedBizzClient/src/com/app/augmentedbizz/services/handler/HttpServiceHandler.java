@@ -4,7 +4,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import com.app.augmentedbizz.services.parser.AbstractServiceResponseParser;
-import com.app.augmentedbizz.services.parser.ServiceParserException;
 import com.app.augmentedbizz.services.response.ServiceResponseListener;
 import com.app.augmentedbizz.services.service.BaseHttpService;
 

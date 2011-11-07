@@ -7,6 +7,11 @@ package com.app.augmentedbizz.services.parser;
  */
 public class ServiceParserException extends Exception
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ServiceParserException(String msg)
 	{
 		super(msg);

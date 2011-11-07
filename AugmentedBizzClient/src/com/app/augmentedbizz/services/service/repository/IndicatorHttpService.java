@@ -7,7 +7,6 @@ import android.content.Context;
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
 import com.app.augmentedbizz.services.entity.transfer.IndicatorServiceEntity;
-import com.app.augmentedbizz.services.entity.transfer.ModelServiceEntity;
 import com.app.augmentedbizz.services.service.BaseHttpService;
 
 /**
