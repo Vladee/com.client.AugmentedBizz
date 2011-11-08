@@ -1,9 +1,14 @@
 package com.app.augmentedbizz.ui.renderer;
 
+import android.util.DisplayMetrics;
+
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.data.ModelDataListener;
+import com.app.augmentedbizz.application.status.ApplicationState;
+import com.app.augmentedbizz.application.status.ApplicationStateListener;
 import com.app.augmentedbizz.ui.MainActivity;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
+import com.app.augmentedbizz.util.Display;
 import com.qualcomm.QCAR.QCAR;
 
 /**
@@ -12,27 +17,38 @@ import com.qualcomm.QCAR.QCAR;
  * @author Vladi
  *
  */
-public class RenderManager implements ModelDataListener
+public class RenderManager implements ModelDataListener, ApplicationStateListener
 {
-	private static int depthSize = 16;
-	private static int stencilSize = 0;
+	public static int depthSize = 16;
+	public static int stencilSize = 0;
 	private MainActivity mainActivity;
-	private AugmentedRenderer augmentedRenderer;
+	private boolean initialized = false;
 	
 	public RenderManager(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
-		this.augmentedRenderer = new AugmentedRenderer();
+		mainActivity.getAugmentedBizzApplication().getApplicationStateManager().addApplicationStateListener(this);
 	}
 	
-	public void initialize() throws Exception
+	/**
+	 * Initializes the render manager by setting up the GL surface view 
+	 * and passing necessary data to the native side.
+	 * 
+	 * @return true, if the initialization was successful
+	 */
+	public boolean initialize()
 	{
 		if(getGlSurfaceView() == null)
 		{
-			throw(new Exception("GL surface view not available"));
+			return false;
 		}
 		
-		getGlSurfaceView().init(QCAR.requiresAlpha(), depthSize, stencilSize);
-		getGlSurfaceView().setRenderer(augmentedRenderer);
+		if(!initialized)
+		{
+			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize);
+			setupScreenDimensions(Display.getScreenWidth(mainActivity), Display.getScreenHeight(mainActivity));
+			initialized = true;
+		}
+		return true;
 	}
 	
 	/**
@@ -42,14 +58,28 @@ public class RenderManager implements ModelDataListener
 	{
 		return (AugmentedGLSurfaceView)mainActivity.findViewById(R.id.augmentedGLSurfaceView);
 	}
-
+	
 	/**
-	 * @return The augmented renderer
+	 * @return The renderer for the 3D augmentation
 	 */
-	public AugmentedRenderer getAugmentedRenderer()
+	public AugmentedRenderer getRenderer()
 	{
-		return augmentedRenderer;
+		return getGlSurfaceView().getRenderer();
 	}
+	
+	/**
+	 * Setup of screen dimensions on the native side.
+	 * 
+	 * @param width of the screen
+	 * @param height of the screen
+	 */
+	private native void setupScreenDimensions(int width, int height);
+	
+	/** 
+	 * Native methods for starting and stoping the camera. 
+	 */ 
+    public native void startCamera();
+    public native void stopCamera();
 
 	@Override
 	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration)
@@ -61,5 +91,19 @@ public class RenderManager implements ModelDataListener
 	public void onModelError(Exception e)
 	{
 		// TODO
+	}
+
+	@Override
+	public void onApplicationStateChange(ApplicationState nextState)
+	{
+		// TODO
+		if(nextState.equals(ApplicationState.TRACKING))
+		{
+			startCamera();
+		}
+		else if(nextState.equals(ApplicationState.DEINITIALIZING))
+		{
+			stopCamera();
+		}
 	}
 }

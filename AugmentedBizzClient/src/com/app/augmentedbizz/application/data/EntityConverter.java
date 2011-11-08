@@ -15,7 +15,6 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
 import com.app.augmentedbizz.services.service.repository.ModelHttpService;
 import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
-import com.app.augmentedbizz.ui.renderer.Target;
 import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.Base64;
 import com.app.augmentedbizz.util.TypeConversion;

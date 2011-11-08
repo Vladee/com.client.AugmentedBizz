@@ -16,6 +16,7 @@ import com.qualcomm.QCAR.QCAR;
  */
 public class Initializer extends AsyncTask<Object, Integer, Object>
 {
+	private static int minSplashMillis = 2000;
 	private static String LIBRARY_QCAR = "QCAR";
 	private static String LIBRARY_AUGBIZZ = "AugmentedBizzClient";
 	
@@ -31,34 +32,37 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
      * 
      * @param libraryName Name of the library to load.
      */
-    private void loadLibrary(String libraryName) {
+    private static void loadLibrary(String libraryName) throws Exception {
     	try {
             System.loadLibrary(libraryName);
-            DebugLog.logi("Native library lib" + libraryName + ".so loaded");
         }
-        catch (UnsatisfiedLinkError ulee) {
-            DebugLog.loge("The library lib" + libraryName +
-                            ".so could not be loaded", ulee);
+        catch(UnsatisfiedLinkError ulee) {
+            throw(new Exception("The library lib" + libraryName + ".so could not be loaded"));
         }
         catch (SecurityException se) {
-            DebugLog.loge("The library lib" + libraryName +
-                            ".so was not allowed to be loaded");
+        	throw(new Exception("The library lib" + libraryName + ".so was not allowed to be loaded"));
         }
     }
 	
     /**
 	 * Loads necessary application libraries as shared objects.
 	 */
-	private void loadSharedLibraries()
+	public static void loadSharedLibraries()
 	{
-		loadLibrary(LIBRARY_QCAR);
-    	loadLibrary(LIBRARY_AUGBIZZ);
+		try
+		{
+			loadLibrary(LIBRARY_QCAR);
+			loadLibrary(LIBRARY_AUGBIZZ);
+		}
+		catch (Exception e) {
+			DebugLog.logw(e.getMessage());
+		}
 	}
 	
 	/**
      * Native component initializing.
      */
-    private native void initializeApplicationNative();
+    private native void initializeApplicationNative(ApplicationFacade facade);
     
     /**
      * Initialites all necessary application components.
@@ -76,6 +80,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
     @Override
     protected void onPreExecute()
     {
+    	DebugLog.logi("Begin application initialization.");
     	facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
     }
     
@@ -89,12 +94,22 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 				Thread.sleep(10);
 			}
 			publishProgress(1);
-			loadSharedLibraries();
-			initializeApplicationNative();
+			long preTimePoint = System.currentTimeMillis();
+			initializeApplicationNative(facade);
 			initializeMainQCARComponents();
-			publishProgress(2);
-			facade.getUIManager().getMainActivity().getRenderManager().initialize();
 			initializeQCARTracker();
+			System.gc();
+			long postTimePoints = System.currentTimeMillis();
+			if(postTimePoints - preTimePoint < 2000)
+			{
+				Thread.sleep(2000 - (postTimePoints - preTimePoint));
+			}
+			publishProgress(2);
+			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize())
+			{
+				Thread.sleep(10);
+			}
+			
 		}
 		catch(Exception e)
 		{
@@ -122,10 +137,12 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 	{
 		if(result instanceof Integer)
 		{
+			DebugLog.logi("Application initialized.");
 			facade.getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		}
 		else
 		{
+			DebugLog.loge("Application initialization failed", (Exception)result);
 			facade.getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
 		}
 		

@@ -5,6 +5,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
+import com.app.augmentedbizz.ui.renderer.AugmentedRenderer;
+import com.app.augmentedbizz.ui.renderer.RenderManager;
 import com.qualcomm.QCAR.QCAR;
 
 
@@ -15,7 +17,8 @@ import android.util.AttributeSet;
 
 public class AugmentedGLSurfaceView extends GLSurfaceView
 {
-
+	private AugmentedRenderer renderer;
+	
 	public AugmentedGLSurfaceView(Context context)
 	{
 		super(context);
@@ -35,15 +38,24 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
 	/** 
 	 * Initialization of the surface view
 	 */
-    public void init(boolean translucent, int depth, int stencil)
+    public void setup(boolean translucent, int depth, int stencil)
     {
         setTranslucent(translucent);
         setEGLContextFactory(createContextFactory());
-
         setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
+        
+        setupRenderer();
     }
     
     /**
+	 * @return the renderer for the GL surface augmentation
+	 */
+	public AugmentedRenderer getRenderer()
+	{
+		return renderer;
+	}
+
+	/**
      * Setup for the translucency, e.g. if background views should be visible behind the GL Surface 
      * @param translucent
      */
@@ -89,5 +101,14 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
     	}
     	
     	return configChooser;
+    }
+    
+    private void setupRenderer()
+    {
+    	if(renderer == null)
+    	{
+    		renderer = new AugmentedRenderer();
+    		setRenderer(renderer);
+    	}
     }
 }

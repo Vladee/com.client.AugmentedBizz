@@ -25,13 +25,8 @@ public class ApplicationStateManager implements ApplicationStateListener {
      */
     private List<ApplicationStateListener> applicationStateListener = new ArrayList<ApplicationStateListener>();
     
-    private static ApplicationStateManager instance = new ApplicationStateManager();
-    private ApplicationStateManager() {
+    public ApplicationStateManager() {
     	this.addApplicationStateListener(this);
-    }
-    
-    public static ApplicationStateManager getInstance() {
-    	return ApplicationStateManager.instance;
     }
     
     /**
@@ -59,7 +54,7 @@ public class ApplicationStateManager implements ApplicationStateListener {
      */
     public synchronized void setApplicationState(ApplicationState nextState) {
     	this.fireApplicationStateChangedEvent(nextState);
-    	if(nextState != ApplicationState.INITIALIZING) {
+    	if(nextState != ApplicationState.INITIALIZING && !nextState.equals(currentState)) {
     		// Initializing is the default state in native
     		// and cannot be changed before it is initialized.
     		this.fireApplicationStateChangedEventNative(nextState.getIndex());

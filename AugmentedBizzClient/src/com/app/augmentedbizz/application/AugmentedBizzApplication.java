@@ -19,11 +19,19 @@ import com.app.augmentedbizz.ui.UIManager;
 public class AugmentedBizzApplication extends Application implements ApplicationFacade {
 	
 	private UIManager uiManager;
+	private ApplicationStateManager stateManager;
 	private Initializer initializer;
+	
+	static {
+		Initializer.loadSharedLibraries();
+	}
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		uiManager = new UIManager(this);
+		stateManager = new ApplicationStateManager();
 		
 		initializer = new Initializer(this);
 		initializer.initializeApplication();
@@ -31,20 +39,17 @@ public class AugmentedBizzApplication extends Application implements Application
 	
 	@Override
 	public ApplicationStateManager getApplicationStateManager() {
-		return ApplicationStateManager.getInstance();
+		return stateManager;
 	}
 
 	@Override
-	public Context getContext()
-	{
+	public Context getContext() {
 		return this;
 	}
 
 	@Override
-	public UIManager getUIManager()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	public UIManager getUIManager() {
+		return uiManager;
 	}
 	
 	

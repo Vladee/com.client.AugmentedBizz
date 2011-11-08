@@ -15,7 +15,11 @@ import android.opengl.GLSurfaceView.Renderer;
  */
 public class AugmentedRenderer implements Renderer
 {
-	protected boolean active = false;
+	protected boolean active = true;
+	
+	public AugmentedRenderer()
+	{
+	}
 	
 	/** 
 	 * Native function for initializing the renderer. 
@@ -61,6 +65,22 @@ public class AugmentedRenderer implements Renderer
         //call QCAR function to (re)initialize rendering after first use
         //or after OpenGL ES context was lost (e.g. after onPause/onResume)
         QCAR.onSurfaceCreated();
+	}
+
+	/**
+	 * @return whether the renderer is actively rendering or not
+	 */
+	public boolean isActive()
+	{
+		return active;
+	}
+
+	/**
+	 * @param active True, if the renderer should actively render the data
+	 */
+	public void setActive(boolean active)
+	{
+		this.active = active;
 	}
 
 }

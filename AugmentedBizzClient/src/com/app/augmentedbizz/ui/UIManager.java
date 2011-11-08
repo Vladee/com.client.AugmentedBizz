@@ -1,6 +1,7 @@
 package com.app.augmentedbizz.ui;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.ui.scanner.QRScanner;
@@ -20,6 +21,7 @@ public class UIManager
 	public UIManager(ApplicationFacade facade)
 	{
 		this.facade = facade;
+		qrScanner = new QRScanner(Bitmap.Config.RGB_565);
 	}
 
 	/**
@@ -28,14 +30,6 @@ public class UIManager
 	public QRScanner getQRScanner()
 	{
 		return qrScanner;
-	}
-
-	/**
-	 * @param qrScanner the qrScanner to set
-	 */
-	public void setQRScanner(QRScanner qrScanner)
-	{
-		this.qrScanner = qrScanner;
 	}
 
 	/**

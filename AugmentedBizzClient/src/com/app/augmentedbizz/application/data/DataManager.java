@@ -17,7 +17,6 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
 import com.app.augmentedbizz.services.service.repository.ModelHttpService;
 import com.app.augmentedbizz.services.service.repository.TargetHttpService;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
-import com.app.augmentedbizz.ui.renderer.Target;
 
 /**
  * The data manager presents an interface between the application facade, the cache and the service manager
