@@ -20,7 +20,6 @@ public class AugmentedBizzApplication extends Application implements Application
 	
 	private UIManager uiManager;
 	private ApplicationStateManager stateManager;
-	private Initializer initializer;
 	
 	static {
 		Initializer.loadSharedLibraries();
@@ -32,9 +31,13 @@ public class AugmentedBizzApplication extends Application implements Application
 		
 		uiManager = new UIManager(this);
 		stateManager = new ApplicationStateManager();
-		
-		initializer = new Initializer(this);
-		initializer.initializeApplication();
+	}
+	
+	/**
+	 * Starts the application initialization.
+	 */
+	public void startInitialization() {
+		new Initializer(this).initializeApplication();
 	}
 	
 	@Override
@@ -51,6 +54,5 @@ public class AugmentedBizzApplication extends Application implements Application
 	public UIManager getUIManager() {
 		return uiManager;
 	}
-	
 	
 }

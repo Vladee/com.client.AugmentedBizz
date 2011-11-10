@@ -94,6 +94,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 				Thread.sleep(10);
 			}
 			publishProgress(1);
+			Thread.sleep(10);
 			long preTimePoint = System.currentTimeMillis();
 			initializeApplicationNative(facade);
 			initializeMainQCARComponents();
@@ -142,6 +143,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 		}
 		else
 		{
+			//TODO
 			DebugLog.loge("Application initialization failed", (Exception)result);
 			facade.getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
 		}
@@ -180,9 +182,9 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 		{
 			process = QCAR.load();
 		}
-		if(process < 0)
+		if(process < -1)//gives negative number also if already initialized
 		{
-			throw(new Exception("Main QCAR initialization failed"));
+			throw(new Exception("QCAR Tracker initialization failed"));
 		}
 	}
 }
