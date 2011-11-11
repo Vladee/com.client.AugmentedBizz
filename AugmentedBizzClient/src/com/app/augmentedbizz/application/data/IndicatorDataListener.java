@@ -7,5 +7,5 @@ import com.app.augmentedbizz.services.entity.transfer.IndicatorServiceEntity.Tar
 public interface IndicatorDataListener {
 	
 	void onIndicatorData(List<TargetIndicator> targetIndicators);
-	
+	void onIndicatorError(Exception e);
 }

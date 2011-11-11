@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="errorTitle">An error occurred...</string>
+    <string name="errorButtonOK">OK</string>
     <string name="errorBarcodeInvalid">The captured barcode is invalid.</string>
+    <string name="errorModelRetrieval">The model data couldn\'t be retrieved.</string>
     <string name="errorServiceUnreachable">Data services are unreachable or the connection is lost.</string>
     <string name="errorLostTargetFocus">Lost the focus on the target.</string>
     <string name="errorInitialization">The application couldn\'t be initialized.</string>

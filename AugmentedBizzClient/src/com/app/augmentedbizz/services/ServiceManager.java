@@ -3,6 +3,7 @@ package com.app.augmentedbizz.services;
 import android.content.Context;
 
 import com.app.augmentedbizz.R;
+import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.services.handler.HttpServiceHandler;
 import com.app.augmentedbizz.services.parser.json.JSONServiceResponseParser;
 import com.app.augmentedbizz.services.response.ServiceResponseListener;
@@ -20,10 +21,12 @@ import com.app.augmentedbizz.services.service.repository.TargetHttpService;
 public class ServiceManager {
 	private HttpServiceHandler serviceHandler;
 	private Context context;
+	private DataManager dataManager;
 	
-	public ServiceManager(Context context)
+	public ServiceManager(DataManager dataManager)
 	{
-		this.context = context;
+		this.dataManager = dataManager;
+		this.context = dataManager.getApplicationFacade().getContext();
 		serviceHandler = new HttpServiceHandler(context.getString(R.string.baseUrl), new JSONServiceResponseParser());
 	}
 	

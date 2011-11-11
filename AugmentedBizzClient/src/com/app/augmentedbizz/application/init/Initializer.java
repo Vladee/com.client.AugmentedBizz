@@ -2,6 +2,7 @@ package com.app.augmentedbizz.application.init;
 
 import android.os.AsyncTask;
 
+import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.AugmentedBizzApplication;
 import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.status.ApplicationState;
@@ -143,8 +144,9 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 		}
 		else
 		{
-			//TODO
 			DebugLog.loge("Application initialization failed", (Exception)result);
+			facade.getUIManager().showErrorDialog(R.string.errorInitialization);
+			//TODO force close
 			facade.getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
 		}
 		

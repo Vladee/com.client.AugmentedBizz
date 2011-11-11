@@ -208,6 +208,26 @@ public class CacheDbAdapter {
     }
     
     /**
+     * Checks whether a model exists already in the database or not.
+     * 
+     * @param id The model Id
+     * @return true, if the model with the specified id is stored in the cache
+     */
+    public boolean isModelExisting(long id) {
+    	Cursor cursor = this.db.query(true,
+            	CacheDbAdapter.DATABASE_TABLE,
+            	this.getDatabaseTableColumnNamesAsStringArray(),
+                CacheDbAdapter.KEY_ID + "=" + id,
+                null, null, null, null, null);
+            
+            if (cursor != null) {
+            	return true;
+            } else {
+            	return false;
+            }
+    }
+    
+    /**
      * Update the {@link OpenGLModel} using the details provided. The model to be updated is
      * specified using the rowId, and it is altered to use the values passed in. This function
      * expects a complete model, missing information will delete existing contents!

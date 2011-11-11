@@ -18,7 +18,6 @@ public class MainActivity extends AugmentedBizzActivity {
 	
 	private RenderManager renderManager = null;
 	private RelativeLayout mainLayout = null;
-	private AugmentedGLSurfaceView glSurfaceView = null;
 	private InfoPanelSlidingDrawer infoPanelSlider = null;
 	
     /** Called when the activity is first created. */
@@ -110,7 +109,6 @@ public class MainActivity extends AugmentedBizzActivity {
 		
 		//load necessary UI elements
 		mainLayout = (RelativeLayout)findViewById(R.id.relativeLayoutMain);
-		glSurfaceView = (AugmentedGLSurfaceView)findViewById(R.id.augmentedGLSurfaceView);
 		infoPanelSlider = (InfoPanelSlidingDrawer)findViewById(R.id.slidingDrawerInfoPanel);
 	}
 	
