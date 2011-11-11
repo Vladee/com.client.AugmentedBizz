@@ -1,6 +1,7 @@
 package com.app.augmentedbizz.ui;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AugmentedBizzActivity {
 		
 		QCAR.deinit();
 		
+		System.gc();
 		super.onDestroy();
 	}
     
@@ -51,11 +53,13 @@ public class MainActivity extends AugmentedBizzActivity {
 		QCAR.onResume();
 		
 		if(getAugmentedBizzApplication().getApplicationStateManager().getApplicationState().equals(ApplicationState.DEINITIALIZING))
+		{
 			getRenderManager().startCamera();
+		}
 		
 		if(mainLayout != null)
 		{
-			mainLayout.setVisibility(View.VISIBLE);
+			getRenderManager().getGlSurfaceView().onResume();
 		}
 	}
 	
@@ -66,6 +70,10 @@ public class MainActivity extends AugmentedBizzActivity {
 		super.onStop();
 		
 		getAugmentedBizzApplication().getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
+		
+		//small hack as the onDestroy() method isn't called when leaving via home button
+		onDestroy();
+		System.exit(0);
 	}
 	
 	@Override
@@ -77,7 +85,6 @@ public class MainActivity extends AugmentedBizzActivity {
 		//hide the main screen
 		if(mainLayout != null)
 		{
-			mainLayout.setVisibility(View.GONE);
 			getRenderManager().getGlSurfaceView().onPause();
 		}
 		
@@ -112,6 +119,16 @@ public class MainActivity extends AugmentedBizzActivity {
 		infoPanelSlider = (InfoPanelSlidingDrawer)findViewById(R.id.slidingDrawerInfoPanel);
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_HOME)
+		{
+			finish();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	/**
 	 * @return the renderManager
 	 */
@@ -119,5 +136,4 @@ public class MainActivity extends AugmentedBizzActivity {
 	{
 		return renderManager;
 	}
-	
 }
