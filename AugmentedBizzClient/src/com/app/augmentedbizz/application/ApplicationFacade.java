@@ -2,6 +2,7 @@ package com.app.augmentedbizz.application;
 
 import android.content.Context;
 
+import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
 import com.app.augmentedbizz.ui.UIManager;
 
@@ -28,5 +29,12 @@ public interface ApplicationFacade
 	 * @return The application UI manager.
 	 */
 	public UIManager getUIManager();
+	
+	/**
+	 * Returns the application data manager.
+	 * 
+	 * @return The application data manager.
+	 */
+	public DataManager getDataManager();
 
 }

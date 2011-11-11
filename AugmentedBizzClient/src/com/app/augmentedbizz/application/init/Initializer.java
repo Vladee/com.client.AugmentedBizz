@@ -3,10 +3,8 @@ package com.app.augmentedbizz.application.init;
 import android.os.AsyncTask;
 
 import com.app.augmentedbizz.R;
-import com.app.augmentedbizz.application.AugmentedBizzApplication;
 import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.status.ApplicationState;
-import com.app.augmentedbizz.cache.DummyCacheData;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.qualcomm.QCAR.QCAR;
 
@@ -145,9 +143,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 		else
 		{
 			DebugLog.loge("Application initialization failed", (Exception)result);
-			facade.getUIManager().showErrorDialog(R.string.errorInitialization);
-			//TODO force close
-			facade.getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
+			facade.getUIManager().showErrorDialog(R.string.errorInitialization, true);
 		}
 		
 	}
@@ -184,7 +180,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 		{
 			process = QCAR.load();
 		}
-		if(process < -1)//gives negative number also if already initialized
+		if(process < -1)//gives negative number too if already initialized
 		{
 			throw(new Exception("QCAR Tracker initialization failed"));
 		}

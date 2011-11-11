@@ -66,7 +66,7 @@ public class UIManager
 	 * 
 	 * @param stringId The id of the error string which should be shown.
 	 */
-	public void showErrorDialog(int stringId)
+	public void showErrorDialog(int stringId, final boolean forceClose)
 	{
 		final AlertDialog errorDialog = new AlertDialog.Builder(mainActivity).create();   
 		errorDialog.setTitle(mainActivity.getResources().getString(com.app.augmentedbizz.R.string.errorTitle));   
@@ -78,6 +78,10 @@ public class UIManager
 			public void onClick(DialogInterface dialog, int which) 
 	    	{   
 				errorDialog.dismiss();
+				if(forceClose) 
+				{
+					getMainActivity().finish();
+				}
 	    	}
 		});
 		errorDialog.show();

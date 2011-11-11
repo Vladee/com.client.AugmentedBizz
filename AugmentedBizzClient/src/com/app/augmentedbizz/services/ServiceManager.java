@@ -3,6 +3,7 @@ package com.app.augmentedbizz.services;
 import android.content.Context;
 
 import com.app.augmentedbizz.R;
+import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.services.handler.HttpServiceHandler;
 import com.app.augmentedbizz.services.parser.json.JSONServiceResponseParser;
@@ -20,14 +21,12 @@ import com.app.augmentedbizz.services.service.repository.TargetHttpService;
  */
 public class ServiceManager {
 	private HttpServiceHandler serviceHandler;
-	private Context context;
-	private DataManager dataManager;
+	private ApplicationFacade facade;
 	
-	public ServiceManager(DataManager dataManager)
+	public ServiceManager(ApplicationFacade facade)
 	{
-		this.dataManager = dataManager;
-		this.context = dataManager.getApplicationFacade().getContext();
-		serviceHandler = new HttpServiceHandler(context.getString(R.string.baseUrl), new JSONServiceResponseParser());
+		this.facade = facade;
+		serviceHandler = new HttpServiceHandler(facade.getContext().getString(R.string.baseUrl), new JSONServiceResponseParser());
 	}
 	
 	/**
@@ -38,7 +37,7 @@ public class ServiceManager {
 	 */
 	public void callTargetInformationService(int targetId, ServiceResponseListener responseListener)
 	{
-		serviceHandler.processRequestAsynch(new TargetHttpService(context, new Long(targetId)), responseListener);
+		serviceHandler.processRequestAsynch(new TargetHttpService(facade.getContext(), new Long(targetId)), responseListener);
 	}
 	
 	/**
@@ -49,7 +48,7 @@ public class ServiceManager {
 	 */
 	public void callModelInformationService(int modelId, ServiceResponseListener responseListener)
 	{
-		serviceHandler.processRequestAsynch(new ModelHttpService(context, new Long(modelId)), responseListener);
+		serviceHandler.processRequestAsynch(new ModelHttpService(facade.getContext(), new Long(modelId)), responseListener);
 	}
 	
 	/**
@@ -60,6 +59,6 @@ public class ServiceManager {
 	 */
 	public void callIndicatorInformationService(int targetId, ServiceResponseListener responseListener)
 	{
-		serviceHandler.processRequestAsynch(new IndicatorHttpService(context, new Long(targetId)), responseListener);
+		serviceHandler.processRequestAsynch(new IndicatorHttpService(facade.getContext(), new Long(targetId)), responseListener);
 	}
 }

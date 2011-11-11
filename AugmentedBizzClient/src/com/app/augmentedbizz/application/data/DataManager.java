@@ -46,10 +46,10 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	private List<IndicatorDataListener> indicatorDataListeners = new ArrayList<IndicatorDataListener>();
 	
 	public DataManager(ApplicationFacade facade) {
-		this.serviceManager = new ServiceManager(this);
+		this.serviceManager = new ServiceManager(facade);
 		this.entityConverter = new EntityConverter();
 		this.facade = facade;
-		this.cacheManager = new CacheManager(this);
+		this.cacheManager = new CacheManager(facade.getContext());
 		
 		this.addModelDataListener(this);
 		this.addTargetDataListener(this);
@@ -246,6 +246,20 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	public void onFailedModelConfigLoading(int modelId) {
 		//try to get the data from the service manager
 		this.serviceManager.callModelInformationService(modelId, this);
+	}
+
+	/**
+	 * @return the current target from the local buffer
+	 */
+	public Target getCurrentTarget() {
+		return currentTarget;
+	}
+
+	/**
+	 * @return the indicators
+	 */
+	public List<TargetIndicator> getCurrentIndicators() {
+		return indicators;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.app.augmentedbizz.cache;
 
+import android.content.Context;
+
 import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
@@ -12,12 +14,10 @@ import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
  *
  */
 public class CacheManager {
-	private DataManager dataManager;
 	private CacheDbAdapter dbAdapter;
 	
-	public CacheManager(DataManager dataManager) {
-		this.dataManager = dataManager;
-		dbAdapter = new CacheDbAdapter(dataManager.getApplicationFacade().getContext());
+	public CacheManager(Context context) {
+		dbAdapter = new CacheDbAdapter(context);
 	}
 	
 	/**
