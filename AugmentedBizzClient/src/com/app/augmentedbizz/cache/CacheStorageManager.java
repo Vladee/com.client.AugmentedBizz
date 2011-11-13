@@ -13,10 +13,10 @@ import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
  * @author Vladi
  *
  */
-public class CacheManager {
+public class CacheStorageManager {
 	private CacheDbAdapter dbAdapter;
 	
-	public CacheManager(Context context) {
+	public CacheStorageManager(Context context) {
 		dbAdapter = new CacheDbAdapter(context);
 	}
 	
@@ -30,7 +30,7 @@ public class CacheManager {
 	}
 	
 	/**
-	 * Tries to read a model from the db cache of the application.
+	 * Fetches a model from the db cache of the application.
 	 * 
 	 * @param modelId The id of the model which should be fetched.
 	 * @param responseListener The response listener which handles successful or failed fetches.

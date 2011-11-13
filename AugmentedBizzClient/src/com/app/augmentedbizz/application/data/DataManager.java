@@ -10,7 +10,7 @@ import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.init.Initializer;
 import com.app.augmentedbizz.cache.CacheDbAdapter;
-import com.app.augmentedbizz.cache.CacheManager;
+import com.app.augmentedbizz.cache.CacheStorageManager;
 import com.app.augmentedbizz.cache.CacheResponseListener;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.services.ServiceManager;
@@ -39,7 +39,7 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	private ServiceManager serviceManager;
 	private EntityConverter entityConverter;
 	private ApplicationFacade facade;
-	private CacheManager cacheManager;
+	private CacheStorageManager cacheManager;
 	
 	private List<ModelDataListener> modelDataListeners = new ArrayList<ModelDataListener>();
 	private List<TargetDataListener> targetDataListeners = new ArrayList<TargetDataListener>();
@@ -49,7 +49,7 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 		this.serviceManager = new ServiceManager(facade);
 		this.entityConverter = new EntityConverter();
 		this.facade = facade;
-		this.cacheManager = new CacheManager(facade.getContext());
+		this.cacheManager = new CacheStorageManager(facade.getContext());
 		
 		this.addModelDataListener(this);
 		this.addTargetDataListener(this);

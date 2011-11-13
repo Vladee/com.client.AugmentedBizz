@@ -1,11 +1,15 @@
 package com.app.augmentedbizz.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import com.app.augmentedbizz.application.ApplicationFacade;
+import com.app.augmentedbizz.application.status.ApplicationState;
+import com.app.augmentedbizz.application.status.ApplicationStateListener;
 import com.app.augmentedbizz.ui.scanner.QRScanner;
 
 /**
@@ -14,7 +18,7 @@ import com.app.augmentedbizz.ui.scanner.QRScanner;
  * @author Vladi
  *
  */
-public class UIManager
+public class UIManager implements ApplicationStateListener
 {
 	private QRScanner qrScanner;
 	private volatile MainActivity mainActivity;
@@ -24,6 +28,9 @@ public class UIManager
 	{
 		this.facade = facade;
 		qrScanner = new QRScanner(Bitmap.Config.RGB_565);
+		
+		//register as state listener
+		facade.getApplicationStateManager().addApplicationStateListener(this);
 	}
 
 	/**
@@ -84,5 +91,16 @@ public class UIManager
 	    	}
 		});
 		errorDialog.show();
+	}
+
+	@Override
+	public void onApplicationStateChange(ApplicationState nextState)
+	{
+		if(nextState.equals(ApplicationState.CAPTURED)) 
+		{
+			//vibrate the phone
+			Vibrator v = (Vibrator)facade.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+		}
 	}
 }
