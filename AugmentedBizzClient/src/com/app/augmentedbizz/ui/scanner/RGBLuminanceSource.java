@@ -16,12 +16,9 @@
 
 package com.app.augmentedbizz.ui.scanner;
 
-import com.google.zxing.LuminanceSource;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import java.io.FileNotFoundException;
+import com.google.zxing.LuminanceSource;
 
 /**
  * This class is used to help decode images from files which arrive as RGB data from

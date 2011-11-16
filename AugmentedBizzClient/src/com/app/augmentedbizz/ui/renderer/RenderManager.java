@@ -1,7 +1,5 @@
 package com.app.augmentedbizz.ui.renderer;
 
-import android.util.DisplayMetrics;
-
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.data.ModelDataListener;
 import com.app.augmentedbizz.application.status.ApplicationState;
@@ -94,7 +92,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState nextState)
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
 	{
 		// TODO
 		if(nextState.equals(ApplicationState.TRACKING))

@@ -72,9 +72,9 @@ public class ApplicationStateManager implements ApplicationStateListener {
 	 * @see com.app.augmentedbizz.states.ApplicationStateListener#onApplicationStateChange(int)
 	 */
 	@Override
-	public void onApplicationStateChange(ApplicationState nextState) {
+	public void onApplicationStateChange( ApplicationState lastState, ApplicationState nextState) {
 		DebugLog.logi("Application state changed. Moved from " +
-				this.currentState +" to " +
+				lastState +" to " +
 				nextState + ".");
 		this.currentState = nextState;
 	}
@@ -88,7 +88,7 @@ public class ApplicationStateManager implements ApplicationStateListener {
 		Iterator<ApplicationStateListener> it = this.applicationStateListener.iterator();
 		
 		while(it.hasNext()) {
-			it.next().onApplicationStateChange(nextState);
+			it.next().onApplicationStateChange(this.currentState, nextState);
 		}
 	}
 	

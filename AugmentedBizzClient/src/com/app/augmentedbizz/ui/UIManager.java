@@ -94,7 +94,7 @@ public class UIManager implements ApplicationStateListener
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState nextState)
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
 	{
 		if(nextState.equals(ApplicationState.CAPTURED)) 
 		{

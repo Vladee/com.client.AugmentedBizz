@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import android.content.Context;
-
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.application.init.Initializer;
-import com.app.augmentedbizz.cache.CacheDbAdapter;
-import com.app.augmentedbizz.cache.CacheStorageManager;
 import com.app.augmentedbizz.cache.CacheResponseListener;
+import com.app.augmentedbizz.cache.CacheStorageManager;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.services.ServiceManager;
 import com.app.augmentedbizz.services.entity.ServiceTransferEntity;

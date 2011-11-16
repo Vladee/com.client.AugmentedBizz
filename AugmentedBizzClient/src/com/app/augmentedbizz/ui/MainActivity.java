@@ -2,17 +2,13 @@ package com.app.augmentedbizz.ui;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.app.augmentedbizz.R;
-import com.app.augmentedbizz.application.init.Initializer;
 import com.app.augmentedbizz.application.status.ApplicationState;
 import com.app.augmentedbizz.logging.DebugLog;
-import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
 import com.app.augmentedbizz.ui.renderer.RenderManager;
 import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer;
-import com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer.StateIndicatorValue;
 import com.qualcomm.QCAR.QCAR;
 
 public class MainActivity extends AugmentedBizzActivity {
@@ -117,6 +113,7 @@ public class MainActivity extends AugmentedBizzActivity {
 		//load necessary UI elements
 		mainLayout = (RelativeLayout)findViewById(R.id.relativeLayoutMain);
 		infoPanelSlider = (InfoPanelSlidingDrawer)findViewById(R.id.slidingDrawerInfoPanel);
+		infoPanelSlider.getWidth();
 	}
 	
 	@Override

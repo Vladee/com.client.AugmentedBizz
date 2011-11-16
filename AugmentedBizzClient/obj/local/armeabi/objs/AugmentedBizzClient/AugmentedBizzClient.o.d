@@ -1,5 +1,5 @@
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/obj/local/armeabi/objs/AugmentedBizzClient/AugmentedBizzClient.o: \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/AugmentedBizzClient.cpp \
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/obj/local/armeabi/objs/AugmentedBizzClient/AugmentedBizzClient.o: \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/AugmentedBizzClient.cpp \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/jni.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stdarg.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cprolog.h \
@@ -15,7 +15,29 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/config/_native_headers.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_epilog.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_config_compat_post.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/logging/DebugLog.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2platform.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/KHR/khrplatform.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/stdint.h \
+ /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stddef.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/_types.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/machine/_types.h \
+ /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2ext.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/QCAR.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/System.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/CameraDevice.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/NonCopyable.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/VideoMode.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Tracker.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/CameraCalibration.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Vectors.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Tool.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Matrices.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/VideoBackgroundConfig.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Renderer.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/State.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Frame.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/logging/DebugLog.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/android/log.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/string \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_prolog.h \
@@ -23,7 +45,6 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_alloc.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cstddef.h \
- /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stddef.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cstdlib.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stdlib.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/../include/stdlib.h \
@@ -35,9 +56,6 @@
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/alloca.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/strings.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/types.h \
- /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/stdint.h \
- /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/_types.h \
- /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/machine/_types.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/linux/posix_types.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/linux/stddef.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/linux/compiler.h \
@@ -141,10 +159,10 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.c \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/AugmentedBizzApplication.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/AugmentedBizzApplication.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/map \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_map.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_tree.h \
@@ -154,7 +172,7 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_list.c \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_carray.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/jni.h:
 
@@ -186,7 +204,51 @@
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_config_compat_post.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/logging/DebugLog.h:
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2platform.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/KHR/khrplatform.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/stdint.h:
+
+/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stddef.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/_types.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/machine/_types.h:
+
+/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/GLES2/gl2ext.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/QCAR.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/System.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/CameraDevice.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/NonCopyable.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/VideoMode.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Tracker.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/CameraCalibration.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Vectors.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Tool.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Matrices.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/VideoBackgroundConfig.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Renderer.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/State.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/QCAR/Frame.h:
+
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/logging/DebugLog.h:
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/android/log.h:
 
@@ -201,8 +263,6 @@
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_alloc.h:
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cstddef.h:
-
-/cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stddef.h:
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cstdlib.h:
 
@@ -225,12 +285,6 @@
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/strings.h:
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/types.h:
-
-/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/stdint.h:
-
-/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/sys/_types.h:
-
-/cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/machine/_types.h:
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/linux/posix_types.h:
 
@@ -438,13 +492,13 @@
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/AugmentedBizzApplication.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/AugmentedBizzApplication.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h:
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/map:
 
@@ -464,4 +518,4 @@
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_carray.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ApplicationStateManager.h:

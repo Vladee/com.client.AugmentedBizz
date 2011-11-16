@@ -1,6 +1,6 @@
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/obj/local/armeabi/objs/AugmentedBizzClient/application/ObjectLoader.o: \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.cpp \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h \
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/obj/local/armeabi/objs/AugmentedBizzClient/application/ObjectLoader.o: \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.cpp \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/jni.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stdarg.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_cprolog.h \
@@ -140,11 +140,11 @@
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.h \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_num_get.c \
  /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h \
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h \
  /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/android/log.h \
- /cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../Utils.h
+ /cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../Utils.h
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/ObjectLoader.h:
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/jni.h:
 
@@ -424,8 +424,8 @@
 
 /cygdrive/c/Android/android-ndk-r6b/sources/cxx-stl/stlport/stlport/stl/_string_io.c:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../logging/DebugLog.h:
 
 /cygdrive/c/Android/android-ndk-r6b/platforms/android-5/arch-arm/usr/include/android/log.h:
 
-/cygdrive/c/Users/Miffels/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../Utils.h:
+/cygdrive/c/Users/Administrator/git/com.client.AugmentedBizz/AugmentedBizzClient/jni/application/../Utils.h:

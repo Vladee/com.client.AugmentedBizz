@@ -5,15 +5,12 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import com.app.augmentedbizz.ui.renderer.AugmentedRenderer;
-import com.app.augmentedbizz.ui.renderer.RenderManager;
-import com.qualcomm.QCAR.QCAR;
-
-
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+
+import com.app.augmentedbizz.ui.renderer.AugmentedRenderer;
 
 public class AugmentedGLSurfaceView extends GLSurfaceView
 {

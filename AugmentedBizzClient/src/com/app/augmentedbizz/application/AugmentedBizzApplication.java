@@ -5,9 +5,7 @@ import android.content.Context;
 
 import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.application.init.Initializer;
-import com.app.augmentedbizz.application.status.ApplicationState;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
-import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.UIManager;
 
 /**

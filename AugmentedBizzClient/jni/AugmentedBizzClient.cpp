@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+const unsigned short MAX_TRACKABLE_COUNT = 1;
+
 IApplicationFacade* application;
 QCAR::Matrix44F projectionMatrix;
 unsigned int screenWidth = 0;
@@ -37,8 +39,7 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_MainActivity_onDestroyNativ
 }
 
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_initRendering(JNIEnv *env, jobject) {
-	//only one image target possible at a time
-	QCAR::setHint(QCAR::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1);
+	QCAR::setHint(QCAR::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, MAX_TRACKABLE_COUNT);
 
 	//TODO
 }
@@ -46,6 +47,7 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_updateRendering(JNIEnv* env, jobject obj, jint width, jint height) {
 	screenWidth = width;
 	screenHeight = height;
+
 	//TODO
 }
 
@@ -91,6 +93,7 @@ void configureVideoBackground()
 }
 
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_startCamera(JNIEnv *, jobject) {
+	DebugLog::logi("Camera started.");
     // Initialize the camera:
     if(!QCAR::CameraDevice::getInstance().init())
         return;
@@ -116,13 +119,11 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_star
     projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f, 2000.0f);
 }
 
-
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_stopCamera(JNIEnv *, jobject) {
     QCAR::Tracker::getInstance().stop();
     QCAR::CameraDevice::getInstance().stop();
     QCAR::CameraDevice::getInstance().deinit();
 }
-
 
 #ifdef __cplusplus
 }

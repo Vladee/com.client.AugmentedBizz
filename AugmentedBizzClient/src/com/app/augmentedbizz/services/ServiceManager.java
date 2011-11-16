@@ -1,10 +1,7 @@
 package com.app.augmentedbizz.services;
 
-import android.content.Context;
-
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.services.handler.HttpServiceHandler;
 import com.app.augmentedbizz.services.parser.json.JSONServiceResponseParser;
 import com.app.augmentedbizz.services.response.ServiceResponseListener;

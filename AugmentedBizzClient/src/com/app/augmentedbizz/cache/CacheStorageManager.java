@@ -2,8 +2,6 @@ package com.app.augmentedbizz.cache;
 
 import android.content.Context;
 
-import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 
 /**

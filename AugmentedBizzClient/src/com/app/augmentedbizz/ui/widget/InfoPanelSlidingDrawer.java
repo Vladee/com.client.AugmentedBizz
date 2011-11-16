@@ -281,7 +281,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState nextState)
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
 	{
 		ApplicationFacade facade = (ApplicationFacade)mainActivity.getAugmentedBizzApplication();
 		switch(nextState)
