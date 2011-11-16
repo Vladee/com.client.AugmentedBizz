@@ -27,7 +27,7 @@ public class UIManager implements ApplicationStateListener
 	public UIManager(ApplicationFacade facade)
 	{
 		this.facade = facade;
-		qrScanner = new QRScanner(Bitmap.Config.RGB_565);
+		qrScanner = new QRScanner(facade.getContext(), Bitmap.Config.RGB_565);
 		
 		//register as state listener
 		facade.getApplicationStateManager().addApplicationStateListener(this);

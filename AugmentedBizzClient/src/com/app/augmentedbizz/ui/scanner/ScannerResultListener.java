@@ -8,7 +8,7 @@ package com.app.augmentedbizz.ui.scanner;
  */
 public interface ScannerResultListener
 {
-	public void onScanningSuccess(String resultText);
+	public void onScanningSuccess(int targetId);
 	
 	public void onScanningResultless();
 	
