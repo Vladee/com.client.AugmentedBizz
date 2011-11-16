@@ -1,5 +1,6 @@
 package com.app.augmentedbizz.ui.scanner;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -14,9 +15,9 @@ public class QRScanner
 {
 	private BarcodeScannerTask scannerTask;
 	
-	public QRScanner(Bitmap.Config bitmapConfig)
+	public QRScanner(Context context, Bitmap.Config bitmapConfig)
 	{
-		this.scannerTask = new BarcodeScannerTask(bitmapConfig);
+		this.scannerTask = new BarcodeScannerTask(context, bitmapConfig);
 	}
 	
 	/**

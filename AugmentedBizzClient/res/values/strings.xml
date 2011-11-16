@@ -8,4 +8,6 @@
     <string name="infoRetrievingIndicators">Retrieving indicators for \'%1$s\'...</string>
     <string name="infoTapDetailView">Tap here for detail info...</string>
     <string name="infoTapCameraView">Tap here for camera view...</string>
+    
+    <string name="prefixBarcode">AUGMENTEDTARGET_</string>
 </resources>

@@ -4,11 +4,13 @@ import java.nio.ByteBuffer;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.app.augmentedbizz.R;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -21,13 +23,15 @@ import android.os.AsyncTask;
 public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 {
 	private volatile boolean processing = false;
+	private Context context = null;
 	private ScannerResultListener resultListener = null;
 	private QRCodeReader qrReader = new QRCodeReader();
 	private Bitmap cameraImage = null;
 	private Bitmap.Config bitmapConfig;
 	
-	public BarcodeScannerTask(Bitmap.Config config)
+	public BarcodeScannerTask(Context context, Bitmap.Config config)
 	{
+		this.context = context;
 		this.bitmapConfig = config;
 	}
 
@@ -66,9 +70,18 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 		if(result instanceof String)
 		{
 			String barcodeText = (String)result;
-			if(barcodeText.length() > 0)
+			String codePrefix = context.getString(R.string.prefixBarcode);
+			if(barcodeText.length() > 0 && barcodeText.startsWith(codePrefix))
 			{
-				resultListener.onScanningSuccess(barcodeText);
+				try
+				{
+					Integer targetId = new Integer(barcodeText.substring(codePrefix.length()));
+					resultListener.onScanningSuccess(targetId);
+				}
+				catch(Exception e)
+				{
+					resultListener.onScanningResultless();
+				}
 			}
 			else
 			{
