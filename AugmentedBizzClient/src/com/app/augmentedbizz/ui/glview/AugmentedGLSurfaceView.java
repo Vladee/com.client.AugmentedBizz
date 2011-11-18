@@ -37,7 +37,6 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
         setTranslucent(translucent);
         setEGLContextFactory(createContextFactory());
         setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
-        
         setupRenderer();
     }
     
@@ -52,8 +51,7 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
      * Setup for the translucency, e.g. if background views should be visible behind the GL Surface 
      * @param translucent
      */
-    public void setTranslucent(boolean translucent)
-    {
+    public void setTranslucent(boolean translucent) {
     	this.getHolder().setFormat(translucent ? PixelFormat.TRANSLUCENT : PixelFormat.RGB_565);
     }
     
@@ -62,45 +60,37 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
      * @param flags
      * @return Instance of an OpenGL ES context factory
      */
-    protected GLSurfaceView.EGLContextFactory createContextFactory()
-    {
+    protected GLSurfaceView.EGLContextFactory createContextFactory() {
     	return new GLSurfaceView.EGLContextFactory() {
     		private int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
     		
-            public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig)
-            {
+            public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig) {
             	int[] attribListGL20 = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
                 return egl.eglCreateContext(display, eglConfig, EGL10.EGL_NO_CONTEXT, attribListGL20);
             }
 
-            public void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context)
-            {
+            public void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context) {
                 egl.eglDestroyContext(display, context);
             }
 		};
     }
     
-    protected AbstractConfigChooser createConfigChooser(boolean transclucent, int depth, int stencil)
-    {
+    protected AbstractConfigChooser createConfigChooser(boolean transclucent, int depth, int stencil) {
     	AbstractConfigChooser configChooser = null;
-    	if(transclucent)
-    	{
+    	if(transclucent) {
     		configChooser = new RGB8888ConfigChooser(depth, stencil);
     	}
-    	else
-    	{
+    	else {
     		configChooser = new RGB565ConfigChooser(depth, stencil);
     	}
     	
     	return configChooser;
     }
     
-    private void setupRenderer()
-    {
-    	if(renderer == null)
-    	{
+    private void setupRenderer() {
+    	if(renderer == null) {
     		renderer = new AugmentedRenderer();
-    		setRenderer(renderer);
+    		this.setRenderer(renderer);
     	}
     }
 }

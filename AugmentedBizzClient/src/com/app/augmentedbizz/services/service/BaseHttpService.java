@@ -16,8 +16,7 @@ import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
 public abstract class BaseHttpService {
     protected List<BasicNameValuePair> queryKeyValuePairs = new ArrayList<BasicNameValuePair>();
     
-    public BaseHttpService() 
-    {
+    public BaseHttpService()  {
     }
 
     /**
@@ -33,8 +32,7 @@ public abstract class BaseHttpService {
     /**
      * @return The method's key-value-pairs in form of a list
      */
-    public List<BasicNameValuePair> getServiceQueryList()
-    {
+    public List<BasicNameValuePair> getServiceQueryList() {
         return queryKeyValuePairs;
     }
     
@@ -44,11 +42,9 @@ public abstract class BaseHttpService {
      * 
      * @return The string representation of the url extension
      */
-    public String generateUrlExtension()
-    {
+    public String generateUrlExtension() {
     	String query = "";
-    	for(BasicNameValuePair pair : queryKeyValuePairs)
-    	{
+    	for(BasicNameValuePair pair : queryKeyValuePairs) {
     		query += (query.length() > 0 ? "&" : "") + pair.getName() + "=" + pair.getValue();
     	}
     	return getServiceUrlExtension() + (query.length() > 0 ? "?" + query : "");

@@ -17,10 +17,9 @@ public class MainActivity extends AugmentedBizzActivity {
 	private RelativeLayout mainLayout = null;
 	private InfoPanelSlidingDrawer infoPanelSlider = null;
 	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	DebugLog.logi("onCreate()");
+    	DebugLog.logi("MainActivity.onCreate()");
         super.onCreate(savedInstanceState);
         
         renderManager = new RenderManager(this);
@@ -31,7 +30,7 @@ public class MainActivity extends AugmentedBizzActivity {
     
 	@Override
 	protected void onDestroy() {
-		DebugLog.logi("onDestroy()");
+		DebugLog.logi("MainActivity.onDestroy()");
 		getAugmentedBizzApplication().getApplicationStateManager().setApplicationState(ApplicationState.UNINITIATED);
 		
 		QCAR.deinit();
@@ -41,28 +40,24 @@ public class MainActivity extends AugmentedBizzActivity {
 	}
     
 	@Override
-	protected void onResume()
-	{
-		DebugLog.logi("onResume()");
+	protected void onResume() {
+		DebugLog.logi("MainActivity.onResume()");
 		super.onResume();
 		
 		QCAR.onResume();
 		
-		if(getAugmentedBizzApplication().getApplicationStateManager().getApplicationState().equals(ApplicationState.DEINITIALIZING))
-		{
+		if(getAugmentedBizzApplication().getApplicationStateManager().getApplicationState().equals(ApplicationState.DEINITIALIZING)) {
 			getRenderManager().startCamera();
 		}
 		
-		if(mainLayout != null)
-		{
+		if(mainLayout != null) {
 			getRenderManager().getGlSurfaceView().onResume();
 		}
 	}
 	
 	@Override
-	protected void onStop()
-	{
-		DebugLog.logi("onStop()");
+	protected void onStop() {
+		DebugLog.logi("MainActivity.onStop()");
 		super.onStop();
 		
 		getAugmentedBizzApplication().getApplicationStateManager().setApplicationState(ApplicationState.DEINITIALIZING);
@@ -73,22 +68,19 @@ public class MainActivity extends AugmentedBizzActivity {
 	}
 	
 	@Override
-	protected void onPause()
-	{
-		DebugLog.logi("onPause()");
+	protected void onPause() {
+		DebugLog.logi("MainActivity.onPause()");
 		super.onPause();
 	
 		//hide the main screen
-		if(mainLayout != null)
-		{
+		if(mainLayout != null) {
 			getRenderManager().getGlSurfaceView().onPause();
 		}
 		
 		QCAR.onPause();
 		
 		//stop camera if running
-		if(!getAugmentedBizzApplication().getApplicationStateManager().getApplicationState().equals(ApplicationState.DEINITIALIZING))
-		{
+		if(!getAugmentedBizzApplication().getApplicationStateManager().getApplicationState().equals(ApplicationState.DEINITIALIZING)) {
 			getRenderManager().stopCamera();
 		}
 	}
@@ -96,8 +88,7 @@ public class MainActivity extends AugmentedBizzActivity {
 	/**
 	 * Shows the splash screen on the display.
 	 */
-	public void showSplashScreen()
-	{
+	public void showSplashScreen() {
 		DebugLog.logi("Showing splash screen");
 		setContentView(R.layout.splash);
 	}
@@ -105,8 +96,7 @@ public class MainActivity extends AugmentedBizzActivity {
 	/**
 	 * Shows the main screen of the app.
 	 */
-	public void showMainScreen()
-	{
+	public void showMainScreen() {
 		DebugLog.logi("Showing main screen");
 		setContentView(R.layout.main);
 		
@@ -117,10 +107,8 @@ public class MainActivity extends AugmentedBizzActivity {
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_HOME)
-		{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_HOME) {
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
@@ -129,8 +117,7 @@ public class MainActivity extends AugmentedBizzActivity {
 	/**
 	 * @return the renderManager
 	 */
-	public RenderManager getRenderManager()
-	{
+	public RenderManager getRenderManager() {
 		return renderManager;
 	}
 }

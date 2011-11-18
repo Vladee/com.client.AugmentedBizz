@@ -31,8 +31,7 @@ public class HttpClientFactory  {
      *  
      * @return instance an HttpClient
      */
-    public static synchronized HttpClient createHttpClient() 
-    {
+    public static synchronized HttpClient createHttpClient()  {
     	//register necessary schemes
         SchemeRegistry schemeReg = new SchemeRegistry();
         schemeReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -45,8 +44,7 @@ public class HttpClientFactory  {
         //setup proxy if available
         String proxyHostname = android.net.Proxy.getDefaultHost();
         int proxyPort = android.net.Proxy.getDefaultPort();
-        if (proxyHostname != null && proxyPort != -1)
-        {
+        if (proxyHostname != null && proxyPort != -1) {
         	HttpHost proxyHttpHost = new HttpHost(proxyHostname, proxyPort);
             httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
         }
@@ -57,10 +55,8 @@ public class HttpClientFactory  {
     /**
      * Shut down the HttpClient built by this factory.
      */
-    public static synchronized void shutdownHttpClient(HttpClient httpClient) 
-    {
-        if (httpClient != null && httpClient.getConnectionManager() != null)
-        {
+    public static synchronized void shutdownHttpClient(HttpClient httpClient)  {
+        if (httpClient != null && httpClient.getConnectionManager() != null) {
             httpClient.getConnectionManager().shutdown();
         }
     }
@@ -70,8 +66,7 @@ public class HttpClientFactory  {
      * an IOException. These exceptions are produced in situations where it is
      * possible to attempt to recover.
      */
-    private static class RetryHandler implements HttpRequestRetryHandler
-    {
+    private static class RetryHandler implements HttpRequestRetryHandler {
 
         @Override
 		public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
@@ -79,20 +74,17 @@ public class HttpClientFactory  {
             DebugLog.logw("Http retry " + exception.toString() + " " + executionCount);
             
             //do not retry if over max retry count
-            if(executionCount >= 5) 
-            {
+            if(executionCount >= 5)  {
                 return false;
             }
             //retry if the server dropped connection on us
-            if(exception instanceof NoHttpResponseException) 
-            {
+            if(exception instanceof NoHttpResponseException)  {
                 
                 return true;
             }
             //limit retries to requests that have not yet been sent.
             Boolean requestSent = (Boolean) context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
-            if(!requestSent)
-            {
+            if(!requestSent) {
                 return true;
             }
             

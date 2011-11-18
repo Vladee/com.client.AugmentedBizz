@@ -19,11 +19,6 @@ public class AugmentedRenderer implements Renderer {
 	public AugmentedRenderer() {
 	}
 	
-	/** 
-	 * Native function for initializing the renderer. 
-	 */
-    public native void initRendering();
-    
     /** 
      * Native function to update the renderer. 
      */
@@ -54,9 +49,6 @@ public class AugmentedRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		//call native function to initialize rendering
-        initRendering();
-        
         //call QCAR function to (re)initialize rendering after first use
         //or after OpenGL ES context was lost (e.g. after onPause/onResume)
         QCAR.onSurfaceCreated();

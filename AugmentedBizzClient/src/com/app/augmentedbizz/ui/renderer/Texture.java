@@ -20,8 +20,7 @@ public class Texture {
     }
     
     /** Returns the raw data */
-    public byte[] getData()
-    {
+    public byte[] getData() {
         return this.RGBAdata;
     }
 

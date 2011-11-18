@@ -63,18 +63,14 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
      * Initialites all necessary application components.
      */
     public void initializeApplication() {
-    	
-    	if(facade.getApplicationStateManager().getApplicationState().equals(ApplicationState.UNINITIATED))
-    	{
+    	if(facade.getApplicationStateManager().getApplicationState().equals(ApplicationState.UNINITIATED)) {
     		facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
     		execute();
     	}
-    	
     }
     
     @Override
-    protected void onPreExecute()
-    {
+    protected void onPreExecute() {
     	DebugLog.logi("Begin application initialization.");
     	facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
     }
@@ -82,30 +78,34 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 	@Override
 	protected Object doInBackground(Object... arg0) {
 		try {
-			while(facade.getUIManager().getMainActivity() == null) {
-				Thread.sleep(10);
-			}
+			// Why? Managers are set up before the initializer is called.
+			// Plus, avoid direct calls between threads.
+//			while(facade.getUIManager().getMainActivity() == null) {
+//				Thread.sleep(10);
+//			}
 			publishProgress(1);
 			Thread.sleep(10);
 			long preTimePoint = System.currentTimeMillis();
 			initializeApplicationNative(facade);
 			initializeMainQCARComponents();
 			initializeQCARTracker();
-			System.gc();
+			// Why calling the garbage collection during initialization?
+//			System.gc();
 			long postTimePoints = System.currentTimeMillis();
 			if(postTimePoints - preTimePoint < 2000) {
 				Thread.sleep(2000 - (postTimePoints - preTimePoint));
 			}
 			publishProgress(2);
-			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize()) {
-				Thread.sleep(10);
-			}
-			
+			// This is _NOT_ thread safe! Call it after returning to the UI thread or wrap in in another
+			// AsyncTask afterwards.
+//			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize()) {
+//				DebugLog.logi("Immernoch Inietzscheleising");
+//				Thread.sleep(10);
+//			}
 		}
 		catch(Exception e) {
 			return e;
 		}
-
 		return new Integer(100);
 	}
 	
@@ -116,6 +116,8 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 		}
 		else if(values[0] == 2) {
 			facade.getUIManager().getMainActivity().showMainScreen();
+			// Wrap in another AsyncTask if this call causes performance issues
+			facade.getUIManager().getMainActivity().getRenderManager().initialize();
 		}
 	}
 	

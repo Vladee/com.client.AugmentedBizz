@@ -5,6 +5,7 @@
 #include "../logging/DebugLog.h"
 #include "ObjectLoader.h"
 #include "ApplicationStateManager.h"
+#include "../renderer/RenderManager.h"
 
 class AugmentedBizzApplication;
 class IApplicationFacade;
@@ -14,6 +15,7 @@ class IApplicationFacade {
 	public:
 		virtual ApplicationStateManager* getApplicationStateManager() = 0;
 		virtual AugmentedBizzApplication* getAugmentedBizzApplication() = 0;
+		virtual RenderManager* getRenderManager() = 0;
 };
 
 class AugmentedBizzApplication: public IApplicationFacade {
@@ -21,12 +23,14 @@ class AugmentedBizzApplication: public IApplicationFacade {
 	    AugmentedBizzApplication(JNIEnv*, jobject);
 		virtual ApplicationStateManager* getApplicationStateManager();
 		virtual AugmentedBizzApplication* getAugmentedBizzApplication();
+		virtual RenderManager* getRenderManager();
 		~AugmentedBizzApplication();
 	private:
 		AugmentedBizzApplicationJavaInterface* augmentedBizzApplicationJavaInterface;
-		void initializeApplication(JNIEnv*, jobject);
 		ObjectLoader* objectLoader;
 		ApplicationStateManager* applicationStateManager;
+		RenderManager* renderManager;
+		void initializeApplication(JNIEnv*, jobject);
 };
 
 class AugmentedBizzApplicationJavaInterface: JavaInterface {

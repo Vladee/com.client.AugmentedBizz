@@ -73,8 +73,7 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object> {
 	 * @throws Exception Thrown if the GET method is invalid
 	 */
 	private void validateGetMethod(HttpGet get) throws Exception {
-		if(get == null || get.isAborted() || !get.getURI().isAbsolute())
-        {
+		if(get == null || get.isAborted() || !get.getURI().isAbsolute()) {
             throw(new Exception("HTTP GET is invalid."));
         }
 	}
@@ -90,14 +89,12 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object> {
 	private HttpEntity executeHttpGetForEntity(HttpClient client, HttpGet get) throws Exception {
         HttpResponse httpResponse = client.execute(get);
         
-        if(httpResponse == null) 
-        {
+        if(httpResponse == null)  {
         	throw(new Exception("HTTP response is null."));
         }
         
         HttpEntity entity = httpResponse.getEntity();
-        if(entity == null)
-        {
+        if(entity == null) {
         	throw(new Exception("HTTP entity is null."));
         }
         

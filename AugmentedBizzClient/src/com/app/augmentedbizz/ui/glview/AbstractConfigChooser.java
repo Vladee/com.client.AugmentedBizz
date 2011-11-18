@@ -24,14 +24,12 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
 		this.stencilSize = stencil;
 	}
 	
-	protected EGLConfig getMatchingConfig(EGL10 egl, EGLDisplay display, int[] configAttribs)
-    {
+	protected EGLConfig getMatchingConfig(EGL10 egl, EGLDisplay display, int[] configAttribs) {
         //get the number of minimally matching EGL configurations
         int[] numConfigs = new int[1];
         egl.eglChooseConfig(display, configAttribs, null, 0, numConfigs);
 
-        if(numConfigs[0] <= 0)
-        {
+        if(numConfigs[0] <= 0) {
             throw(new IllegalArgumentException());
         }
         //allocate then read the array of minimally matching EGL configs
@@ -41,10 +39,8 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
         return chooseConfig(egl, display, configs);
     }
 	
-	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display)
-    {
-        final int[] configAttribsGL20 =
-        {
+	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
+        final int[] configAttribsGL20 = {
             EGL10.EGL_RED_SIZE, 4,
             EGL10.EGL_GREEN_SIZE, 4,
             EGL10.EGL_BLUE_SIZE, 4,
@@ -56,8 +52,7 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
     }
 	
 	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) {
-		for(EGLConfig config : configs)
-        {
+		for(EGLConfig config : configs) {
             int configDepthSize = findConfigAttrib(egl, display, config, EGL10.EGL_DEPTH_SIZE, 0);
             int configStencilSize = findConfigAttrib(egl, display, config, EGL10.EGL_STENCIL_SIZE, 0);
 
@@ -70,8 +65,7 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
             int b = findConfigAttrib(egl, display, config, EGL10.EGL_BLUE_SIZE, 0);
             int a = findConfigAttrib(egl, display, config, EGL10.EGL_ALPHA_SIZE, 0);
 
-            if (r == redSize && g == greenSize && b == blueSize && a == alphaSize)
-            {
+            if (r == redSize && g == greenSize && b == blueSize && a == alphaSize) {
                 return config;
             }
         }
@@ -79,11 +73,9 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
         return null;
 	}
 
-	protected int findConfigAttrib(EGL10 egl, EGLDisplay display, EGLConfig config, int attribute, int defaultValue)
-    {
+	protected int findConfigAttrib(EGL10 egl, EGLDisplay display, EGLConfig config, int attribute, int defaultValue) {
 		int[] value = new int[1];
-        if(egl.eglGetConfigAttrib(display, config, attribute, value))
-        {
+        if(egl.eglGetConfigAttrib(display, config, attribute, value)) {
         	return value[0];
         }
         return defaultValue;

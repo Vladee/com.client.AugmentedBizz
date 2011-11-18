@@ -94,7 +94,8 @@ LOCAL_SRC_FILES := AugmentedBizzClient.cpp \
 	application/ApplicationStateManager.cpp \
 	application/AugmentedBizzApplication.cpp \
 	application/ObjectLoader.cpp \
-	logging/DebugLog.cpp
+	logging/DebugLog.cpp \
+	renderer/RenderManager.cpp
 
 # By default, ARM target binaries will be generated in 'thumb' mode, where
 # each instruction are 16-bit wide. You can define this variable to 'arm'

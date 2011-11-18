@@ -206,8 +206,7 @@ public class TypeConversion {
         // Convert:
         byte[] dataBytes = new byte[bitmap.getWidth() *
                                     bitmap.getHeight() * 4];
-        for (int p = 0; p < bitmap.getWidth() * bitmap.getHeight(); ++p)
-        {
+        for (int p = 0; p < bitmap.getWidth() * bitmap.getHeight(); ++p) {
             int colour = data[p];
             dataBytes[p * 4]        = (byte)(colour >>> 16);    // R
             dataBytes[p * 4 + 1]    = (byte)(colour >>> 8);     // G

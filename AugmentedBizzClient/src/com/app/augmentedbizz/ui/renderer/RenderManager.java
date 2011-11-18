@@ -4,6 +4,7 @@ import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.data.ModelDataListener;
 import com.app.augmentedbizz.application.status.ApplicationState;
 import com.app.augmentedbizz.application.status.ApplicationStateListener;
+import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.MainActivity;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
 import com.app.augmentedbizz.util.Display;
@@ -39,7 +40,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 		
 		if(!initialized) {
 			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize);
-			setupScreenDimensions(Display.getScreenWidth(mainActivity), Display.getScreenHeight(mainActivity));
+			this.initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
 			initialized = true;
 		}
 		return true;
@@ -60,12 +61,12 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	}
 	
 	/**
-	 * Setup of screen dimensions on the native side.
+	 * Initialize on the native side.
 	 * 
 	 * @param width of the screen
 	 * @param height of the screen
 	 */
-	private native void setupScreenDimensions(int width, int height);
+	private native void initializeNative(short width, short height);
 	
 	/** 
 	 * Native methods for starting and stoping the camera. 
@@ -87,9 +88,11 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
 		// TODO
 		if(nextState.equals(ApplicationState.TRACKING)) {
+			DebugLog.logi("Starting camera.");
 			startCamera();
 		}
 		else if(nextState.equals(ApplicationState.DEINITIALIZING)) {
+			DebugLog.logi("Stopping camera.");
 			stopCamera();
 		}
 	}
