@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -275,7 +276,27 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	{
 		ListView indicatorInfoList = new ListView(getContext());
 		
-		//TODO create list view
+		String[] descriptionStrings = new String[indicators.size()];
+		for(int i = 0; i < indicators.size(); ++i)
+		{
+			descriptionStrings[i] = indicators.get(i).getDescription();
+		}
+		ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(getContext(), R.layout.detail_listitem, descriptionStrings)
+		{
+			@Override
+			public boolean areAllItemsEnabled()
+			{
+				return false;
+			}
+			
+			@Override
+			public boolean isEnabled(int position)
+			{
+				return false;
+			}
+		};
+		
+		indicatorInfoList.setAdapter(descriptionAdapter);
 		
 		return indicatorInfoList;
 	}
