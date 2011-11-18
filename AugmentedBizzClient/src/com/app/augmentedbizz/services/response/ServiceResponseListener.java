@@ -10,8 +10,7 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
  * @author Vladi
  *
  */
-public interface ServiceResponseListener
-{
+public interface ServiceResponseListener {
 	/**
 	 * Gets called when a service response was received and parsed successfully into an entity
 	 * 

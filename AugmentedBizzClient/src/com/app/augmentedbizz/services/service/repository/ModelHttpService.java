@@ -15,8 +15,7 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
  * @author Vladi
  *
  */
-public class ModelHttpService extends BaseHttpService
-{
+public class ModelHttpService extends BaseHttpService {
 	private Context context;
 	private int modelId;
 	
@@ -24,8 +23,7 @@ public class ModelHttpService extends BaseHttpService
 		return modelId;
 	}
 
-	public ModelHttpService(Context context, Long modelId)
-	{
+	public ModelHttpService(Context context, Long modelId) {
 		this.context = context;
 		this.modelId = modelId.intValue();
 		
@@ -33,14 +31,12 @@ public class ModelHttpService extends BaseHttpService
 	}
 	
 	@Override
-	public String getServiceUrlExtension()
-	{
+	public String getServiceUrlExtension() {
 		return context.getString(R.string.modelServiceUrlExtension);
 	}
 
 	@Override
-	public Class<? extends ServiceTransferEntity> getServiceTransferEntityClass()
-	{
+	public Class<? extends ServiceTransferEntity> getServiceTransferEntityClass() {
 		return ModelServiceEntity.class;
 	}
 

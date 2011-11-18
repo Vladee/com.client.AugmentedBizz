@@ -13,14 +13,12 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
  * @author Vladi
  *
  */
-public class HttpServiceHandler
-{
+public class HttpServiceHandler {
 	private String baseUrl;
 	private HttpClient httpClient;
 	private AbstractServiceResponseParser serviceParser;
 	
-	public HttpServiceHandler(String baseUrl, AbstractServiceResponseParser serviceParser)
-	{
+	public HttpServiceHandler(String baseUrl, AbstractServiceResponseParser serviceParser) {
 		this.baseUrl = baseUrl;
 		this.serviceParser = serviceParser;
 		httpClient = HttpClientFactory.createHttpClient();
@@ -33,8 +31,7 @@ public class HttpServiceHandler
 	 * @param responseListener The listener which should be invoked when the result is available
 	 * @throws ServiceHandlingException
 	 */
-	public void processRequestAsynch(BaseHttpService service, ServiceResponseListener responseListener)
-	{
+	public void processRequestAsynch(BaseHttpService service, ServiceResponseListener responseListener) {
         HttpGet getMethod = new HttpGet(baseUrl + (!baseUrl.endsWith("/") ? "/" : "") + service.generateUrlExtension());
 
         new HttpGetTask(httpClient, service, serviceParser, responseListener).execute(getMethod);

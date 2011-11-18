@@ -12,12 +12,11 @@ import android.util.AttributeSet;
 
 import com.app.augmentedbizz.ui.renderer.AugmentedRenderer;
 
-public class AugmentedGLSurfaceView extends GLSurfaceView
-{
+public class AugmentedGLSurfaceView extends GLSurfaceView {
 	private AugmentedRenderer renderer;
 	
-	public AugmentedGLSurfaceView(Context context)
-	{
+	public AugmentedGLSurfaceView(Context context) {
+
 		super(context);
 	}
 	
@@ -27,16 +26,14 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
 	 * @param context
 	 * @param attrs
 	 */
-	public AugmentedGLSurfaceView(Context context, AttributeSet attrs)
-	{
+	public AugmentedGLSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	/** 
 	 * Initialization of the surface view
 	 */
-    public void setup(boolean translucent, int depth, int stencil)
-    {
+    public void setup(boolean translucent, int depth, int stencil) {
         setTranslucent(translucent);
         setEGLContextFactory(createContextFactory());
         setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
@@ -47,8 +44,7 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
     /**
 	 * @return the renderer for the GL surface augmentation
 	 */
-	public AugmentedRenderer getRenderer()
-	{
+	public AugmentedRenderer getRenderer() {
 		return renderer;
 	}
 
@@ -68,8 +64,7 @@ public class AugmentedGLSurfaceView extends GLSurfaceView
      */
     protected GLSurfaceView.EGLContextFactory createContextFactory()
     {
-    	return new GLSurfaceView.EGLContextFactory()
-		{
+    	return new GLSurfaceView.EGLContextFactory() {
     		private int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
     		
             public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig)

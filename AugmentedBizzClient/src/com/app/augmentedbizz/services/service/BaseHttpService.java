@@ -13,8 +13,7 @@ import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
  * @author Vladi
  *
  */
-public abstract class BaseHttpService
-{
+public abstract class BaseHttpService {
     protected List<BasicNameValuePair> queryKeyValuePairs = new ArrayList<BasicNameValuePair>();
     
     public BaseHttpService() 

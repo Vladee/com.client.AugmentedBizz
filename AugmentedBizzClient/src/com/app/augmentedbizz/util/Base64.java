@@ -148,8 +148,7 @@ package com.app.augmentedbizz.util;
  * @version 2.3.7
  */
 
-public class Base64
-{
+public class Base64 {
     
 /* ********  P U B L I C   F I E L D S  ******** */   
     

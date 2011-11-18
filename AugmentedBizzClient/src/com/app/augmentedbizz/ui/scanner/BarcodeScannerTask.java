@@ -20,8 +20,7 @@ import android.os.AsyncTask;
  * @author Vladi
  *
  */
-public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
-{
+public class BarcodeScannerTask extends AsyncTask<Object, Object, Object> {
 	private volatile boolean processing = false;
 	private Context context = null;
 	private ScannerResultListener resultListener = null;
@@ -29,23 +28,19 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 	private Bitmap cameraImage = null;
 	private Bitmap.Config bitmapConfig;
 	
-	public BarcodeScannerTask(Context context, Bitmap.Config config)
-	{
+	public BarcodeScannerTask(Context context, Bitmap.Config config) {
 		this.context = context;
 		this.bitmapConfig = config;
 	}
 
 	@Override
-	protected void onPreExecute()
-	{
+	protected void onPreExecute() {
 		processing = true;
 	}
 	
 	@Override
-	protected Object doInBackground(Object... params)
-	{
-		try
-		{
+	protected Object doInBackground(Object... params) {
+		try {
 			Integer width = (Integer)params[0];
 			Integer height = (Integer)params[1];
 			ByteArrayBuffer data = (ByteArrayBuffer)params[2];
@@ -57,39 +52,31 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 			Result result = qrReader.decode(binBitmap);
 			return result.getText();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			return e;
 		}
 	}
 	
 	 @Override
-	protected void onPostExecute(Object result)
-	{
+	protected void onPostExecute(Object result) {
 		processing = false;
-		if(result instanceof String)
-		{
+		if(result instanceof String) {
 			String barcodeText = (String)result;
 			String codePrefix = context.getString(R.string.prefixBarcode);
-			if(barcodeText.length() > 0 && barcodeText.startsWith(codePrefix))
-			{
-				try
-				{
+			if(barcodeText.length() > 0 && barcodeText.startsWith(codePrefix)) {
+				try {
 					Integer targetId = new Integer(barcodeText.substring(codePrefix.length()));
 					resultListener.onScanningSuccess(targetId);
 				}
-				catch(Exception e)
-				{
+				catch(Exception e) {
 					resultListener.onScanningResultless();
 				}
 			}
-			else
-			{
+			else {
 				resultListener.onScanningResultless();
 			}
 		}
-		else if(result instanceof Exception)
-		{
+		else if(result instanceof Exception) {
 			resultListener.onScanningFailed();
 		}
 	}
@@ -97,8 +84,7 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 	/**
 	 * @return the processing
 	 */
-	public boolean isProcessing()
-	{
+	public boolean isProcessing() {
 		return processing;
 	}
 	
@@ -107,16 +93,13 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object>
 	 * @param bitmap The rgb bitmap
 	 * @return A binary bitmap
 	 */
-	private BinaryBitmap createBinaryBitmapFromRGBBitmap(Bitmap bitmap)
-	{
+	private BinaryBitmap createBinaryBitmapFromRGBBitmap(Bitmap bitmap) {
 		HybridBinarizer binarizer = new HybridBinarizer(new RGBLuminanceSource(cameraImage));
 		return new BinaryBitmap(binarizer);
 	}
 	
-	private void createBitmapFromData(Integer width, Integer height, byte[] bitmapData)
-	{
-		if(cameraImage == null || width != cameraImage.getWidth() || height != cameraImage.getHeight())
-		{
+	private void createBitmapFromData(Integer width, Integer height, byte[] bitmapData) {
+		if(cameraImage == null || width != cameraImage.getWidth() || height != cameraImage.getHeight()) {
 			cameraImage = Bitmap.createBitmap(width, height, bitmapConfig);
 		}
 		cameraImage.copyPixelsFromBuffer(ByteBuffer.wrap(bitmapData));

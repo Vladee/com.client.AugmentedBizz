@@ -13,12 +13,10 @@ import android.opengl.GLSurfaceView.Renderer;
  * @author Vladi
  *
  */
-public class AugmentedRenderer implements Renderer
-{
+public class AugmentedRenderer implements Renderer {
 	protected boolean active = true;
 	
-	public AugmentedRenderer()
-	{
+	public AugmentedRenderer() {
 	}
 	
 	/** 
@@ -37,10 +35,8 @@ public class AugmentedRenderer implements Renderer
     public native void renderFrame();
 
 	@Override
-	public void onDrawFrame(GL10 arg0)
-	{
-		if(active)
-		{
+	public void onDrawFrame(GL10 arg0) {
+		if(active) {
 			//invoke native rendering
 			renderFrame();
 		}
@@ -57,8 +53,7 @@ public class AugmentedRenderer implements Renderer
 	}
 
 	@Override
-	public void onSurfaceCreated(GL10 gl, EGLConfig config)
-	{
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		//call native function to initialize rendering
         initRendering();
         
@@ -70,16 +65,14 @@ public class AugmentedRenderer implements Renderer
 	/**
 	 * @return whether the renderer is actively rendering or not
 	 */
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return active;
 	}
 
 	/**
 	 * @param active True, if the renderer should actively render the data
 	 */
-	public void setActive(boolean active)
-	{
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 

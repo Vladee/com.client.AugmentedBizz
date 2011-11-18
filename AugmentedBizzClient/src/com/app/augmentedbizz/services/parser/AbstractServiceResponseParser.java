@@ -8,8 +8,7 @@ import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
  * @author Vladi
  *
  */
-public abstract class AbstractServiceResponseParser
-{
+public abstract class AbstractServiceResponseParser {
 	/**
 	 * Parses a byte array input to an service transfer entity
 	 * 

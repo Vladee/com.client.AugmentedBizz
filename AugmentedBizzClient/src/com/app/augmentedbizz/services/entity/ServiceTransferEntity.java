@@ -9,8 +9,7 @@ package com.app.augmentedbizz.services.entity;
  */
 public class ServiceTransferEntity {
 	
-	protected ServiceTransferEntity()
-	{
+	protected ServiceTransferEntity() {
 	}
 	
 }

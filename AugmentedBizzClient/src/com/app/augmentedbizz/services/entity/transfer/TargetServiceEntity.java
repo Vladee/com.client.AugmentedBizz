@@ -15,8 +15,7 @@ public class TargetServiceEntity extends ServiceTransferEntity {
 	 * @author Vladi
 	 *
 	 */
-	public static enum TargetState
-	{
+	public static enum TargetState {
 		OK,
 		NOT_FOUND,
 		NO_MODEL,
@@ -27,31 +26,26 @@ public class TargetServiceEntity extends ServiceTransferEntity {
 	private Long modelId;
 	private Integer latestModelVersion;
 	
-	public TargetServiceEntity(TargetState targetState, String targetName, Long modelId, Integer latestModelVersion)
-	{
+	public TargetServiceEntity(TargetState targetState, String targetName, Long modelId, Integer latestModelVersion) {
 		this.targetState = targetState;
 		this.targetName = targetName;
 		this.modelId = modelId;
 		this.latestModelVersion = latestModelVersion;
 	}
 	
-	public TargetState getTargetState()
-	{
+	public TargetState getTargetState() {
 		return targetState;
 	}
 	
-	public String getTargetName() 
-	{
+	public String getTargetName()  {
 		return targetName;
 	}
 	
-	public Long getModelId() 
-	{
+	public Long getModelId()  {
 		return modelId;
 	}
 	
-	public Integer getLatestModelVersion()
-	{
+	public Integer getLatestModelVersion() {
 		return latestModelVersion;
 	}
 }

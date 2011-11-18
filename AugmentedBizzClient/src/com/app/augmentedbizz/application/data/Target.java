@@ -13,25 +13,21 @@ public class Target {
 	private int modelId;
 	private int latestModelVersion;
 	
-	public Target(String targetName, int modelId, int latestModelVersion)
-	{
+	public Target(String targetName, int modelId, int latestModelVersion) {
 		this.targetName = targetName;
 		this.modelId = modelId;
 		this.latestModelVersion = latestModelVersion;
 	}
 	
-	public String getTargetName() 
-	{
+	public String getTargetName()  {
 		return targetName;
 	}
 	
-	public int getModelId() 
-	{
+	public int getModelId()  {
 		return modelId;
 	}
 	
-	public int getLatestModelVersion()
-	{
+	public int getLatestModelVersion() {
 		return latestModelVersion;
 	}
 

@@ -11,12 +11,10 @@ import org.apache.http.util.ByteArrayBuffer;
  * @author Vladi
  *
  */
-public class QRScanner
-{
+public class QRScanner {
 	private BarcodeScannerTask scannerTask;
 	
-	public QRScanner(Context context, Bitmap.Config bitmapConfig)
-	{
+	public QRScanner(Context context, Bitmap.Config bitmapConfig) {
 		this.scannerTask = new BarcodeScannerTask(context, bitmapConfig);
 	}
 	
@@ -31,8 +29,7 @@ public class QRScanner
 	 */
 	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener)
 	{	
-		if(bitmapData != null && listener != null)
-		{
+		if(bitmapData != null && listener != null) {
 			ByteArrayBuffer dataBuffer = new ByteArrayBuffer(bitmapData.length);
 			dataBuffer.append(bitmapData, 0, bitmapData.length);
 			scannerTask.execute(new Integer(width), new Integer(height), dataBuffer, listener);
@@ -42,8 +39,7 @@ public class QRScanner
 	/**
 	 * @return true, if scanner is currently scanning and decoding an image
 	 */
-	public boolean isScanning()
-	{
+	public boolean isScanning() {
 		return scannerTask.isProcessing();
 	}
 }

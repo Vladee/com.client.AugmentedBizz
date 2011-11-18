@@ -6,8 +6,7 @@ package com.app.augmentedbizz.ui.renderer;
  * @author Miffels
  *
  */
-public class Texture
-{
+public class Texture {
 	
     private int width;      // The width of the texture.
     private int height;     // The height of the texture.

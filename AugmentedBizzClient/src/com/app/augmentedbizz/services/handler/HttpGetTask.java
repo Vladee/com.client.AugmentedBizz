@@ -20,15 +20,13 @@ import android.os.AsyncTask;
  * @author Vladi
  *
  */
-public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
-{
+public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object> {
 	private HttpClient httpClient;
 	private BaseHttpService service;
 	private AbstractServiceResponseParser serviceParser;
 	private ServiceResponseListener responseListener;
 	
-	public HttpGetTask(HttpClient httpClient, BaseHttpService service, AbstractServiceResponseParser serviceParser, ServiceResponseListener responseListener)
-	{
+	public HttpGetTask(HttpClient httpClient, BaseHttpService service, AbstractServiceResponseParser serviceParser, ServiceResponseListener responseListener) {
 		this.httpClient = httpClient;
 		this.service = service;
 		this.serviceParser = serviceParser;
@@ -36,10 +34,8 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
 	}
 
 	@Override
-	protected Object doInBackground(HttpGet... get)
-	{
-		try
-		{
+	protected Object doInBackground(HttpGet... get) {
+		try {
             validateGetMethod(get[0]);
             
             HttpEntity entity = executeHttpGetForEntity(httpClient, get[0]);
@@ -49,27 +45,22 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
             
             return serviceParser.parseToServiceEntityFromData(data, service.getServiceTransferEntityClass());
         } 
-		catch(Exception e) 
-		{
+		catch(Exception e)  {
             DebugLog.logw("Exception while service processing: " + e.getMessage());
             return e;
         }
 	}
 	
 	@Override
-	protected void onPostExecute(Object result)
-	{
-		if(responseListener == null)
-		{
+	protected void onPostExecute(Object result) {
+		if(responseListener == null) {
 			return;
 		}
 		
-		if(result instanceof ServiceTransferEntity)
-		{
+		if(result instanceof ServiceTransferEntity) {
 			responseListener.onServiceResponse((ServiceTransferEntity)result, service);
 		}
-		else if(result instanceof Exception)
-		{
+		else if(result instanceof Exception) {
 			String msg = ((Exception)(result)).getMessage();
 			responseListener.onServiceFailed(new ServiceHandlingException(msg), service);
 		}
@@ -81,8 +72,7 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
 	 * @param get The instance of the HTTP GET which should be validated
 	 * @throws Exception Thrown if the GET method is invalid
 	 */
-	private void validateGetMethod(HttpGet get) throws Exception
-	{
+	private void validateGetMethod(HttpGet get) throws Exception {
 		if(get == null || get.isAborted() || !get.getURI().isAbsolute())
         {
             throw(new Exception("HTTP GET is invalid."));
@@ -97,8 +87,7 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object>
 	 * @return An instance of an HTTP entity containing the response information from the request
 	 * @throws Exception
 	 */
-	private HttpEntity executeHttpGetForEntity(HttpClient client, HttpGet get) throws Exception
-	{
+	private HttpEntity executeHttpGetForEntity(HttpClient client, HttpGet get) throws Exception {
         HttpResponse httpResponse = client.execute(get);
         
         if(httpResponse == null) 

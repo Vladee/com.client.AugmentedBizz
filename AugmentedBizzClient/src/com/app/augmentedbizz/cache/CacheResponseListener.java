@@ -8,8 +8,7 @@ import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
  * @author Vladi
  *
  */
-public interface CacheResponseListener
-{
+public interface CacheResponseListener {
 	/**
 	 * Gets called when a model was successfully fetched from the cache.
 	 * 

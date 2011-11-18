@@ -24,8 +24,7 @@ import com.app.augmentedbizz.logging.DebugLog;
  * 
  * @author Vladi
  */
-public class HttpClientFactory 
-{
+public class HttpClientFactory  {
 
     /**
      * Creates a new HttpClient that is ready to for use

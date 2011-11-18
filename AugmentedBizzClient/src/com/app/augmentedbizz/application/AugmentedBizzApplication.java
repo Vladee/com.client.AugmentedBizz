@@ -29,8 +29,8 @@ public class AugmentedBizzApplication extends Application implements Application
 		super.onCreate();
 		
 		//init managers
-		uiManager = new UIManager(this);
 		stateManager = new ApplicationStateManager();
+		uiManager = new UIManager(this);
 		dataManager = new DataManager(this);
 	}
 	

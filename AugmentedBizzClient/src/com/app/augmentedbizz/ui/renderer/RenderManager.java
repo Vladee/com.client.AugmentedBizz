@@ -15,8 +15,7 @@ import com.qualcomm.QCAR.QCAR;
  * @author Vladi
  *
  */
-public class RenderManager implements ModelDataListener, ApplicationStateListener
-{
+public class RenderManager implements ModelDataListener, ApplicationStateListener {
 	public static int depthSize = 16;
 	public static int stencilSize = 0;
 	private MainActivity mainActivity;
@@ -33,15 +32,12 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	 * 
 	 * @return true, if the initialization was successful
 	 */
-	public boolean initialize()
-	{
-		if(getGlSurfaceView() == null)
-		{
+	public boolean initialize() {
+		if(getGlSurfaceView() == null) {
 			return false;
 		}
 		
-		if(!initialized)
-		{
+		if(!initialized) {
 			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize);
 			setupScreenDimensions(Display.getScreenWidth(mainActivity), Display.getScreenHeight(mainActivity));
 			initialized = true;
@@ -52,16 +48,14 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	/**
 	 * @return The GL surface view of the main screen.
 	 */
-	public AugmentedGLSurfaceView getGlSurfaceView()
-	{
+	public AugmentedGLSurfaceView getGlSurfaceView() {
 		return (AugmentedGLSurfaceView)mainActivity.findViewById(R.id.augmentedGLSurfaceView);
 	}
 	
 	/**
 	 * @return The renderer for the 3D augmentation
 	 */
-	public AugmentedRenderer getRenderer()
-	{
+	public AugmentedRenderer getRenderer() {
 		return getGlSurfaceView().getRenderer();
 	}
 	
@@ -80,27 +74,22 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
     public native void stopCamera();
 
 	@Override
-	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration)
-	{
+	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration) {
 		// TODO
 	}
 
 	@Override
-	public void onModelError(Exception e)
-	{
+	public void onModelError(Exception e) {
 		// TODO
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
-	{
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
 		// TODO
-		if(nextState.equals(ApplicationState.TRACKING))
-		{
+		if(nextState.equals(ApplicationState.TRACKING)) {
 			startCamera();
 		}
-		else if(nextState.equals(ApplicationState.DEINITIALIZING))
-		{
+		else if(nextState.equals(ApplicationState.DEINITIALIZING)) {
 			stopCamera();
 		}
 	}

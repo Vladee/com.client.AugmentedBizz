@@ -13,16 +13,14 @@ import com.qualcomm.QCAR.QCAR;
  * @author Vladi
  *
  */
-public class Initializer extends AsyncTask<Object, Integer, Object>
-{
+public class Initializer extends AsyncTask<Object, Integer, Object> {
 	private static int minSplashMillis = 2000;
 	private static String LIBRARY_QCAR = "QCAR";
 	private static String LIBRARY_AUGBIZZ = "AugmentedBizzClient";
 	
 	private ApplicationFacade facade;
 	
-	public Initializer(ApplicationFacade facade)
-	{
+	public Initializer(ApplicationFacade facade) {
 		this.facade = facade;
 	}
 	
@@ -46,10 +44,8 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
     /**
 	 * Loads necessary application libraries as shared objects.
 	 */
-	public static void loadSharedLibraries()
-	{
-		try
-		{
+	public static void loadSharedLibraries() {
+		try {
 			loadLibrary(LIBRARY_QCAR);
 			loadLibrary(LIBRARY_AUGBIZZ);
 		}
@@ -84,12 +80,9 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
     }
     
 	@Override
-	protected Object doInBackground(Object... arg0)
-	{
-		try
-		{
-			while(facade.getUIManager().getMainActivity() == null)
-			{
+	protected Object doInBackground(Object... arg0) {
+		try {
+			while(facade.getUIManager().getMainActivity() == null) {
 				Thread.sleep(10);
 			}
 			publishProgress(1);
@@ -100,19 +93,16 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 			initializeQCARTracker();
 			System.gc();
 			long postTimePoints = System.currentTimeMillis();
-			if(postTimePoints - preTimePoint < 2000)
-			{
+			if(postTimePoints - preTimePoint < 2000) {
 				Thread.sleep(2000 - (postTimePoints - preTimePoint));
 			}
 			publishProgress(2);
-			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize())
-			{
+			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize()) {
 				Thread.sleep(10);
 			}
 			
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			return e;
 		}
 
@@ -120,28 +110,22 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 	}
 	
 	@Override
-	protected void onProgressUpdate(Integer... values)
-	{
-		if(values[0] == 1)
-		{
+	protected void onProgressUpdate(Integer... values) {
+		if(values[0] == 1) {
 			facade.getUIManager().getMainActivity().showSplashScreen();
 		}
-		else if(values[0] == 2)
-		{
+		else if(values[0] == 2) {
 			facade.getUIManager().getMainActivity().showMainScreen();
 		}
 	}
 	
 	@Override
-	protected void onPostExecute(Object result)
-	{
-		if(result instanceof Integer)
-		{
+	protected void onPostExecute(Object result) {
+		if(result instanceof Integer) {
 			DebugLog.logi("Application initialized.");
 			facade.getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		}
-		else
-		{
+		else {
 			DebugLog.loge("Application initialization failed", (Exception)result);
 			facade.getUIManager().showErrorDialog(R.string.errorInitialization, true);
 		}
@@ -153,17 +137,14 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 	 * 
 	 * @throws Exception Thrown on initialization error.
 	 */
-	private void initializeMainQCARComponents() throws Exception
-	{
+	private void initializeMainQCARComponents() throws Exception {
 		QCAR.setInitParameters(facade.getUIManager().getMainActivity(), QCAR.GL_20);
 		
 		int process = 0;
-		while(process >= 0 && process < 100)
-		{
+		while(process >= 0 && process < 100) {
 			process = QCAR.init();
 		}
-		if(process < 0)
-		{
+		if(process < 0) {
 			throw(new Exception("Main QCAR initialization failed"));
 		}
 	}
@@ -173,15 +154,13 @@ public class Initializer extends AsyncTask<Object, Integer, Object>
 	 * 
 	 * @throws Exception Thrown on initialization error.
 	 */
-	private void initializeQCARTracker() throws Exception
-	{
+	private void initializeQCARTracker() throws Exception {
 		int process = 0;
-		while(process >= 0 && process < 100)
-		{
+		while(process >= 0 && process < 100) {
 			process = QCAR.load();
 		}
-		if(process < -1)//gives negative number too if already initialized
-		{
+		//gives negative number too if already initialized 
+		if(process < -1) {
 			throw(new Exception("QCAR Tracker initialization failed"));
 		}
 	}

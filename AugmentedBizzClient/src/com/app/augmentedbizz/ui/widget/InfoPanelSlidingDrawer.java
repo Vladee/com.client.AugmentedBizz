@@ -22,28 +22,24 @@ import com.app.augmentedbizz.application.status.ApplicationStateListener;
 import com.app.augmentedbizz.services.entity.transfer.IndicatorServiceEntity.TargetIndicator;
 import com.app.augmentedbizz.ui.MainActivity;
 
-public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpenListener, OnDrawerCloseListener, ApplicationStateListener
-{
+public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpenListener, OnDrawerCloseListener, ApplicationStateListener {
 	/**
 	 * Possible values for state indication in the info panel on the left side
 	 * @author Vladi
 	 *
 	 */
-	public enum StateIndicatorValue
-	{
+	public enum StateIndicatorValue {
 		BLUE(R.drawable.blue_indicator),//=> searching for image targets
 		RED(R.drawable.red_indicator),//=> scanning barcode, loading model, loading indicators
 		GREEN(R.drawable.green_indicator);//=> loaded and augmented
 		
 		private int resourceId;
 		
-		StateIndicatorValue(int resourceId)
-		{
+		StateIndicatorValue(int resourceId) {
 			this.resourceId = resourceId;
 		}
 		
-		private int getResourceId()
-		{
+		private int getResourceId() {
 			return resourceId;
 		}
 	}
@@ -56,23 +52,20 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	private LinearLayout linearLayoutDetailView = null;
 	private boolean locked = false;
 	
-	public InfoPanelSlidingDrawer(Context context, AttributeSet attrs)
-	{
+	public InfoPanelSlidingDrawer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		mainActivity = (MainActivity)getContext();
 	}
 	
-	public InfoPanelSlidingDrawer(Context context, AttributeSet attrs, int defStyle)
-	{
+	public InfoPanelSlidingDrawer(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		
 		mainActivity = (MainActivity)getContext();
 	}
 	
 	@Override
-	protected void onFinishInflate()
-	{
+	protected void onFinishInflate() {
 		super.onFinishInflate();
 		
 		//load attributes
@@ -93,8 +86,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	}
 	
 	@Override
-	protected void onDetachedFromWindow()
-	{
+	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		mainActivity.getAugmentedBizzApplication().getApplicationStateManager().removeApplicationStateListener(this);
 	}
@@ -104,16 +96,14 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * 
 	 * @param value New state indicator value
 	 */
-	private void setStateIndicatorValue(StateIndicatorValue value)
-	{
+	private void setStateIndicatorValue(StateIndicatorValue value) {
 		imageViewStateIndicator.setImageResource(value.getResourceId());
 	}
 	
 	/**
 	 * @return The current state indicator value on the left side of the info panel
 	 */
-	public StateIndicatorValue getStateIndicatorValue()
-	{
+	public StateIndicatorValue getStateIndicatorValue() {
 		return indicatorValue;
 	}
 	
@@ -123,8 +113,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * @param stringResourceId The resource id of the string retrievable from R.string.<id>
 	 * @param formatArgs Optional format arguments as strings which can be passed if the string resource contains them
 	 */
-	private void setInfoText(int stringResourceId, String... formatArgs)
-	{
+	private void setInfoText(int stringResourceId, String... formatArgs) {
 		textViewInfoText.setText(getContext().getString(stringResourceId, (Object[])formatArgs));
 	}
 	
@@ -132,14 +121,11 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * Shows the progress bar loader as the action symbol on the right side of the info panel.
 	 * This works only if the sliding drawer and detail view is locked and closed.
 	 */
-	private void showLoadingSymbol()
-	{
-		if(!locked)
-		{
+	private void showLoadingSymbol() {
+		if(!locked) {
 			return;
 		}
-		if(!(linearLayoutActionSymbol.getChildAt(0) instanceof ProgressBar))
-		{
+		if(!(linearLayoutActionSymbol.getChildAt(0) instanceof ProgressBar)) {
 			removeActionSymbol();
 			ProgressBar loader = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleSmallInverse);
 			linearLayoutActionSymbol.addView(loader);
@@ -149,10 +135,8 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	/**
 	 * Shows the arrow up symbol as the action symbol on the right side
 	 */
-	private void showArrowUpActionSymbol()
-	{
-		if(locked)
-		{
+	private void showArrowUpActionSymbol() {
+		if(locked) {
 			return;
 		}
 		removeActionSymbol();
@@ -165,10 +149,8 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	/**
 	 * Shows the arrow down symbol as the action symbol on the right side
 	 */
-	private void showArrowDownActionSymbol()
-	{
-		if(locked)
-		{
+	private void showArrowDownActionSymbol() {
+		if(locked) {
 			return;
 		}
 		removeActionSymbol();
@@ -181,25 +163,20 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	/**
 	 * Removes all current actions
 	 */
-	public void removeActionSymbol()
-	{
+	public void removeActionSymbol() {
 		linearLayoutActionSymbol.removeAllViews();
 	}
 
 	@Override
-	public void onDrawerClosed()
-	{
-		if(!locked)
-		{
+	public void onDrawerClosed() {
+		if(!locked) {
 			showArrowUpActionSymbol();
 		}
 	}
 
 	@Override
-	public void onDrawerOpened()
-	{
-		if(!locked)
-		{
+	public void onDrawerOpened() {
+		if(!locked) {
 			showArrowDownActionSymbol();
 		}
 	}
@@ -209,8 +186,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * 
 	 * @return true, if details view is currently shown
 	 */
-	public boolean isDetailViewShown()
-	{
+	public boolean isDetailViewShown() {
 		return isOpened();
 	}
 	
@@ -219,18 +195,15 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * 
 	 * @return true, if the info panel is locked and the detail view is unavailable and hidden
 	 */
-	public boolean isPanelLocked()
-	{
+	public boolean isPanelLocked() {
 		return locked;
 	}
 	
 	/**
 	 * Unlocks the detail view and sliding drawer so that the user can tap or drag the info panel and see the details
 	 */
-	private void unlockDetailView()
-	{
-		if(locked)
-		{
+	private void unlockDetailView() {
+		if(locked) {
 			locked = false;
 			unlock();
 			showArrowUpActionSymbol();
@@ -240,10 +213,8 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	/**
 	 * Hides the detail view and locks the sliding drawer so that a tap or drag of the info panel is disabled
 	 */
-	private void lockDetailView()
-	{
-		if(!locked)
-		{
+	private void lockDetailView() {
+		if(!locked) {
 			locked = true;
 			close();
 			lock();
@@ -257,11 +228,9 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * 
 	 * @param view The view to set as the detail view content. null removes the current detail view only.
 	 */
-	private void setDetailViewContent(View view)
-	{
+	private void setDetailViewContent(View view) {
 		linearLayoutDetailView.removeAllViews();
-		if(view != null)
-		{
+		if(view != null) {
 			linearLayoutDetailView.addView(view);
 		}
 	}
@@ -272,26 +241,21 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	 * @param indicators List of target indicators.
 	 * @return A generated list view.
 	 */
-	private ListView createListViewFromIndicators(List<TargetIndicator> indicators)
-	{
+	private ListView createListViewFromIndicators(List<TargetIndicator> indicators) {
 		ListView indicatorInfoList = new ListView(getContext());
 		
 		String[] descriptionStrings = new String[indicators.size()];
-		for(int i = 0; i < indicators.size(); ++i)
-		{
+		for(int i = 0; i < indicators.size(); ++i) {
 			descriptionStrings[i] = indicators.get(i).getDescription();
 		}
-		ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(getContext(), R.layout.detail_listitem, descriptionStrings)
-		{
+		ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(getContext(), R.layout.detail_listitem, descriptionStrings) {
 			@Override
-			public boolean areAllItemsEnabled()
-			{
+			public boolean areAllItemsEnabled() {
 				return false;
 			}
 			
 			@Override
-			public boolean isEnabled(int position)
-			{
+			public boolean isEnabled(int position) {
 				return false;
 			}
 		};
@@ -302,11 +266,9 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
-	{
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
 		ApplicationFacade facade = (ApplicationFacade)mainActivity.getAugmentedBizzApplication();
-		switch(nextState)
-		{
+		switch(nextState) {
 			case EXITING:
 			case UNINITIATED:
 			case DEINITIALIZING:

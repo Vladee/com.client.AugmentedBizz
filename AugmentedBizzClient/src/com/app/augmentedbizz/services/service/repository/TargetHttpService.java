@@ -15,26 +15,22 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
  * @author Vladi
  *
  */
-public class TargetHttpService extends BaseHttpService
-{
+public class TargetHttpService extends BaseHttpService {
 	private Context context;
 	
-	public TargetHttpService(Context context, Long targetId)
-	{
+	public TargetHttpService(Context context, Long targetId) {
 		this.context = context;
 		
 		queryKeyValuePairs.add(new BasicNameValuePair("target", Long.toString(targetId)));
 	}
 	
 	@Override
-	public String getServiceUrlExtension()
-	{
+	public String getServiceUrlExtension() {
 		return context.getString(R.string.targetServiceUrlExtension);
 	}
 
 	@Override
-	public Class<? extends ServiceTransferEntity> getServiceTransferEntityClass()
-	{
+	public Class<? extends ServiceTransferEntity> getServiceTransferEntityClass() {
 		return TargetServiceEntity.class;
 	}
 

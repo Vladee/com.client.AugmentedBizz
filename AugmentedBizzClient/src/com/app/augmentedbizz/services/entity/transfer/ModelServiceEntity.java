@@ -16,8 +16,7 @@ public class ModelServiceEntity extends ServiceTransferEntity {
 	private short[] indices;//optional
 	private String base64EncodedTexture;
 	
-	public ModelServiceEntity(float[] vertices, float[] normals, float[] texCoords, short[] indices, String base64Texture)
-	{
+	public ModelServiceEntity(float[] vertices, float[] normals, float[] texCoords, short[] indices, String base64Texture) {
 		this.vertices = vertices;
 		this.normals = normals;
 		this.texCoords = texCoords;
@@ -25,28 +24,23 @@ public class ModelServiceEntity extends ServiceTransferEntity {
 		this.base64EncodedTexture = base64Texture;
 	}
 
-	public float[] getVertices() 
-	{
+	public float[] getVertices()  {
 		return vertices;
 	}
 
-	public float[] getNormals()
-	{
+	public float[] getNormals() {
 		return normals;
 	}
 
-	public float[] getTexCoords()
-	{
+	public float[] getTexCoords() {
 		return texCoords;
 	}
 
-	public short[] getIndices()
-	{
+	public short[] getIndices() {
 		return indices;
 	}
 
-	public String getBase64EncodedTexture() 
-	{
+	public String getBase64EncodedTexture()  {
 		return base64EncodedTexture;
 	}
 	

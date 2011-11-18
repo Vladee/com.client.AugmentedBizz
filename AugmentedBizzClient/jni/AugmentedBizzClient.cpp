@@ -29,8 +29,6 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_Application
 
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_init_Initializer_initializeApplicationNative(JNIEnv *env, jobject, jobject jAugmentedBizzApplication) {
 	application = new AugmentedBizzApplication(env, jAugmentedBizzApplication);
-	// Check if C++ --> Java calls work
-	//application->getApplicationStateManager()->setApplicationState(EXITING);
 }
 
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_MainActivity_onDestroyNative(JNIEnv, jobject) {

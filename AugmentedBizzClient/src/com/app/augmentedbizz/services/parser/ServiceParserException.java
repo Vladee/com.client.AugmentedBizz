@@ -5,15 +5,13 @@ package com.app.augmentedbizz.services.parser;
  * @author Vladi
  *
  */
-public class ServiceParserException extends Exception
-{
+public class ServiceParserException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ServiceParserException(String msg)
-	{
+	public ServiceParserException(String msg) {
 		super(msg);
 	}
 }

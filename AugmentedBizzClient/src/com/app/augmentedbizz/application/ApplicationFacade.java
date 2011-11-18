@@ -6,8 +6,7 @@ import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
 import com.app.augmentedbizz.ui.UIManager;
 
-public interface ApplicationFacade
-{
+public interface ApplicationFacade {
 	
 	/**
 	 * Returns an Android context.

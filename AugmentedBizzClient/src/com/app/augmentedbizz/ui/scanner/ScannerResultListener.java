@@ -6,8 +6,7 @@ package com.app.augmentedbizz.ui.scanner;
  * @author Vladi
  *
  */
-public interface ScannerResultListener
-{
+public interface ScannerResultListener {
 	public void onScanningSuccess(int targetId);
 	
 	public void onScanningResultless();

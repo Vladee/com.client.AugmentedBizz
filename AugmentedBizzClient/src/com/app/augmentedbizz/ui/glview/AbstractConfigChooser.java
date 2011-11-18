@@ -7,8 +7,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import android.opengl.GLSurfaceView;
 
 
-public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigChooser
-{
+public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigChooser {
 	protected int redSize;
 	protected int greenSize;
 	protected int blueSize;
@@ -16,8 +15,7 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
 	protected int depthSize;
 	protected int stencilSize;
 	
-	public AbstractConfigChooser(int r, int g, int b, int a, int depth, int stencil)
-	{
+	public AbstractConfigChooser(int r, int g, int b, int a, int depth, int stencil) {
 		this.redSize = r;
 		this.greenSize = g;
 		this.blueSize = b;
@@ -57,8 +55,7 @@ public abstract class AbstractConfigChooser implements GLSurfaceView.EGLConfigCh
         return getMatchingConfig(egl, display, configAttribsGL20);
     }
 	
-	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs)
-	{
+	public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) {
 		for(EGLConfig config : configs)
         {
             int configDepthSize = findConfigAttrib(egl, display, config, EGL10.EGL_DEPTH_SIZE, 0);

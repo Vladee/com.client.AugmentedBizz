@@ -20,8 +20,7 @@ public class ServiceManager {
 	private HttpServiceHandler serviceHandler;
 	private ApplicationFacade facade;
 	
-	public ServiceManager(ApplicationFacade facade)
-	{
+	public ServiceManager(ApplicationFacade facade) {
 		this.facade = facade;
 		serviceHandler = new HttpServiceHandler(facade.getContext().getString(R.string.baseUrl), new JSONServiceResponseParser());
 	}
@@ -32,8 +31,7 @@ public class ServiceManager {
 	 * @param targetId The id of the captured target
 	 * @param responseListener A response listener which gets invoked when the result is available
 	 */
-	public void callTargetInformationService(int targetId, ServiceResponseListener responseListener)
-	{
+	public void callTargetInformationService(int targetId, ServiceResponseListener responseListener) {
 		serviceHandler.processRequestAsynch(new TargetHttpService(facade.getContext(), new Long(targetId)), responseListener);
 	}
 	
@@ -43,8 +41,7 @@ public class ServiceManager {
 	 * @param modelId The id of the model
 	 * @param responseListener A response listener which gets invoked when the result is available
 	 */
-	public void callModelInformationService(int modelId, ServiceResponseListener responseListener)
-	{
+	public void callModelInformationService(int modelId, ServiceResponseListener responseListener) {
 		serviceHandler.processRequestAsynch(new ModelHttpService(facade.getContext(), new Long(modelId)), responseListener);
 	}
 	
@@ -54,8 +51,7 @@ public class ServiceManager {
 	 * @param targetId The id of the context target
 	 * @param responseListener A response listener which gets invoked when the result is available
 	 */
-	public void callIndicatorInformationService(int targetId, ServiceResponseListener responseListener)
-	{
+	public void callIndicatorInformationService(int targetId, ServiceResponseListener responseListener) {
 		serviceHandler.processRequestAsynch(new IndicatorHttpService(facade.getContext(), new Long(targetId)), responseListener);
 	}
 }

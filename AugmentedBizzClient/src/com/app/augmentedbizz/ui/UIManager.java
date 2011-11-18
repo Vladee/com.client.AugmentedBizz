@@ -18,14 +18,12 @@ import com.app.augmentedbizz.ui.scanner.QRScanner;
  * @author Vladi
  *
  */
-public class UIManager implements ApplicationStateListener
-{
+public class UIManager implements ApplicationStateListener {
 	private QRScanner qrScanner;
 	private volatile MainActivity mainActivity;
 	private ApplicationFacade facade;
 	
-	public UIManager(ApplicationFacade facade)
-	{
+	public UIManager(ApplicationFacade facade) {
 		this.facade = facade;
 		qrScanner = new QRScanner(facade.getContext(), Bitmap.Config.RGB_565);
 		
@@ -36,24 +34,21 @@ public class UIManager implements ApplicationStateListener
 	/**
 	 * @return the qrScanner
 	 */
-	public QRScanner getQRScanner()
-	{
+	public QRScanner getQRScanner() {
 		return qrScanner;
 	}
 
 	/**
 	 * @return the mainActivity
 	 */
-	public MainActivity getMainActivity()
-	{
+	public MainActivity getMainActivity() {
 		return mainActivity;
 	}
 
 	/**
 	 * @param mainActivity the mainActivity to set
 	 */
-	public void setMainActivity(MainActivity mainActivity)
-	{
+	public void setMainActivity(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 	}
 	
@@ -62,8 +57,7 @@ public class UIManager implements ApplicationStateListener
 	 * 
 	 * @param stringId The id of the warning text which should be shown.
 	 */
-	public void showWarningToast(int stringId)
-	{
+	public void showWarningToast(int stringId) {
 		Toast.makeText(mainActivity, stringId, Toast.LENGTH_SHORT).show();
 	}
 	
@@ -72,8 +66,7 @@ public class UIManager implements ApplicationStateListener
 	 * 
 	 * @param stringId The id of the error string which should be shown.
 	 */
-	public void showErrorDialog(int stringId, final boolean forceClose)
-	{
+	public void showErrorDialog(int stringId, final boolean forceClose) {
 		final AlertDialog errorDialog = new AlertDialog.Builder(mainActivity).create();   
 		errorDialog.setTitle(mainActivity.getResources().getString(com.app.augmentedbizz.R.string.errorTitle));   
 		errorDialog.setMessage(mainActivity.getResources().getString(stringId));   
@@ -84,8 +77,7 @@ public class UIManager implements ApplicationStateListener
 			public void onClick(DialogInterface dialog, int which) 
 	    	{   
 				errorDialog.dismiss();
-				if(forceClose) 
-				{
+				if(forceClose)  {
 					getMainActivity().finish();
 				}
 	    	}
@@ -94,10 +86,8 @@ public class UIManager implements ApplicationStateListener
 	}
 
 	@Override
-	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState)
-	{
-		if(nextState.equals(ApplicationState.CAPTURED)) 
-		{
+	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
+		if(nextState.equals(ApplicationState.CAPTURED))  {
 			//vibrate the phone
 			Vibrator v = (Vibrator)facade.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 			v.vibrate(300);

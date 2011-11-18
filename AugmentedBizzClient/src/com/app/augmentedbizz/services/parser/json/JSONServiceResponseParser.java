@@ -11,19 +11,15 @@ import com.google.gson.Gson;
  * @author Vladi
  *
  */
-public class JSONServiceResponseParser extends AbstractServiceResponseParser
-{
+public class JSONServiceResponseParser extends AbstractServiceResponseParser {
 	protected Gson gson = new Gson();
 	
 	@Override
-	public ServiceTransferEntity parseToServiceEntityFromData(byte[] data, Class<? extends ServiceTransferEntity> stClass) throws ServiceParserException
-	{
-		try
-		{
+	public ServiceTransferEntity parseToServiceEntityFromData(byte[] data, Class<? extends ServiceTransferEntity> stClass) throws ServiceParserException {
+		try {
 			return gson.fromJson(new String(data, "UTF-8"), stClass);
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			throw(new ServiceParserException(e.getMessage()));
 		}
 	}
