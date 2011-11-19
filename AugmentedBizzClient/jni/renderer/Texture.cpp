@@ -13,8 +13,8 @@
 
 // Include files
 #include "Texture.h"
-#include "Utils.h"
-#include "logging/DebugLog.h"
+#include "../Utils.h"
+#include "../logging/DebugLog.h"
 
 #include <string.h>
 
@@ -44,19 +44,19 @@ Texture::create(JNIEnv* env, jobject textureObject)
     jclass textureClass = env->GetObjectClass(textureObject);
 
     // Get width:
-    jfieldID widthID = env->GetFieldID(textureClass, "mWidth", "I");
+    jfieldID widthID = env->GetFieldID(textureClass, "width", "I");
     if (!widthID)
     {
-        DebugLog::loge("Field mWidth not found.");
+        DebugLog::loge("Field width not found.");
         return 0;
     }
     newTexture->mWidth = env->GetIntField(textureObject, widthID);
 
     // Get height:
-    jfieldID heightID = env->GetFieldID(textureClass, "mHeight", "I");
+    jfieldID heightID = env->GetFieldID(textureClass, "height", "I");
     if (!heightID)
     {
-        DebugLog::loge("Field mHeight not found.");
+        DebugLog::loge("Field height not found.");
         return 0;
     }
     newTexture->mHeight = env->GetIntField(textureObject, heightID);
@@ -68,7 +68,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
     jmethodID texBufferMethodId = env->GetMethodID(textureClass , "getData", "()[B");
     if (!texBufferMethodId)
     {
-        DebugLog::loge("Function GetTextureBuffer() not found.");
+        DebugLog::loge("Function getData() not found.");
         return 0;
     }
     

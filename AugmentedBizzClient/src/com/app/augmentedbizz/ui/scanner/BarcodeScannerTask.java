@@ -4,15 +4,16 @@ import java.nio.ByteBuffer;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+
 import com.app.augmentedbizz.R;
+import com.app.augmentedbizz.logging.DebugLog;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 
 /**
  * Asynchronous QR barcode scanning of bitmaps.
@@ -41,6 +42,7 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object> {
 	@Override
 	protected Object doInBackground(Object... params) {
 		try {
+			DebugLog.logi("Scanning for QRCodes.");
 			Integer width = (Integer)params[0];
 			Integer height = (Integer)params[1];
 			ByteArrayBuffer data = (ByteArrayBuffer)params[2];

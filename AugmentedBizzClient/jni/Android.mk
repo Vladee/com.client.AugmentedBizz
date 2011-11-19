@@ -90,7 +90,7 @@ LOCAL_SHARED_LIBRARIES := QCAR-prebuilt
 
 LOCAL_SRC_FILES := AugmentedBizzClient.cpp \
 	Utils.cpp \
-	Texture.cpp \
+	renderer/Texture.cpp \
 	application/ApplicationStateManager.cpp \
 	application/AugmentedBizzApplication.cpp \
 	application/ObjectLoader.cpp \

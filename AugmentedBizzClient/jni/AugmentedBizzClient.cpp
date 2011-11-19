@@ -52,6 +52,22 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_stop
 	application->getRenderManager()->stopCamera();
 }
 
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setModel(JNIEnv *env, jobject,
+			jfloatArray jvertices,
+			jfloatArray jnormals,
+			jfloatArray jtexcoords,
+			jshortArray jindices) {
+	application->getRenderManager()->setModel(env, jvertices, jnormals, jtexcoords, jindices);
+}
+
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setTexture(JNIEnv * env, jobject, jobject jtexture) {
+	application->getRenderManager()->setTexture(env, jtexture);
+}
+
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setScaleFactor(JNIEnv, jobject, jfloat jscaleFactor) {
+	application->getRenderManager()->setScaleFactor(jscaleFactor);
+}
+
 #ifdef __cplusplus
 }
 #endif
