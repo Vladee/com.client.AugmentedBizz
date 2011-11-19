@@ -87,7 +87,7 @@ public class UIManager implements ApplicationStateListener {
 
 	@Override
 	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
-		if(nextState.equals(ApplicationState.CAPTURED))  {
+		if(nextState.equals(ApplicationState.TRACKED))  {
 			//vibrate the phone
 			Vibrator v = (Vibrator)facade.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 			v.vibrate(300);

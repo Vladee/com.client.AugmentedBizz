@@ -1,5 +1,6 @@
 #include "RenderManager.h"
 #include "../logging/DebugLog.h"
+#include "../application/ApplicationStateManager.h"
 
 #include <QCAR/QCAR.h>
 #include <QCAR/CameraDevice.h>
@@ -12,7 +13,9 @@
 #include "../Utils.h"
 #include "CubeShaders.h"
 
-RenderManager::RenderManager() {
+RenderManager::RenderManager(ApplicationStateManager* applicationStateManager) {
+	this->applicationStateManager = applicationStateManager;
+
 	this->screenWidth = 0;
 	this->screenHeight = 0;
 
@@ -87,6 +90,7 @@ void RenderManager::startCamera() {
 	projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f, 2000.0f);
 
 	DebugLog::logi("Camera started.");
+	this->applicationStateManager->setApplicationState(TRACKING);
 }
 
 void RenderManager::stopCamera() {
@@ -125,6 +129,7 @@ void RenderManager::setScaleFactor(float scaleFactor) {
 }
 
 void RenderManager::renderFrame() {
+	if(!(this->applicationStateManager->getCurrentApplicationState() == TRACKING)) return;
 	DebugLog::logi("renderFrame()");
 
 	// Clear color and depth buffer

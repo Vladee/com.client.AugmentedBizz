@@ -18,8 +18,10 @@ enum ApplicationState {
 	// Enum values used as array indices
 	UNINITIATED = 0,
 	INITIALIZING,
+	INITIALIZED,
 	TRACKING,
-	CAPTURED,
+	TRACKED,
+	SCANNING,
 	SCANNED,
 	LOADING,
 	SHOWING_CACHE,

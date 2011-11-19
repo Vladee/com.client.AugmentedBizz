@@ -63,16 +63,13 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
      * Initialites all necessary application components.
      */
     public void initializeApplication() {
-    	if(facade.getApplicationStateManager().getApplicationState().equals(ApplicationState.UNINITIATED)) {
-    		facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
-    		execute();
-    	}
+		facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
+		execute();
     }
     
     @Override
     protected void onPreExecute() {
     	DebugLog.logi("Begin application initialization.");
-    	facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZING);
     }
     
 	@Override
@@ -125,7 +122,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 	protected void onPostExecute(Object result) {
 		if(result instanceof Integer) {
 			DebugLog.logi("Application initialized.");
-			facade.getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
+			facade.getApplicationStateManager().setApplicationState(ApplicationState.INITIALIZED);
 		}
 		else {
 			DebugLog.loge("Application initialization failed", (Exception)result);

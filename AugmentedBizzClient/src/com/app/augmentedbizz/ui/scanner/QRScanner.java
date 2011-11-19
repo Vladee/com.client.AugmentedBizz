@@ -27,8 +27,7 @@ public class QRScanner {
 	 * @param bitmapData image data
 	 * @param listener Gets invoked when the asynchronous processing is finished a result is available
 	 */
-	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener)
-	{	
+	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener) {	
 		if(bitmapData != null && listener != null) {
 			ByteArrayBuffer dataBuffer = new ByteArrayBuffer(bitmapData.length);
 			dataBuffer.append(bitmapData, 0, bitmapData.length);

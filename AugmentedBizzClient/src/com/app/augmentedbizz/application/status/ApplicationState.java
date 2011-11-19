@@ -6,10 +6,15 @@ public enum ApplicationState {
     /** The application is starting, splash screen is being shown,
      * and the Java/C++ components are being initialized. */
 	INITIALIZING,
+	/** Indicates that initialization was successful and the components
+	 * could start working now. */
+	INITIALIZED,
     /** Initialization finished, camera active and tracking. */
 	TRACKING,
-    /** ImageTarget captured. */
-	CAPTURED,
+	/** ImageTarget captured. */
+	TRACKED,
+	/** The QRCode scanner has been activated and is working. */
+	SCANNING,
     /** The QRCode has been identified and read. */
 	SCANNED,
 	/** No matching model was found in the cache, all data needs to be

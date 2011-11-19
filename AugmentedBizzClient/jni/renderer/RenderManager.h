@@ -5,10 +5,13 @@
 #include "Texture.h"
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include "../application/ApplicationStateManager.h"
+
+class RenderManager;
 
 class RenderManager {
 	public:
-		RenderManager();
+		RenderManager(ApplicationStateManager*);
 		~RenderManager();
 		void initizializeNative(unsigned short, unsigned short);
 		void updateRendering(unsigned short, unsigned short);
@@ -21,6 +24,9 @@ class RenderManager {
 	private:
 		void configureVideoBackground();
 		void setScreenDimensions(unsigned short, unsigned short);
+
+		ApplicationStateManager* applicationStateManager;
+
 		unsigned short screenWidth;
 		unsigned short screenHeight;
 		Texture* texture;

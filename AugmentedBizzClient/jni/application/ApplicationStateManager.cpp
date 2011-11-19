@@ -10,15 +10,17 @@ ApplicationStateManager::ApplicationStateManager(ObjectLoader *objectLoader, job
 
 	this->applicationStateNames[0] = "Uninitiated";
 	this->applicationStateNames[1] = "Initializing";
-	this->applicationStateNames[2] = "Tracking";
-	this->applicationStateNames[3] = "Captured";
-	this->applicationStateNames[4] = "Scanned";
-	this->applicationStateNames[5] = "Loading";
-	this->applicationStateNames[6] = "Showing cache";
-	this->applicationStateNames[7] = "Loading indicators";
-	this->applicationStateNames[8] = "Showing";
-	this->applicationStateNames[9] = "Deinitializing";
-	this->applicationStateNames[10] = "Exiting";
+	this->applicationStateNames[2] = "Initialized";
+	this->applicationStateNames[3] = "Tracking";
+	this->applicationStateNames[4] = "Tracked";
+	this->applicationStateNames[5] = "Scanning";
+	this->applicationStateNames[6] = "Scanned";
+	this->applicationStateNames[7] = "Loading";
+	this->applicationStateNames[8] = "Showing cache";
+	this->applicationStateNames[9] = "Loading indicators";
+	this->applicationStateNames[10] = "Showing";
+	this->applicationStateNames[11] = "Deinitializing";
+	this->applicationStateNames[12] = "Exiting";
 
 	this->applicationStateListeners.push_back(this);
 }

@@ -24,7 +24,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	
 	public RenderManager(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
-		mainActivity.getAugmentedBizzApplication().getApplicationStateManager().addApplicationStateListener(this);
+		this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager().addApplicationStateListener(this);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	@Override
 	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
 		// TODO
-		if(nextState.equals(ApplicationState.TRACKING)) {
+		if(nextState.equals(ApplicationState.INITIALIZED)) {
 			DebugLog.logi("Starting camera.");
 			startCamera();
 		}

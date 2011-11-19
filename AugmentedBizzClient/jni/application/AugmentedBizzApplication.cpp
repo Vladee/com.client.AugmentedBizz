@@ -14,7 +14,7 @@ void AugmentedBizzApplication::initializeApplication(JNIEnv *env, jobject jAugme
 
 	this->applicationStateManager = new ApplicationStateManager(this->objectLoader, \
 			this->augmentedBizzApplicationJavaInterface->getJavaApplicationStateManager());
-	this->renderManager = new RenderManager();
+	this->renderManager = new RenderManager(this->applicationStateManager);
 }
 
 AugmentedBizzApplication::~AugmentedBizzApplication() {

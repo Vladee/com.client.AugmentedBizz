@@ -283,7 +283,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 				setInfoText(R.string.infoCaptureTarget);
 				removeActionSymbol();
 				break;
-			case CAPTURED:
+			case TRACKED:
 				lockDetailView();
 				setStateIndicatorValue(StateIndicatorValue.BLUE);
 				setInfoText(R.string.infoTargetFoundScanning);
