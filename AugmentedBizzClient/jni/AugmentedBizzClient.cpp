@@ -44,6 +44,10 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_
 	application->getRenderManager()->renderFrame();
 }
 
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_scanFrame(JNIEnv, jobject) {
+	application->getRenderManager()->scanFrame();
+}
+
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_startCamera(JNIEnv *, jobject) {
 	application->getRenderManager()->startCamera();
 }
@@ -60,8 +64,8 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setM
 	application->getRenderManager()->setModel(env, jvertices, jnormals, jtexcoords, jindices);
 }
 
-JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setTexture(JNIEnv * env, jobject, jobject jtexture) {
-	application->getRenderManager()->setTexture(env, jtexture);
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setTexture(JNIEnv, jobject, jobject jtexture) {
+	application->getRenderManager()->setTexture(jtexture);
 }
 
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setScaleFactor(JNIEnv, jobject, jfloat jscaleFactor) {

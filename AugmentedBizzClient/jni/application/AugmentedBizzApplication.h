@@ -36,11 +36,13 @@ class AugmentedBizzApplication: public IApplicationFacade {
 class AugmentedBizzApplicationJavaInterface: JavaInterface {
 	public:
 		AugmentedBizzApplicationJavaInterface(jobject, ObjectLoader*);
+		jobject getJavaRenderManager();
 		jobject getJavaApplicationStateManager();
 	protected:
 		virtual jclass getClass();
 	private:
 		jobject javaAugmentedBizzApplication;
+		jmethodID getJavaGetRenderManagerMethodID();
 		jmethodID getJavaGetApplicationStateManagerMethodID();
 };
 

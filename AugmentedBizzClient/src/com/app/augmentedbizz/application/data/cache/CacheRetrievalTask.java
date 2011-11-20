@@ -1,4 +1,4 @@
-package com.app.augmentedbizz.cache;
+package com.app.augmentedbizz.application.data.cache;
 
 import android.os.AsyncTask;
 
@@ -44,9 +44,9 @@ public class CacheRetrievalTask extends AsyncTask<Object, Integer, Object> {
 	protected void onPostExecute(Object result) {
 		if (result instanceof OpenGLModelConfiguration && responseListener != null) {
 			OpenGLModelConfiguration modelConfig = (OpenGLModelConfiguration)result;
-			responseListener.onLoadedModelConfig(modelConfig);
+			responseListener.onModelConfigFromCache(modelConfig);
 		} else {
-			responseListener.onFailedModelConfigLoading(modelId);
+			responseListener.onCacheFailure(modelId);
 		}
 	}
 

@@ -3,9 +3,11 @@ package com.app.augmentedbizz.ui.renderer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.qualcomm.QCAR.QCAR;
-
 import android.opengl.GLSurfaceView.Renderer;
+
+import com.app.augmentedbizz.application.ApplicationFacade;
+import com.app.augmentedbizz.application.status.ApplicationState;
+import com.qualcomm.QCAR.QCAR;
 
 /**
  * Implements the Java-side representation of the renderer for the camera frames and augmented objects
@@ -15,8 +17,10 @@ import android.opengl.GLSurfaceView.Renderer;
  */
 public class AugmentedRenderer implements Renderer {
 	protected boolean active = true;
+	ApplicationFacade application;
 	
-	public AugmentedRenderer() {
+	public AugmentedRenderer(ApplicationFacade application) {
+		this.application = application;
 	}
 	
     /** 
@@ -27,13 +31,19 @@ public class AugmentedRenderer implements Renderer {
     /** 
      * The native render function. 
      */
-    public native void renderFrame();
+    private native void renderFrame();
+    private native void scanFrame();
 
 	@Override
 	public void onDrawFrame(GL10 arg0) {
-		if(active) {
-			//invoke native rendering
-			renderFrame();
+		ApplicationState currentState = this.application.getApplicationStateManager().getApplicationState();
+		if(currentState.equals(ApplicationState.TRACKING)) {
+			this.scanFrame();
+		} else
+		if(currentState.equals(ApplicationState.SHOWING_CACHE) ||
+				currentState.equals(ApplicationState.LOADING_INDICATORS) ||
+				currentState.equals(ApplicationState.SHOWING)) {
+			this.renderFrame();
 		}
 	}
 

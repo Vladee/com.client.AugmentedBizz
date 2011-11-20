@@ -1,5 +1,6 @@
-package com.app.augmentedbizz.cache;
+package com.app.augmentedbizz.application.data.cache;
 
+import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ public class CacheInsertUpdateTask extends AsyncTask<Object, Integer, Object> {
 				dbAdapter.close();
 			}
 			catch(Exception e) {
+				DebugLog.loge("An error ocurred inserting a model.", e);
 				return 1;
 			}
 		}

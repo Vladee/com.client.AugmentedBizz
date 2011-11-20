@@ -42,6 +42,14 @@ jmethodID ObjectLoader::getMethodID(jclass clazz, std::string methodName, std::s
 	}
 }
 
+jbyteArray ObjectLoader::createByteArray(unsigned int size) {
+	return this->getJNIEnv()->NewByteArray(size);
+}
+
+void ObjectLoader::setByteArrayRegion(jbyteArray array, unsigned int start, unsigned int end, const jbyte* bytes) {
+	return this->getJNIEnv()->SetByteArrayRegion(array, start, end, bytes);
+}
+
 JNIEnv* ObjectLoader::getJNIEnv() {
 	JNIEnv *env;
 

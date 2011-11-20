@@ -7,6 +7,7 @@ import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.application.init.Initializer;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
 import com.app.augmentedbizz.ui.UIManager;
+import com.app.augmentedbizz.ui.renderer.RenderManager;
 
 /**
  * Represents the application context and facade for other application components
@@ -19,6 +20,7 @@ public class AugmentedBizzApplication extends Application implements Application
 	private UIManager uiManager;
 	private ApplicationStateManager stateManager;
 	private DataManager dataManager;
+	private RenderManager renderManager = null;
 	
 	static {
 		Initializer.loadSharedLibraries();
@@ -36,8 +38,10 @@ public class AugmentedBizzApplication extends Application implements Application
 	
 	/**
 	 * Starts the application initialization.
+	 * @param renderManager 
 	 */
-	public void startInitialization() {
+	public void startInitialization(RenderManager renderManager) {
+		this.renderManager = renderManager;
 		new Initializer(this).initializeApplication();
 	}
 	
@@ -59,6 +63,11 @@ public class AugmentedBizzApplication extends Application implements Application
 	@Override
 	public DataManager getDataManager() {
 		return dataManager;
+	}
+	
+	@Override
+	public RenderManager getRenderManager() {
+		return renderManager;
 	}
 	
 }

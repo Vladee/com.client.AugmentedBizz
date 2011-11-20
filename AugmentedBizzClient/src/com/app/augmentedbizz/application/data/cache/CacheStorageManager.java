@@ -1,7 +1,8 @@
-package com.app.augmentedbizz.cache;
+package com.app.augmentedbizz.application.data.cache;
 
 import android.content.Context;
 
+import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 
 /**
@@ -24,6 +25,7 @@ public class CacheStorageManager {
 	 * @param model The model object which sould be inserted or updated.
 	 */
 	public void insertOrUpdateModelAsync(OpenGLModelConfiguration model) {
+		DebugLog.logi("Inserting model in cache db.");
 		new CacheInsertUpdateTask(dbAdapter).execute(model);
 	}
 	

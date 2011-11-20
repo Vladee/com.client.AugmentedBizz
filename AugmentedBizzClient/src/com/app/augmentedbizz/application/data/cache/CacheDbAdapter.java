@@ -1,4 +1,4 @@
-package com.app.augmentedbizz.cache;
+package com.app.augmentedbizz.application.data.cache;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -41,7 +41,7 @@ public class CacheDbAdapter {
     // Db name, version and table name
     private static final String DATABASE_NAME = "arbizz";
     private static final String DATABASE_TABLE = "models";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     /**
      * Database creation SQL statement
@@ -183,7 +183,7 @@ public class CacheDbAdapter {
             CacheDbAdapter.KEY_ID + "=" + id,
             null, null, null, null, null);
         
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
         	cursor.moveToFirst();
         } else {
         	return null;
@@ -225,6 +225,13 @@ public class CacheDbAdapter {
             } else {
             	return false;
             }
+    }
+    
+    /**
+     * @return
+     */
+    public boolean isOpen() {
+    	return this.db != null && this.db.isOpen();
     }
     
     /**

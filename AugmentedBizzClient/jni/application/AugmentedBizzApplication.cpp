@@ -14,7 +14,8 @@ void AugmentedBizzApplication::initializeApplication(JNIEnv *env, jobject jAugme
 
 	this->applicationStateManager = new ApplicationStateManager(this->objectLoader, \
 			this->augmentedBizzApplicationJavaInterface->getJavaApplicationStateManager());
-	this->renderManager = new RenderManager(this->applicationStateManager);
+	this->renderManager = new RenderManager(this->applicationStateManager, this->objectLoader, \
+			this->augmentedBizzApplicationJavaInterface->getJavaRenderManager());
 }
 
 AugmentedBizzApplication::~AugmentedBizzApplication() {
@@ -54,7 +55,17 @@ jobject AugmentedBizzApplicationJavaInterface::getJavaApplicationStateManager() 
 			this->getJavaGetApplicationStateManagerMethodID());
 }
 
+jobject AugmentedBizzApplicationJavaInterface::getJavaRenderManager() {
+	return this->getObjectLoader()->getJNIEnv()->CallObjectMethod(this->javaAugmentedBizzApplication, \
+			this->getJavaGetRenderManagerMethodID());
+}
+
 jmethodID AugmentedBizzApplicationJavaInterface::getJavaGetApplicationStateManagerMethodID() {
 	return this->getMethodID("getApplicationStateManager", \
 			"()Lcom/app/augmentedbizz/application/status/ApplicationStateManager;");
+}
+
+jmethodID AugmentedBizzApplicationJavaInterface::getJavaGetRenderManagerMethodID() {
+	return this->getMethodID("getRenderManager", \
+			"()Lcom/app/augmentedbizz/ui/renderer/RenderManager;");
 }

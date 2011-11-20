@@ -6,8 +6,10 @@ import java.util.List;
 
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.cache.CacheResponseListener;
-import com.app.augmentedbizz.cache.CacheStorageManager;
+import com.app.augmentedbizz.application.AugmentedBizzApplication;
+import com.app.augmentedbizz.application.data.cache.CacheDbAdapter;
+import com.app.augmentedbizz.application.data.cache.CacheResponseListener;
+import com.app.augmentedbizz.application.data.cache.CacheStorageManager;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.services.ServiceManager;
 import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
@@ -27,7 +29,11 @@ import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
  * @author Vladi
  *
  */
-public class DataManager implements ServiceResponseListener, ModelDataListener, TargetDataListener, IndicatorDataListener, CacheResponseListener {
+public class DataManager implements ServiceResponseListener,
+ModelDataListener,
+TargetDataListener,
+IndicatorDataListener,
+CacheResponseListener {
 	
 	private Target currentTarget = null;
 	private List<TargetIndicator> indicators = null;
@@ -36,6 +42,8 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	private EntityConverter entityConverter;
 	private ApplicationFacade facade;
 	private CacheStorageManager cacheManager;
+	
+	private boolean modelNotInCache = false;
 	
 	private List<ModelDataListener> modelDataListeners = new ArrayList<ModelDataListener>();
 	private List<TargetDataListener> targetDataListeners = new ArrayList<TargetDataListener>();
@@ -133,11 +141,25 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	
 	public void loadModel(int modelId) {
 		//check for local buffer
-		if(this.openGLModelConfiguration == null) {
-			//try to read from buffer
-			cacheManager.readModelAsync(modelId, this);
-		} else {
+		if(this.openGLModelConfiguration != null) {
 			this.fireOnModelDataEvent(this.openGLModelConfiguration);
+		} else {
+			// try to read from buffer
+//			cacheManager.readModelAsync(modelId, this);
+			CacheDbAdapter dbAdapter = new CacheDbAdapter((AugmentedBizzApplication)this.facade);
+			dbAdapter.open();
+			this.openGLModelConfiguration = dbAdapter.fetchModel(modelId);
+			if(this.openGLModelConfiguration == null) {
+				this.modelNotInCache = true;
+				DebugLog.logi("Cache miss.");
+			} else {
+				DebugLog.logi("Cache hit.");
+				this.fireOnModelDataEvent(this.openGLModelConfiguration);
+			}
+			dbAdapter.close();
+			// Load most recent data
+//			this.serviceManager.callModelInformationService(modelId, this);
+			this.fireOnIndicatorDataEvent(new ArrayList<TargetIndicator>());
 		}
 	}
 	
@@ -146,7 +168,7 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 		if(this.currentTarget != null) {
 			this.fireOnTargetDataEvent(this.currentTarget);
 		} else {
-			this.serviceManager.callTargetInformationService(targetId, this);
+//			this.serviceManager.callTargetInformationService(targetId, this);
 		}
 	}
 	
@@ -155,7 +177,7 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 		if(this.indicators != null) {
 			this.fireOnIndicatorDataEvent(this.indicators);
 		} else {
-			this.serviceManager.callIndicatorInformationService(targetId, this);
+//			this.serviceManager.callIndicatorInformationService(targetId, this);
 		}
 	}
 	
@@ -206,42 +228,67 @@ public class DataManager implements ServiceResponseListener, ModelDataListener, 
 	@Override
 	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration) {
 		this.openGLModelConfiguration = openGLModelConfiguration;
+		DebugLog.logi("Model data received.");
+		if(this.indicators == null) {
+			this.loadIndicators(openGLModelConfiguration.getOpenGLModel().getId());
+		}
+		if(this.modelNotInCache) {
+//			this.cacheManager.insertOrUpdateModelAsync(this.openGLModelConfiguration);
+			CacheDbAdapter dbAdapter = new CacheDbAdapter((AugmentedBizzApplication)this.facade);
+			dbAdapter.open();
+			dbAdapter.insertModel(this.openGLModelConfiguration);
+			dbAdapter.close();
+			this.modelNotInCache = false;
+		}
 	}
 
 	@Override
 	public void onModelError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorModelRetrieval);
+		DebugLog.logi("An error ocurred while the model was being loaded.");
 	}
 
 	@Override
 	public void onIndicatorData(List<TargetIndicator> targetIndicators) {
 		this.indicators = targetIndicators;
+		DebugLog.logi("Indicator data received.");
 	}
+	
 	@Override
 	public void onIndicatorError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		DebugLog.logi("An error ocurred while the indicators were being loaded.");
 	}
 	
 	@Override
 	public void onTargetData(Target target) {
 		this.currentTarget = target;
+		DebugLog.logi("Target data received.");
+		if(this.openGLModelConfiguration == null) {
+			this.loadModel(target.getModelId());
+		}
 	}
 
 	@Override
 	public void onTargetError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		DebugLog.logi("An error ocurred while the target was being loaded.");
 	}
 	
 	@Override
-	public void onLoadedModelConfig(OpenGLModelConfiguration model) {
+	public void onModelConfigFromCache(OpenGLModelConfiguration model) {
 		//retrieved the model successfully from cache
-		fireOnModelDataEvent(model);
+		this.fireOnModelDataEvent(model);
+		DebugLog.logi("Model data received from cache.");
 	}
 
 	@Override
-	public void onFailedModelConfigLoading(int modelId) {
-		//try to get the data from the service manager
-		this.serviceManager.callModelInformationService(modelId, this);
+	public void onCacheFailure(int modelId) {
+		// try to get the data from the service manager
+		// this call is made anyway.
+		// this.serviceManager.callModelInformationService(modelId, this);
+		this.modelNotInCache = true;
+		DebugLog.logi("An error ocurred while the model was being loaded from cache.");
 	}
 
 	/**

@@ -9,12 +9,19 @@
 #include <QCAR/Trackable.h>
 #include <QCAR/Tool.h>
 #include <QCAR/Tracker.h>
+#include <QCAR/Image.h>
 #include <QCAR/CameraCalibration.h>
 #include "../Utils.h"
 #include "CubeShaders.h"
 
-RenderManager::RenderManager(ApplicationStateManager* applicationStateManager) {
+RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
+		ObjectLoader* objectLoader,
+		jobject jrenderManager) {
 	this->applicationStateManager = applicationStateManager;
+	this->renderManagerJavaInterface = new RenderManagerJavaInterface(objectLoader, jrenderManager);
+
+	this->numPixels = 0;
+	this->pixelArray = 0;
 
 	this->screenWidth = 0;
 	this->screenHeight = 0;
@@ -33,7 +40,8 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager) {
 }
 
 RenderManager::~RenderManager() {
-
+	delete this->renderManagerJavaInterface;
+	this->renderManagerJavaInterface = 0;
 }
 
 void RenderManager::initizializeNative(unsigned short screenWidth, unsigned short screenHeight) {
@@ -90,7 +98,7 @@ void RenderManager::startCamera() {
 	projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f, 2000.0f);
 
 	DebugLog::logi("Camera started.");
-	this->applicationStateManager->setApplicationState(TRACKING);
+	//this->applicationStateManager->setApplicationState(TRACKING);
 }
 
 void RenderManager::stopCamera() {
@@ -120,26 +128,62 @@ void RenderManager::setModel(JNIEnv *env, jfloatArray jvertices, jfloatArray jno
 					env->GetArrayLength(jvertices) / 3;
 }
 
-void RenderManager::setTexture(JNIEnv *env, jobject jtexture) {
-	this->texture = Texture::create(env, jtexture);
+void RenderManager::setTexture(jobject jtexture) {
+	this->texture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
 }
 
 void RenderManager::setScaleFactor(float scaleFactor) {
 	this->scaleFactor = scaleFactor;
 }
 
-void RenderManager::renderFrame() {
+void RenderManager::scanFrame() {
 	if(!(this->applicationStateManager->getCurrentApplicationState() == TRACKING)) return;
-	DebugLog::logi("renderFrame()");
-
-	// Clear color and depth buffer
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//DebugLog::logi("scanFrame()");
 
 	QCAR::State state = QCAR::Renderer::getInstance().begin();
+	// Override private member variable due to
+	// some mystery ArrayIndexOutOufBoundsException
+	jbyteArray pixelArray = NULL;
 
 	if(state.getNumActiveTrackables()) {
 
+	    	QCAR::Frame frame = state.getFrame();
+	    	for(int i = 0; i < frame.getNumImages(); i++)
+	    	{
+	    	    const QCAR::Image *frameImage = frame.getImage(i);
+	    	    if(frameImage->getFormat() == QCAR::RGB565)
+	    	    {
+	    	    	const short* pixels = (const short*) frameImage->getPixels();
+	    	    	int imageWidth = frameImage->getWidth();
+	    	    	int imageHeight = frameImage->getHeight();
+	    	    	int curNumPixels = imageWidth * imageHeight;
+	    	        //build up the pixel array
+	    	    	if(pixelArray == NULL || curNumPixels != numPixels)
+	    	    	{
+	    	    		numPixels = curNumPixels;
+	    	    		pixelArray = this->renderManagerJavaInterface->getObjectLoader()->createByteArray(numPixels * 2);
+	    	    	}
+	    	    	//fill the pixel array
+	    	    	this->renderManagerJavaInterface->getObjectLoader()->setByteArrayRegion(pixelArray, 0, numPixels * 2, (const jbyte*)pixels);
+	    	    	this->renderManagerJavaInterface->callScanner(imageWidth, imageHeight, pixelArray);
+	    	    }
+	    	}
+		}
+	QCAR::Renderer::getInstance().end();
+}
+
+void RenderManager::renderFrame() {
+	if((this->applicationStateManager->getCurrentApplicationState() != SHOWING_CACHE) &&
+			(this->applicationStateManager->getCurrentApplicationState() != LOADING_INDICATORS) &&
+			(this->applicationStateManager->getCurrentApplicationState() != SHOWING)) return;
+	DebugLog::logi("renderFrame()");
+
+	// Clear color and depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	QCAR::State state = QCAR::Renderer::getInstance().begin();
+/*
+	if(state.getNumActiveTrackables()) {
 		// Render video background:
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -150,9 +194,6 @@ void RenderManager::renderFrame() {
 		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
 		QCAR::Matrix44F modelViewMatrix =
 			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
-
-		DebugLog::logi("tracked!");
-
 
 		// There is but one trackable
 		const Texture* const thisTexture = this->texture;
@@ -166,8 +207,9 @@ void RenderManager::renderFrame() {
 		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
 									&modelViewMatrix.data[0] ,
 									&modelViewProjection.data[0]);
-
 		glUseProgram(shaderProgramID);
+		*/
+		/*
 
 		glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
 							  (const GLvoid*) &(this->vertices[0]));
@@ -179,7 +221,36 @@ void RenderManager::renderFrame() {
 		glEnableVertexAttribArray(vertexHandle);
 		glEnableVertexAttribArray(normalHandle);
 		glEnableVertexAttribArray(textureCoordHandle);
-
+		*/
+		/*
+		if(this->texture == 0) {
+			DebugLog::logi("No texture set.");
+		} else {
+			DebugLog::logi("Texture set.");
+		}
+		if(this->vertices == 0 || sizeof(this->vertices) == 0) {
+			DebugLog::logi("No vertices set.");
+		} else {
+			DebugLog::logi("Vertices set.");
+		}
+		if(this->normals == 0 || sizeof(this->normals) == 0) {
+			DebugLog::logi("No normals set.");
+		} else {
+			DebugLog::logi("Normals set.");
+		}
+		if(this->texcoords == 0 || sizeof(this->texcoords) == 0) {
+			DebugLog::logi("No texture coordinates set.");
+		} else {
+			DebugLog::logi("Texture coordinates set.");
+		}
+		if(this->indices == 0 || sizeof(this->indices) == 0) {
+			DebugLog::logi("No indices set.");
+		} else {
+			DebugLog::logi("Indices set.");
+		}
+		DebugLog::logi("Has indices: " + this->hasIndices ? "true" : "false");
+		*/
+		/*
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
 		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
@@ -191,7 +262,7 @@ void RenderManager::renderFrame() {
 			glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
 		}
 
-		SampleUtils::checkGlError("ImageTargets renderFrame");
+		//SampleUtils::checkGlError("ImageTargets renderFrame");
 
 		glDisable(GL_DEPTH_TEST);
 
@@ -199,6 +270,7 @@ void RenderManager::renderFrame() {
 		glDisableVertexAttribArray(normalHandle);
 		glDisableVertexAttribArray(textureCoordHandle);
 	}
+		 */
 
 	QCAR::Renderer::getInstance().end();
 }
@@ -224,4 +296,25 @@ void RenderManager::configureVideoBackground() {
 
     //set the config:
     QCAR::Renderer::getInstance().setVideoBackgroundConfig(config);
+}
+
+// *************************************************************
+
+RenderManagerJavaInterface::RenderManagerJavaInterface(ObjectLoader* objectLoader, jobject javaRenderManager): \
+		JavaInterface(objectLoader) {
+	this->javaRenderManager = javaRenderManager;
+}
+
+jclass RenderManagerJavaInterface::getClass() {
+	return this->getObjectLoader()->getObjectClass(this->javaRenderManager);
+}
+
+void RenderManagerJavaInterface::callScanner(unsigned int width, unsigned int height, jbyteArray pixels) {
+	this->getObjectLoader()->getJNIEnv()->CallVoidMethod(this->javaRenderManager, \
+				this->getCallScannerMethodID(), width, height, pixels);
+}
+
+jmethodID RenderManagerJavaInterface::getCallScannerMethodID() {
+	return this->getMethodID("callScanner", \
+			"(II[B)V");
 }

@@ -7,6 +7,7 @@ import com.app.augmentedbizz.application.status.ApplicationStateListener;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.MainActivity;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
+import com.app.augmentedbizz.ui.scanner.ScannerResultListener;
 import com.app.augmentedbizz.util.Display;
 import com.qualcomm.QCAR.QCAR;
 
@@ -16,7 +17,7 @@ import com.qualcomm.QCAR.QCAR;
  * @author Vladi
  *
  */
-public class RenderManager implements ModelDataListener, ApplicationStateListener {
+public class RenderManager implements ModelDataListener, ScannerResultListener, ApplicationStateListener {
 	public static int depthSize = 16;
 	public static int stencilSize = 0;
 	private MainActivity mainActivity;
@@ -25,6 +26,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	public RenderManager(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 		this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager().addApplicationStateListener(this);
+		this.mainActivity.getAugmentedBizzApplication().getDataManager().addModelDataListener(this);
 	}
 	
 	/**
@@ -39,7 +41,7 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 		}
 		
 		if(!initialized) {
-			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize);
+			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize, this.mainActivity.getAugmentedBizzApplication());
 			this.initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
 			initialized = true;
 		}
@@ -73,15 +75,35 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 	 */ 
     public native void startCamera();
     public native void stopCamera();
+    
+    private void callScanner(final int width, final int height, final byte[] bitmapData) {
+    	DebugLog.logi("Received data for scanner. Bytes: " + bitmapData.length + ", width: " + width + ", height: " + height);
+		RenderManager.this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
+			.setApplicationState(ApplicationState.SCANNING);
+		RenderManager.this.mainActivity.getAugmentedBizzApplication().getUIManager()
+    		.getQRScanner().scanForQRCode(width, height, bitmapData, RenderManager.this);
+
+    }
 
 	@Override
 	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration) {
-		// TODO
+		this.setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
+		this.setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
+				openGLModelConfiguration.getOpenGLModel().getNormals(),
+				openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
+				openGLModelConfiguration.getOpenGLModel().getIndices());
+		this.setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
+		this.mainActivity.getAugmentedBizzApplication()
+			.getApplicationStateManager().setApplicationState(ApplicationState.SHOWING);
 	}
+	
+	private native void setScaleFactor(float scaleFactor);
+	private native void setModel(float[] vertices, float[] normals, float [] texcoords, short[] indices);
+	private native void setTexture(Texture texture);
 
 	@Override
 	public void onModelError(Exception e) {
-		// TODO
+		DebugLog.loge("Unable to load model data", e);
 	}
 
 	@Override
@@ -90,10 +112,32 @@ public class RenderManager implements ModelDataListener, ApplicationStateListene
 		if(nextState.equals(ApplicationState.INITIALIZED)) {
 			DebugLog.logi("Starting camera.");
 			startCamera();
+			this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		}
 		else if(nextState.equals(ApplicationState.DEINITIALIZING)) {
 			DebugLog.logi("Stopping camera.");
 			stopCamera();
 		}
+	}
+
+	@Override
+	public void onScanningSuccess(int targetId) {
+		this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
+			.setApplicationState(ApplicationState.SCANNED);
+		this.mainActivity.getAugmentedBizzApplication().getDataManager().loadModel(targetId);
+	}
+
+	@Override
+	public void onScanningResultless() {
+		DebugLog.logd("Scanning resultless. Returning to tracking state.");
+		this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
+			.setApplicationState(ApplicationState.TRACKING);
+	}
+
+	@Override
+	public void onScanningFailed() {
+		DebugLog.loge("Scanning failed. Returning to tracking state.");
+		this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
+			.setApplicationState(ApplicationState.TRACKING);
 	}
 }

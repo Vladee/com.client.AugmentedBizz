@@ -25,7 +25,7 @@ public class MainActivity extends AugmentedBizzActivity {
         renderManager = new RenderManager(this);
         getAugmentedBizzApplication().getUIManager().setMainActivity(this);
         
-        getAugmentedBizzApplication().startInitialization();
+        getAugmentedBizzApplication().startInitialization(this.renderManager);
     }
     
 	@Override

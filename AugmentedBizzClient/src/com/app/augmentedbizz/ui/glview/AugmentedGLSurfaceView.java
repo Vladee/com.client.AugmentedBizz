@@ -10,6 +10,7 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.ui.renderer.AugmentedRenderer;
 
 public class AugmentedGLSurfaceView extends GLSurfaceView {
@@ -33,11 +34,11 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
 	/** 
 	 * Initialization of the surface view
 	 */
-    public void setup(boolean translucent, int depth, int stencil) {
+    public void setup(boolean translucent, int depth, int stencil, ApplicationFacade application) {
         setTranslucent(translucent);
         setEGLContextFactory(createContextFactory());
         setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
-        setupRenderer();
+        setupRenderer(application);
     }
     
     /**
@@ -87,9 +88,9 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
     	return configChooser;
     }
     
-    private void setupRenderer() {
+    private void setupRenderer(ApplicationFacade application) {
     	if(renderer == null) {
-    		renderer = new AugmentedRenderer();
+    		renderer = new AugmentedRenderer(application);
     		this.setRenderer(renderer);
     	}
     }

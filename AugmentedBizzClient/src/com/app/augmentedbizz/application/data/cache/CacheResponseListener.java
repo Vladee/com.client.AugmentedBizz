@@ -1,4 +1,4 @@
-package com.app.augmentedbizz.cache;
+package com.app.augmentedbizz.application.data.cache;
 
 import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 
@@ -14,12 +14,12 @@ public interface CacheResponseListener {
 	 * 
 	 * @param model The model object which was retrieved.
 	 */
-	public void onLoadedModelConfig(OpenGLModelConfiguration model);
+	public void onModelConfigFromCache(OpenGLModelConfiguration model);
 	
 	/**
 	 * Gets called when a model retrieval couldn't be satsfied by the cache.
 	 * 
 	 * @param modelId The id of the model which failed to be fetched.
 	 */
-	public void onFailedModelConfigLoading(int modelId);
+	public void onCacheFailure(int modelId);
 }

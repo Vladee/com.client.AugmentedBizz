@@ -1,9 +1,9 @@
 package com.app.augmentedbizz.ui.scanner;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import android.content.Context;
 import android.graphics.Bitmap;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 /**
  * A QRScanner for bitmaps
@@ -12,10 +12,12 @@ import org.apache.http.util.ByteArrayBuffer;
  *
  */
 public class QRScanner {
-	private BarcodeScannerTask scannerTask;
+	private Context context;
+	private Bitmap.Config bitmapConfig;
 	
 	public QRScanner(Context context, Bitmap.Config bitmapConfig) {
-		this.scannerTask = new BarcodeScannerTask(context, bitmapConfig);
+		this.context = context;
+		this.bitmapConfig = bitmapConfig;
 	}
 	
 	/**
@@ -27,18 +29,11 @@ public class QRScanner {
 	 * @param bitmapData image data
 	 * @param listener Gets invoked when the asynchronous processing is finished a result is available
 	 */
-	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener) {	
+	public void scanForQRCode(int width, int height, byte[] bitmapData, ScannerResultListener listener) {
 		if(bitmapData != null && listener != null) {
 			ByteArrayBuffer dataBuffer = new ByteArrayBuffer(bitmapData.length);
 			dataBuffer.append(bitmapData, 0, bitmapData.length);
-			scannerTask.execute(new Integer(width), new Integer(height), dataBuffer, listener);
+			new BarcodeScannerTask(this.context, this.bitmapConfig).execute(new Integer(width), new Integer(height), dataBuffer, listener);
 		}
-	}
-	
-	/**
-	 * @return true, if scanner is currently scanning and decoding an image
-	 */
-	public boolean isScanning() {
-		return scannerTask.isProcessing();
 	}
 }

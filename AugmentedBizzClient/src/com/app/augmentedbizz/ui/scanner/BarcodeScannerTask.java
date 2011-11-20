@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
@@ -78,7 +79,12 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object> {
 				resultListener.onScanningResultless();
 			}
 		}
+		else if(result instanceof NotFoundException) {
+			DebugLog.logd("No QRCode found.");
+			resultListener.onScanningResultless();
+		}
 		else if(result instanceof Exception) {
+			DebugLog.loge("Scanning failed. Reason: ", (Throwable)result);
 			resultListener.onScanningFailed();
 		}
 	}

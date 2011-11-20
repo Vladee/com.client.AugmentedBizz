@@ -5,6 +5,7 @@ import android.content.Context;
 import com.app.augmentedbizz.application.data.DataManager;
 import com.app.augmentedbizz.application.status.ApplicationStateManager;
 import com.app.augmentedbizz.ui.UIManager;
+import com.app.augmentedbizz.ui.renderer.RenderManager;
 
 public interface ApplicationFacade {
 	
@@ -35,5 +36,12 @@ public interface ApplicationFacade {
 	 * @return The application data manager.
 	 */
 	public DataManager getDataManager();
+	
+	/**
+	 * Returns the application render manager.
+	 * 
+	 * @return The application render manager.
+	 */
+	public RenderManager getRenderManager();
 
 }

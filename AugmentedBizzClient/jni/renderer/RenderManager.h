@@ -8,17 +8,19 @@
 #include "../application/ApplicationStateManager.h"
 
 class RenderManager;
+class RenderManagerJavaInterface;
 
 class RenderManager {
 	public:
-		RenderManager(ApplicationStateManager*);
+		RenderManager(ApplicationStateManager*, ObjectLoader*, jobject);
 		~RenderManager();
 		void initizializeNative(unsigned short, unsigned short);
 		void updateRendering(unsigned short, unsigned short);
+		void scanFrame();
 		void renderFrame();
 		void startCamera();
 		void stopCamera();
-		void setTexture(JNIEnv*, jobject);
+		void setTexture(jobject);
 		void setModel(JNIEnv*, jfloatArray, jfloatArray, jfloatArray, jshortArray);
 		void setScaleFactor(float);
 	private:
@@ -26,6 +28,10 @@ class RenderManager {
 		void setScreenDimensions(unsigned short, unsigned short);
 
 		ApplicationStateManager* applicationStateManager;
+		RenderManagerJavaInterface* renderManagerJavaInterface;
+
+		unsigned int numPixels;
+		jbyteArray pixelArray;
 
 		unsigned short screenWidth;
 		unsigned short screenHeight;
@@ -46,6 +52,18 @@ class RenderManager {
 		unsigned short *indices;
 		bool hasIndices;
 		float scaleFactor;
+};
+
+class RenderManagerJavaInterface: public JavaInterface {
+	public:
+		RenderManagerJavaInterface(ObjectLoader*, jobject);
+		void callScanner(unsigned int, unsigned int, jbyteArray);
+	protected:
+		virtual jclass getClass();
+	private:
+		jobject javaRenderManager;
+
+		jmethodID getCallScannerMethodID();
 };
 
 #endif // _RENDERMANAGER_H_

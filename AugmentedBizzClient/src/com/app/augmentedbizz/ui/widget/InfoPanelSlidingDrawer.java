@@ -244,8 +244,9 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	private ListView createListViewFromIndicators(List<TargetIndicator> indicators) {
 		ListView indicatorInfoList = new ListView(getContext());
 		
-		String[] descriptionStrings = new String[indicators.size()];
-		for(int i = 0; i < indicators.size(); ++i) {
+		int size = indicators == null ? 0 : indicators.size();
+		String[] descriptionStrings = new String[size];
+		for(int i = 0; i < size; ++i) {
 			descriptionStrings[i] = indicators.get(i).getDescription();
 		}
 		ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(getContext(), R.layout.detail_listitem, descriptionStrings) {

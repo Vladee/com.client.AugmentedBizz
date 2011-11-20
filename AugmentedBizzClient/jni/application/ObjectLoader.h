@@ -41,6 +41,9 @@ class ObjectLoader {
 		jmethodID getMethodID(jclass, std::string, std::string);
 		void callVoidMethod(jobject, jmethodID, ...);
 		jobject callObjectMethod(jobject, jmethodID, ...);
+
+		jbyteArray createByteArray(unsigned int);
+		void setByteArrayRegion(jbyteArray, unsigned int, unsigned int, const jbyte*);
 	private:
 		JavaVM *javaVM;
 };
@@ -48,8 +51,8 @@ class ObjectLoader {
 class JavaInterface {
 	public:
 		JavaInterface(ObjectLoader*);
-	protected:
 		ObjectLoader* getObjectLoader();
+	protected:
 		jmethodID getMethodID(std::string, std::string);
 		virtual jclass getClass() = 0;
 	private:
