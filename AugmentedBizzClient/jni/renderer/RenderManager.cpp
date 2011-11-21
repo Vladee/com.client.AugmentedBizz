@@ -146,7 +146,6 @@ void RenderManager::scanFrame() {
 	jbyteArray pixelArray = NULL;
 
 	if(state.getNumActiveTrackables()) {
-
 	    	QCAR::Frame frame = state.getFrame();
 	    	for(int i = 0; i < frame.getNumImages(); i++)
 	    	{

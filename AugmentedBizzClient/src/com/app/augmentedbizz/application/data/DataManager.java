@@ -144,22 +144,34 @@ CacheResponseListener {
 		if(this.openGLModelConfiguration != null) {
 			this.fireOnModelDataEvent(this.openGLModelConfiguration);
 		} else {
-			// try to read from buffer
-//			cacheManager.readModelAsync(modelId, this);
-			CacheDbAdapter dbAdapter = new CacheDbAdapter((AugmentedBizzApplication)this.facade);
-			dbAdapter.open();
-			this.openGLModelConfiguration = dbAdapter.fetchModel(modelId);
-			if(this.openGLModelConfiguration == null) {
-				this.modelNotInCache = true;
-				DebugLog.logi("Cache miss.");
-			} else {
-				DebugLog.logi("Cache hit.");
-				this.fireOnModelDataEvent(this.openGLModelConfiguration);
-			}
-			dbAdapter.close();
-			// Load most recent data
-//			this.serviceManager.callModelInformationService(modelId, this);
-			this.fireOnIndicatorDataEvent(new ArrayList<TargetIndicator>());
+			this.loadModelFromCache(modelId);
+			this.loadModelFromServer(modelId);
+		}
+	}
+	
+	private void loadModelFromCache(int modelId) {
+		// try to read from buffer
+//		cacheManager.readModelAsync(modelId, this);
+		// read sync
+		CacheDbAdapter dbAdapter = new CacheDbAdapter((AugmentedBizzApplication)this.facade);
+		dbAdapter.open();
+		this.openGLModelConfiguration = dbAdapter.fetchModel(modelId);
+		if(this.openGLModelConfiguration == null) {
+			this.modelNotInCache = true;
+			DebugLog.logi("Cache miss.");
+		} else {
+			DebugLog.logi("Cache hit.");
+			this.fireOnModelDataEvent(this.openGLModelConfiguration);
+		}
+		dbAdapter.close();
+	}
+	
+	private void loadModelFromServer(int modelId) {
+		// Load most recent data
+		if(!this.modelNotInCache ||
+				this.openGLModelConfiguration.getOpenGLModel().getModelVersion()
+				< this.currentTarget.getLatestModelVersion()) {
+			this.serviceManager.callModelInformationService(modelId, this);
 		}
 	}
 	
@@ -168,7 +180,7 @@ CacheResponseListener {
 		if(this.currentTarget != null) {
 			this.fireOnTargetDataEvent(this.currentTarget);
 		} else {
-//			this.serviceManager.callTargetInformationService(targetId, this);
+			this.serviceManager.callTargetInformationService(targetId, this);
 		}
 	}
 	
@@ -177,17 +189,28 @@ CacheResponseListener {
 		if(this.indicators != null) {
 			this.fireOnIndicatorDataEvent(this.indicators);
 		} else {
-//			this.serviceManager.callIndicatorInformationService(targetId, this);
+			this.serviceManager.callIndicatorInformationService(targetId, this);
 		}
 	}
 	
 	private void handleModelResponse(ServiceTransferEntity stEntity, BaseHttpService calledService) {
 		//convert service entity to model
 		OpenGLModelConfiguration model = entityConverter.toOpenGLModelFrom(stEntity, calledService, this.currentTarget.getLatestModelVersion());
-		//insert into cache
-		cacheManager.insertOrUpdateModelAsync(model);
-		
+		this.insertOrUpdateModel();
 		this.fireOnModelDataEvent(model);
+	}
+	
+	private void insertOrUpdateModel() {
+		if(	this.modelNotInCache ||
+			(this.openGLModelConfiguration.getOpenGLModel().getModelVersion()
+						< this.currentTarget.getLatestModelVersion())) {
+	//		this.cacheManager.insertOrUpdateModelAsync(this.openGLModelConfiguration);
+			CacheDbAdapter dbAdapter = new CacheDbAdapter(this.facade.getContext());
+			dbAdapter.open();
+			dbAdapter.insertModel(this.openGLModelConfiguration);
+			dbAdapter.close();
+			this.modelNotInCache = false;
+		}
 	}
 	
 	private void handleTargetResponse(ServiceTransferEntity stEntity) {
@@ -232,16 +255,8 @@ CacheResponseListener {
 		if(this.indicators == null) {
 			this.loadIndicators(openGLModelConfiguration.getOpenGLModel().getId());
 		}
-		if(this.modelNotInCache) {
-//			this.cacheManager.insertOrUpdateModelAsync(this.openGLModelConfiguration);
-			CacheDbAdapter dbAdapter = new CacheDbAdapter((AugmentedBizzApplication)this.facade);
-			dbAdapter.open();
-			dbAdapter.insertModel(this.openGLModelConfiguration);
-			dbAdapter.close();
-			this.modelNotInCache = false;
-		}
 	}
-
+	
 	@Override
 	public void onModelError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorModelRetrieval);
@@ -285,8 +300,6 @@ CacheResponseListener {
 	@Override
 	public void onCacheFailure(int modelId) {
 		// try to get the data from the service manager
-		// this call is made anyway.
-		// this.serviceManager.callModelInformationService(modelId, this);
 		this.modelNotInCache = true;
 		DebugLog.logi("An error ocurred while the model was being loaded from cache.");
 	}
