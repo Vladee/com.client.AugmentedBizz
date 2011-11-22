@@ -30,14 +30,17 @@ public class CacheRetrievalTask extends AsyncTask<Object, Integer, Object> {
 				dbAdapter.open();
 				model = dbAdapter.fetchModel(new Long(modelId));
 				dbAdapter.close();
+				
+				if(model != null) {
+					return model;
+				}
 			}
 			catch(Exception e) {
-				return (OpenGLModelConfiguration)null;
+				return e;
 			}
-			return model;
 		}
 		
-		return (Object)null;
+		return new Exception();
 	}
 	
 	@Override

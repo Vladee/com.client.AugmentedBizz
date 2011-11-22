@@ -311,7 +311,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 			case LOADING_INDICATORS:
 				lockDetailView();
 				setStateIndicatorValue(StateIndicatorValue.RED);
-				setInfoText(R.string.infoRetrievingIndicators, new Integer(facade.getDataManager().getCurrentTarget().getModelId()).toString());
+				setInfoText(R.string.infoRetrievingIndicators, facade.getDataManager().getCurrentTarget().getTargetName());
 				showLoadingSymbol();
 				break;
 			case SHOWING:

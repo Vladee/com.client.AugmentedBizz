@@ -89,6 +89,9 @@ void RenderManager::startCamera() {
 	if(!QCAR::CameraDevice::getInstance().start())
 		return;
 
+	// Set the focus mode
+	QCAR::CameraDevice::getInstance().setFocusMode(QCAR::CameraDevice::FOCUS_MODE_AUTO);
+
 	// Start the tracker:
 	QCAR::Tracker::getInstance().start();
 
@@ -112,20 +115,20 @@ void RenderManager::stopCamera() {
 void RenderManager::setModel(JNIEnv *env, jfloatArray jvertices, jfloatArray jnormals, jfloatArray jtexcoords, jshortArray jindices) {
 	jboolean copyArrays = true;
 
-			this->vertices = env->GetFloatArrayElements(jvertices, &copyArrays);
-			this->normals = env->GetFloatArrayElements(jnormals, &copyArrays);
-			this->texcoords = env->GetFloatArrayElements(jtexcoords, &copyArrays);
+	this->vertices = env->GetFloatArrayElements(jvertices, &copyArrays);
+	this->normals = env->GetFloatArrayElements(jnormals, &copyArrays);
+	this->texcoords = env->GetFloatArrayElements(jtexcoords, &copyArrays);
 
-			this->hasIndices = false;
+	this->hasIndices = false;
 
-			if(jindices) {
-				this->indices = (unsigned short*)env->GetShortArrayElements(jindices, &copyArrays);
-				this->hasIndices = env->GetArrayLength(jindices) > 0;
-			}
+	if(jindices) {
+		this->indices = (unsigned short*)env->GetShortArrayElements(jindices, &copyArrays);
+		this->hasIndices = env->GetArrayLength(jindices) > 0;
+	}
 
-			this->numModelElementsToDraw = this->hasIndices ?
-					env->GetArrayLength(jindices) :
-					env->GetArrayLength(jvertices) / 3;
+	this->numModelElementsToDraw = this->hasIndices ?
+			env->GetArrayLength(jindices) :
+			env->GetArrayLength(jvertices) / 3;
 }
 
 void RenderManager::setTexture(jobject jtexture) {
@@ -136,140 +139,113 @@ void RenderManager::setScaleFactor(float scaleFactor) {
 	this->scaleFactor = scaleFactor;
 }
 
-void RenderManager::scanFrame() {
-	if(!(this->applicationStateManager->getCurrentApplicationState() == TRACKING)) return;
-	//DebugLog::logi("scanFrame()");
-
-	QCAR::State state = QCAR::Renderer::getInstance().begin();
+void RenderManager::scanFrameForBarcode(QCAR::State& state) {
 	// Override private member variable due to
 	// some mystery ArrayIndexOutOufBoundsException
 	jbyteArray pixelArray = NULL;
 
-	if(state.getNumActiveTrackables()) {
-	    	QCAR::Frame frame = state.getFrame();
-	    	for(int i = 0; i < frame.getNumImages(); i++)
-	    	{
-	    	    const QCAR::Image *frameImage = frame.getImage(i);
-	    	    if(frameImage->getFormat() == QCAR::RGB565)
-	    	    {
-	    	    	const short* pixels = (const short*) frameImage->getPixels();
-	    	    	int imageWidth = frameImage->getWidth();
-	    	    	int imageHeight = frameImage->getHeight();
-	    	    	int curNumPixels = imageWidth * imageHeight;
-	    	        //build up the pixel array
-	    	    	if(pixelArray == NULL || curNumPixels != numPixels)
-	    	    	{
-	    	    		numPixels = curNumPixels;
-	    	    		pixelArray = this->renderManagerJavaInterface->getObjectLoader()->createByteArray(numPixels * 2);
-	    	    	}
-	    	    	//fill the pixel array
-	    	    	this->renderManagerJavaInterface->getObjectLoader()->setByteArrayRegion(pixelArray, 0, numPixels * 2, (const jbyte*)pixels);
-	    	    	this->renderManagerJavaInterface->callScanner(imageWidth, imageHeight, pixelArray);
-	    	    }
-	    	}
+	QCAR::Frame frame = state.getFrame();
+	for(int i = 0; i < frame.getNumImages(); i++)
+	{
+		const QCAR::Image *frameImage = frame.getImage(i);
+		if(frameImage->getFormat() == QCAR::RGB565)
+		{
+			const short* pixels = (const short*) frameImage->getPixels();
+			int imageWidth = frameImage->getWidth();
+			int imageHeight = frameImage->getHeight();
+			int curNumPixels = imageWidth * imageHeight;
+			//build up the pixel array
+			if(pixelArray == NULL || curNumPixels != numPixels)
+			{
+				numPixels = curNumPixels;
+				pixelArray = this->renderManagerJavaInterface->getObjectLoader()->createByteArray(numPixels * 2);
+			}
+			//fill the pixel array
+			this->renderManagerJavaInterface->getObjectLoader()->setByteArrayRegion(pixelArray, 0, numPixels * 2, (const jbyte*)pixels);
+			this->renderManagerJavaInterface->callScanner(imageWidth, imageHeight, pixelArray);
 		}
-	QCAR::Renderer::getInstance().end();
+	}
 }
 
 void RenderManager::renderFrame() {
-	if((this->applicationStateManager->getCurrentApplicationState() != SHOWING_CACHE) &&
-			(this->applicationStateManager->getCurrentApplicationState() != LOADING_INDICATORS) &&
-			(this->applicationStateManager->getCurrentApplicationState() != SHOWING)) return;
-	DebugLog::logi("renderFrame()");
-
-	// Clear color and depth buffer
+    // Clear color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Render video background:
 	QCAR::State state = QCAR::Renderer::getInstance().begin();
-/*
-	if(state.getNumActiveTrackables()) {
-		// Render video background:
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		//	glEnable(GL_BLEND);
-		//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Get the trackable:
-		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
-		QCAR::Matrix44F modelViewMatrix =
-			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
+	if(state.getNumActiveTrackables() > 0) {
+		if(this->applicationStateManager->getCurrentApplicationState() == TRACKING) {
+			this->applicationStateManager->setApplicationState(TRACKED);
+			//focus the trackable
+			QCAR::CameraDevice::getInstance().startAutoFocus();
+		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
+			scanFrameForBarcode(state);
+		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING_CACHE ||
+				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS ||
+				  this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
 
-		// There is but one trackable
-		const Texture* const thisTexture = this->texture;
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		QCAR::Matrix44F modelViewProjection;
+			// Get the trackable:
+			const QCAR::Trackable* trackable = state.getActiveTrackable(0);
+			QCAR::Matrix44F modelViewMatrix =
+				QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
 
-		SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
+			// There is but one trackable
+			const Texture* const thisTexture = this->texture;
+
+			QCAR::Matrix44F modelViewProjection;
+
+			SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
+											 &modelViewMatrix.data[0]);
+			SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
 										 &modelViewMatrix.data[0]);
-		SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
-									 &modelViewMatrix.data[0]);
-		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
-									&modelViewMatrix.data[0] ,
-									&modelViewProjection.data[0]);
-		glUseProgram(shaderProgramID);
-		*/
-		/*
+			SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
+										&modelViewMatrix.data[0] ,
+										&modelViewProjection.data[0]);
+			glUseProgram(shaderProgramID);
 
-		glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) &(this->vertices[0]));
-		glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) &(this->normals[0]));
-		glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) &(this->texcoords[0]));
+			if(this->vertices != NULL &&
+			   this->normals != NULL &&
+			   this->texcoords != NULL &&
+			   thisTexture != NULL) {
 
-		glEnableVertexAttribArray(vertexHandle);
-		glEnableVertexAttribArray(normalHandle);
-		glEnableVertexAttribArray(textureCoordHandle);
-		*/
-		/*
-		if(this->texture == 0) {
-			DebugLog::logi("No texture set.");
-		} else {
-			DebugLog::logi("Texture set.");
-		}
-		if(this->vertices == 0 || sizeof(this->vertices) == 0) {
-			DebugLog::logi("No vertices set.");
-		} else {
-			DebugLog::logi("Vertices set.");
-		}
-		if(this->normals == 0 || sizeof(this->normals) == 0) {
-			DebugLog::logi("No normals set.");
-		} else {
-			DebugLog::logi("Normals set.");
-		}
-		if(this->texcoords == 0 || sizeof(this->texcoords) == 0) {
-			DebugLog::logi("No texture coordinates set.");
-		} else {
-			DebugLog::logi("Texture coordinates set.");
-		}
-		if(this->indices == 0 || sizeof(this->indices) == 0) {
-			DebugLog::logi("No indices set.");
-		} else {
-			DebugLog::logi("Indices set.");
-		}
-		DebugLog::logi("Has indices: " + this->hasIndices ? "true" : "false");
-		*/
-		/*
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
-		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
-						   (GLfloat*)&modelViewProjection.data[0] );
+				/*
+				DebugLog::logi("Rendering");
 
-		if(hasIndices) {
-			glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
-		} else {
-			glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
+				glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
+									  (const GLvoid*) (&vertices)[0]);
+				glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
+									  (const GLvoid*) (&normals)[0]);
+				glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
+									  (const GLvoid*) (&texcoords)[0]);
+
+				glEnableVertexAttribArray(vertexHandle);
+				glEnableVertexAttribArray(normalHandle);
+				glEnableVertexAttribArray(textureCoordHandle);
+
+				//if(hasIndices) {
+				//	glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
+				//} else {
+					glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
+				//}
+				 */
+			}
+
+			glDisable(GL_DEPTH_TEST);
+
+			glDisableVertexAttribArray(vertexHandle);
+			glDisableVertexAttribArray(normalHandle);
+			glDisableVertexAttribArray(textureCoordHandle);
 		}
 
-		//SampleUtils::checkGlError("ImageTargets renderFrame");
-
-		glDisable(GL_DEPTH_TEST);
-
-		glDisableVertexAttribArray(vertexHandle);
-		glDisableVertexAttribArray(normalHandle);
-		glDisableVertexAttribArray(textureCoordHandle);
+	} else if(this->applicationStateManager->getCurrentApplicationState() != TRACKING) {
+		this->applicationStateManager->setApplicationState(TRACKING);
 	}
-		 */
 
 	QCAR::Renderer::getInstance().end();
 }
@@ -278,7 +254,7 @@ void RenderManager::renderFrame() {
 void RenderManager::configureVideoBackground() {
     //get the default video mode:
     QCAR::CameraDevice& cameraDevice = QCAR::CameraDevice::getInstance();
-    QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_DEFAULT);
+    QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_OPTIMIZE_QUALITY);
 
     //set frame format
     QCAR::setFrameFormat(QCAR::RGB565, true);

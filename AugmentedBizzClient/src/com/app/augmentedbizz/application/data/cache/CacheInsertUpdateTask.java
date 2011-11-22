@@ -34,7 +34,7 @@ public class CacheInsertUpdateTask extends AsyncTask<Object, Integer, Object> {
 				dbAdapter.close();
 			}
 			catch(Exception e) {
-				DebugLog.loge("An error ocurred inserting a model.", e);
+				DebugLog.loge("An error ocurred while inserting a model.", e);
 				return 1;
 			}
 		}

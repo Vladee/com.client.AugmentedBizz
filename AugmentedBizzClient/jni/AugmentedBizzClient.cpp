@@ -44,10 +44,6 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_
 	application->getRenderManager()->renderFrame();
 }
 
-JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_AugmentedRenderer_scanFrame(JNIEnv, jobject) {
-	application->getRenderManager()->scanFrame();
-}
-
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_startCamera(JNIEnv *, jobject) {
 	application->getRenderManager()->startCamera();
 }

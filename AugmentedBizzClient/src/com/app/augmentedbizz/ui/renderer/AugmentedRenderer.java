@@ -32,18 +32,23 @@ public class AugmentedRenderer implements Renderer {
      * The native render function. 
      */
     private native void renderFrame();
-    private native void scanFrame();
 
 	@Override
 	public void onDrawFrame(GL10 arg0) {
-		ApplicationState currentState = this.application.getApplicationStateManager().getApplicationState();
-		if(currentState.equals(ApplicationState.TRACKING)) {
-			this.scanFrame();
-		} else
-		if(currentState.equals(ApplicationState.SHOWING_CACHE) ||
-				currentState.equals(ApplicationState.LOADING_INDICATORS) ||
-				currentState.equals(ApplicationState.SHOWING)) {
-			this.renderFrame();
+		if(active)
+		{
+			/*
+			ApplicationState currentState = this.application.getApplicationStateManager().getApplicationState();
+			if(currentState.equals(ApplicationState.TRACKED)) {
+				this.scanFrame();
+			} else
+			if(currentState.equals(ApplicationState.SHOWING_CACHE) ||
+					currentState.equals(ApplicationState.LOADING_INDICATORS) ||
+					currentState.equals(ApplicationState.SHOWING)) {
+				this.renderFrame();
+			}
+			*/
+			renderFrame();
 		}
 	}
 

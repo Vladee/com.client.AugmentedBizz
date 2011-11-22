@@ -4,7 +4,7 @@ import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 
 public interface ModelDataListener {
 	
-	void onModelData(OpenGLModelConfiguration openGLModelConfiguration);
+	void onModelData(OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion);
 	void onModelError(Exception e);
 
 }

@@ -5,6 +5,7 @@
 #include <map>
 #include <list>
 #include <string>
+#include <pthread.h>
 #include "../logging/DebugLog.h"
 #include "ObjectLoader.h"
 
@@ -54,6 +55,7 @@ class ApplicationStateManager : IApplicationStateListener {
     ApplicationState currentState;
     std::list<IApplicationStateListener*> applicationStateListeners;
     ApplicationStateManagerJavaInterface* applicationStateManagerJavaInterface;
+    pthread_mutex_t* stateMutex;
 
     void fireApplicationStateChangedEvent(ApplicationState);
     JNIEXPORT void JNICALL Java_com_app_augmentedbizz_application_status_ApplicationStateManger_fireApplicationStateChangedEventNative(JNIEnv *, jobject, jstring);

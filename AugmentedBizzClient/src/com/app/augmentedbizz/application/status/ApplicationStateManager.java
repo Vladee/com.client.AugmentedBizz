@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.app.augmentedbizz.logging.DebugLog;
 
 
@@ -28,6 +31,10 @@ public class ApplicationStateManager implements ApplicationStateListener {
     public ApplicationStateManager() {
     	this.addApplicationStateListener(this);
     }
+    /**
+     * A handler for non-UI thread state changement invocations
+     */
+    public Handler nativeStateHandler = new Handler();
     
     /**
      * Adds a new {@link ApplicationStateListener} to the listener list.
@@ -53,12 +60,14 @@ public class ApplicationStateManager implements ApplicationStateListener {
      * @param nextState The next application state that should be entered.
      */
     public synchronized void setApplicationState(ApplicationState nextState) {
-    	if(nextState != ApplicationState.INITIALIZING && !nextState.equals(currentState)) {
-    		// Initializing is the default state in native
-    		// and cannot be changed before it is initialized.
-    		this.fireApplicationStateChangedEventNative(nextState.getIndex());
+    	if(!nextState.equals(currentState)) {
+	    	if(nextState != ApplicationState.INITIALIZING) {
+	    		// Initializing is the default state in native
+	    		// and cannot be changed before it is initialized.
+	    		this.fireApplicationStateChangedEventNative(nextState.getIndex());
+	    	}
+	    	this.fireApplicationStateChangedEvent(nextState);
     	}
-    	this.fireApplicationStateChangedEvent(nextState);
     }
     
     /**
@@ -86,14 +95,33 @@ public class ApplicationStateManager implements ApplicationStateListener {
 	 */
 	private void fireApplicationStateChangedEvent(ApplicationState nextState) {
 		Iterator<ApplicationStateListener> it = this.applicationStateListener.iterator();
-		
+		ApplicationState currentState = this.currentState;
 		while(it.hasNext()) {
-			it.next().onApplicationStateChange(this.currentState, nextState);
+			it.next().onApplicationStateChange(currentState, nextState);
 		}
 	}
 	
-	private void fireApplicationStateChangedEvent(int nextState) {
-		this.fireApplicationStateChangedEvent(ApplicationState.values()[nextState]);
+	private synchronized void fireApplicationStateChangedEvent(final int nextState) {
+		nativeStateHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				synchronized(this) {
+					fireApplicationStateChangedEvent(ApplicationState.values()[nextState]);
+				}
+				synchronized(ApplicationStateManager.this) {
+					ApplicationStateManager.this.notify();
+				}
+			}
+		});
+		
+		try {
+			synchronized(this) {
+				wait();
+			}
+		} 
+		catch (InterruptedException e) {
+		}
+		
 	}
 	
 	/**

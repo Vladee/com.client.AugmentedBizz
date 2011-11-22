@@ -220,10 +220,10 @@ public class CacheDbAdapter {
                 CacheDbAdapter.KEY_ID + "=" + id,
                 null, null, null, null, null);
             
-            if (cursor != null) {
-            	return true;
-            } else {
+            if (cursor == null || cursor.isAfterLast()) {
             	return false;
+            } else {
+            	return true;
             }
     }
     

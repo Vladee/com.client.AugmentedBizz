@@ -1,7 +1,11 @@
 #ifndef _RENDERMANAGER_H_
 #define _RENDERMANAGER_H_
 
+#include <QCAR/QCAR.h>
 #include <QCAR/Tool.h>
+#include <QCAR/Renderer.h>
+#include <QCAR/Trackable.h>
+#include <QCAR/Tracker.h>
 #include "Texture.h"
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -16,7 +20,7 @@ class RenderManager {
 		~RenderManager();
 		void initizializeNative(unsigned short, unsigned short);
 		void updateRendering(unsigned short, unsigned short);
-		void scanFrame();
+		void scanFrameForBarcode(QCAR::State& state);
 		void renderFrame();
 		void startCamera();
 		void stopCamera();
