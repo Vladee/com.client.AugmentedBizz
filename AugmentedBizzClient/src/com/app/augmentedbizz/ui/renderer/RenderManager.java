@@ -91,13 +91,20 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
     }
 
 	@Override
-	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
-		this.setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
-		this.setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
-				openGLModelConfiguration.getOpenGLModel().getNormals(),
-				openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
-				openGLModelConfiguration.getOpenGLModel().getIndices());
-		this.setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
+	public void onModelData(final OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
+		
+		getGlSurfaceView().queueEvent(new Runnable() {
+			@Override
+			public void run() {
+				setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
+				setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
+						openGLModelConfiguration.getOpenGLModel().getNormals(),
+						openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
+						openGLModelConfiguration.getOpenGLModel().getIndices());
+				setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
+			}
+		});
+		
 		
 		if(retrievingNewerVersion) {
 			this.mainActivity.getAugmentedBizzApplication()

@@ -190,12 +190,11 @@ void RenderManager::renderFrame() {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// Get the trackable:
+			// Get the trackable (only one available)
 			const QCAR::Trackable* trackable = state.getActiveTrackable(0);
 			QCAR::Matrix44F modelViewMatrix =
 				QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
 
-			// There is but one trackable
 			const Texture* const thisTexture = this->texture;
 
 			QCAR::Matrix44F modelViewProjection;
@@ -214,26 +213,29 @@ void RenderManager::renderFrame() {
 			   this->texcoords != NULL &&
 			   thisTexture != NULL) {
 
-				/*
-				DebugLog::logi("Rendering");
-
 				glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) (&vertices)[0]);
+									  (const GLvoid*) &this->vertices[0]);
 				glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) (&normals)[0]);
+									  (const GLvoid*) &this->normals[0]);
 				glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) (&texcoords)[0]);
+									  (const GLvoid*) &this->texcoords[0]);
 
 				glEnableVertexAttribArray(vertexHandle);
 				glEnableVertexAttribArray(normalHandle);
 				glEnableVertexAttribArray(textureCoordHandle);
 
-				//if(hasIndices) {
-				//	glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
-				//} else {
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
+				glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
+								   (GLfloat*)&modelViewProjection.data[0] );
+
+
+				if(hasIndices) {
+					glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
+				} else {
 					glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
-				//}
-				 */
+				}
+
 			}
 
 			glDisable(GL_DEPTH_TEST);
