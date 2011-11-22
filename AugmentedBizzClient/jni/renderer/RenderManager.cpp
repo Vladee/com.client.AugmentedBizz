@@ -133,6 +133,14 @@ void RenderManager::setModel(JNIEnv *env, jfloatArray jvertices, jfloatArray jno
 
 void RenderManager::setTexture(jobject jtexture) {
 	this->texture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
+
+	glGenTextures(1, &(this->texture->mTextureID));
+	glBindTexture(GL_TEXTURE_2D, this->texture->mTextureID);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture->mWidth,
+			this->texture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		(GLvoid*)  this->texture->mData);
 }
 
 void RenderManager::setScaleFactor(float scaleFactor) {
@@ -250,6 +258,8 @@ void RenderManager::renderFrame() {
 	}
 
 	QCAR::Renderer::getInstance().end();
+
+	glFinish();
 }
 
 
