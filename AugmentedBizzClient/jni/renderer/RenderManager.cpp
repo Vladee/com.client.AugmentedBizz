@@ -13,6 +13,7 @@
 #include <QCAR/CameraCalibration.h>
 #include "../Utils.h"
 #include "CubeShaders.h"
+#include "Teapot.h"
 
 RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 		ObjectLoader* objectLoader,
@@ -22,6 +23,7 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 
 	this->numPixels = 0;
 	this->pixelArray = 0;
+	this->scanCounter = 0;
 
 	this->screenWidth = 0;
 	this->screenHeight = 0;
@@ -36,7 +38,7 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 	this->texcoords = 0;
 	this->indices = 0;
 	this->hasIndices = false;
-	this->scaleFactor = 0;
+	this->scaleFactor = 10.0f;
 }
 
 RenderManager::~RenderManager() {
@@ -52,13 +54,12 @@ void RenderManager::initizializeNative(unsigned short screenWidth, unsigned shor
 	if(!QCAR::CameraDevice::getInstance().init())
 		return;
 
+	// Select the default mode:
+	if(!QCAR::CameraDevice::getInstance().selectVideoMode(QCAR::CameraDevice::MODE_DEFAULT))
+		return;
+
 	// Configure the video background
 	configureVideoBackground();
-
-	// Select the default mode:
-	if(!QCAR::CameraDevice::getInstance().selectVideoMode(
-								QCAR::CameraDevice::MODE_DEFAULT))
-		return;
 
 	this->shaderProgramID = SampleUtils::createProgramFromBuffer(cubeMeshVertexShader,
 	                                            cubeFragmentShader);
@@ -70,8 +71,10 @@ void RenderManager::initizializeNative(unsigned short screenWidth, unsigned shor
 												"vertexTexCoord");
 	this->mvpMatrixHandle = glGetUniformLocation(shaderProgramID,
 												"modelViewProjectionMatrix");
+	// Define clear color
+	glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
 
-	// TODO
+	SampleUtils::checkGlError("Augmented Bizz GL init error");
 }
 
 void RenderManager:: setScreenDimensions(unsigned short screenWidth, unsigned short screenHeight) {
@@ -81,7 +84,9 @@ void RenderManager:: setScreenDimensions(unsigned short screenWidth, unsigned sh
 
 void RenderManager::updateRendering(unsigned short screenWidth, unsigned short screenHeight) {
 	this->setScreenDimensions(screenWidth, screenHeight);
-	//TODO
+
+	// Configure the video background
+	configureVideoBackground();
 }
 
 void RenderManager::startCamera() {
@@ -101,7 +106,6 @@ void RenderManager::startCamera() {
 	projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f, 2000.0f);
 
 	DebugLog::logi("Camera started.");
-	//this->applicationStateManager->setApplicationState(TRACKING);
 }
 
 void RenderManager::stopCamera() {
@@ -141,6 +145,8 @@ void RenderManager::setTexture(jobject jtexture) {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture->mWidth,
 			this->texture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 		(GLvoid*)  this->texture->mData);
+
+	DebugLog::logi("New texture is set");
 }
 
 void RenderManager::setScaleFactor(float scaleFactor) {
@@ -171,6 +177,8 @@ void RenderManager::scanFrameForBarcode(QCAR::State& state) {
 			//fill the pixel array
 			this->renderManagerJavaInterface->getObjectLoader()->setByteArrayRegion(pixelArray, 0, numPixels * 2, (const jbyte*)pixels);
 			this->renderManagerJavaInterface->callScanner(imageWidth, imageHeight, pixelArray);
+
+			this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv()->ReleaseByteArrayElements(pixelArray, (jbyte*)pixels, 0);
 		}
 	}
 }
@@ -185,9 +193,15 @@ void RenderManager::renderFrame() {
 	if(state.getNumActiveTrackables() > 0) {
 		if(this->applicationStateManager->getCurrentApplicationState() == TRACKING) {
 			this->applicationStateManager->setApplicationState(TRACKED);
+			this->scanCounter = 0;
 			//focus the trackable
 			QCAR::CameraDevice::getInstance().startAutoFocus();
 		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
+			++this->scanCounter;
+			if(scanCounter > 10) {
+				QCAR::CameraDevice::getInstance().startAutoFocus();
+				this->scanCounter = 0;
+			}
 			scanFrameForBarcode(state);
 		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING_CACHE ||
 				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS ||
@@ -216,50 +230,50 @@ void RenderManager::renderFrame() {
 										&modelViewProjection.data[0]);
 			glUseProgram(shaderProgramID);
 
-			if(this->vertices != NULL &&
-			   this->normals != NULL &&
-			   this->texcoords != NULL &&
-			   thisTexture != NULL) {
-
-				glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) &this->vertices[0]);
-				glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) &this->normals[0]);
-				glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
-									  (const GLvoid*) &this->texcoords[0]);
-
-				glEnableVertexAttribArray(vertexHandle);
-				glEnableVertexAttribArray(normalHandle);
-				glEnableVertexAttribArray(textureCoordHandle);
-
+			/*
+			DebugLog::logi("R1");
+			glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &(&this->vertices)[0]);
+			glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &(&this->normals)[0]);
+			glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &(&this->texcoords)[0]);
+			DebugLog::logi("R2");
+			glEnableVertexAttribArray(vertexHandle);
+			glEnableVertexAttribArray(normalHandle);
+			glEnableVertexAttribArray(textureCoordHandle);
+			DebugLog::logi("R3");
+			if(thisTexture != NULL) {
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
-				glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
-								   (GLfloat*)&modelViewProjection.data[0] );
-
-
-				if(hasIndices) {
-					glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
-				} else {
-					glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
-				}
-
 			}
+			DebugLog::logi("R3b");
+			glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
+							   (GLfloat*)&modelViewProjection.data[0] );
+			DebugLog::logi("R4");
 
-			glDisable(GL_DEPTH_TEST);
-
-			glDisableVertexAttribArray(vertexHandle);
-			glDisableVertexAttribArray(normalHandle);
-			glDisableVertexAttribArray(textureCoordHandle);
+			//if(hasIndices) {
+			//	glDrawElements(GL_TRIANGLES, this->numModelElementsToDraw, GL_UNSIGNED_SHORT, (const GLvoid*) &(this->indices[0]));
+			//} else {
+				glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
+			//}
+			DebugLog::logi("R5");
+			*/
 		}
 
 	} else if(this->applicationStateManager->getCurrentApplicationState() != TRACKING) {
 		this->applicationStateManager->setApplicationState(TRACKING);
 	}
 
-	QCAR::Renderer::getInstance().end();
+	SampleUtils::checkGlError("Augmented Bizz GL error");
 
-	glFinish();
+	glDisable(GL_DEPTH_TEST);
+
+	glDisableVertexAttribArray(vertexHandle);
+	glDisableVertexAttribArray(normalHandle);
+	glDisableVertexAttribArray(textureCoordHandle);
+
+	QCAR::Renderer::getInstance().end();
 }
 
 

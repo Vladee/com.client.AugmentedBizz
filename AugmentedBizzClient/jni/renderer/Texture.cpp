@@ -79,7 +79,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
         return 0;
     }
 
-    jboolean isCopy;
+    jboolean isCopy = JNI_TRUE;
     jbyte* pixels = env->GetByteArrayElements(pixelBuffer, &isCopy);
     if (pixels == NULL)
     {

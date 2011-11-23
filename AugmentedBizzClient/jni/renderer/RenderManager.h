@@ -36,6 +36,7 @@ class RenderManager {
 
 		unsigned int numPixels;
 		jbyteArray pixelArray;
+		unsigned int scanCounter;
 
 		unsigned short screenWidth;
 		unsigned short screenHeight;

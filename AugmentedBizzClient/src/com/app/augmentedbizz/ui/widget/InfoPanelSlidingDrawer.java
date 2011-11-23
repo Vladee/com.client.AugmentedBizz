@@ -170,6 +170,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	@Override
 	public void onDrawerClosed() {
 		if(!locked) {
+			bringToFront();
 			showArrowUpActionSymbol();
 		}
 	}
@@ -177,6 +178,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 	@Override
 	public void onDrawerOpened() {
 		if(!locked) {
+			bringToFront();
 			showArrowDownActionSymbol();
 		}
 	}

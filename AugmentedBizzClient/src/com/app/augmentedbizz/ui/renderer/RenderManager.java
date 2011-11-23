@@ -93,23 +93,26 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 	@Override
 	public void onModelData(final OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
 		
-		getGlSurfaceView().queueEvent(new Runnable() {
-			@Override
-			public void run() {
-				setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
-				setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
-						openGLModelConfiguration.getOpenGLModel().getNormals(),
-						openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
-						openGLModelConfiguration.getOpenGLModel().getIndices());
-				setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
+		if(this.mainActivity.getAugmentedBizzApplication()
+			.getApplicationStateManager().
+			getApplicationState().equals(ApplicationState.LOADING)) {
+			getGlSurfaceView().queueEvent(new Runnable() {
+				@Override
+				public void run() {
+					setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
+					setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
+					setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
+							openGLModelConfiguration.getOpenGLModel().getNormals(),
+							openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
+							openGLModelConfiguration.getOpenGLModel().getIndices());
+				}
+			});
+			
+			if(retrievingNewerVersion) {
+				this.mainActivity.getAugmentedBizzApplication()
+					.getApplicationStateManager().
+					setApplicationState(ApplicationState.SHOWING_CACHE);
 			}
-		});
-		
-		
-		if(retrievingNewerVersion) {
-			this.mainActivity.getAugmentedBizzApplication()
-				.getApplicationStateManager().
-				setApplicationState(ApplicationState.SHOWING_CACHE);
 		}
 	}
 	
@@ -164,11 +167,15 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 
 	@Override
 	public void onIndicatorData(List<TargetIndicator> targetIndicators) {
-		// TODO show indicators
-		
-		this.mainActivity.getAugmentedBizzApplication()
+		if(this.mainActivity.getAugmentedBizzApplication()
 			.getApplicationStateManager().
-			setApplicationState(ApplicationState.SHOWING);
+			getApplicationState().equals(ApplicationState.LOADING_INDICATORS)) {
+			// TODO show indicators
+			
+			this.mainActivity.getAugmentedBizzApplication()
+				.getApplicationStateManager().
+				setApplicationState(ApplicationState.SHOWING);
+		}
 	}
 
 	@Override

@@ -18,7 +18,7 @@
     <com.app.augmentedbizz.ui.widget.InfoPanelSlidingDrawer
             android:id="@+id/slidingDrawerInfoPanel"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:handle="@+id/relativeLayoutInfoHandle"
