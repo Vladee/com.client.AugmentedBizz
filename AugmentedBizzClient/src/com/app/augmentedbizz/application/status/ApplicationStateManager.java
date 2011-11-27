@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.os.Handler;
-import android.os.Looper;
 
 import com.app.augmentedbizz.logging.DebugLog;
 
@@ -22,19 +21,20 @@ public class ApplicationStateManager implements ApplicationStateListener {
     /**
      * Variable that stores the current application state.
      */
-    private ApplicationState currentState = ApplicationState.UNINITIATED;
+    private volatile ApplicationState currentState = ApplicationState.UNINITIATED;
     /**
      * List of listeners that will be notified when a state change takes place.
      */
     private List<ApplicationStateListener> applicationStateListener = new ArrayList<ApplicationStateListener>();
     
-    public ApplicationStateManager() {
-    	this.addApplicationStateListener(this);
-    }
     /**
      * A handler for non-UI thread state changement invocations
      */
     public Handler nativeStateHandler = new Handler();
+    
+    public ApplicationStateManager() {
+    	this.addApplicationStateListener(this);
+    }
     
     /**
      * Adds a new {@link ApplicationStateListener} to the listener list.

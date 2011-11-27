@@ -13,7 +13,6 @@ import com.app.augmentedbizz.ui.MainActivity;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
 import com.app.augmentedbizz.ui.scanner.ScannerResultListener;
 import com.app.augmentedbizz.util.Display;
-import com.qualcomm.QCAR.QCAR;
 
 /**
  * Manager for graphical rendering.
@@ -44,12 +43,32 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		if(getGlSurfaceView() == null) {
 			return false;
 		}
-		
+
 		if(!initialized) {
-			getGlSurfaceView().setup(QCAR.requiresAlpha(), depthSize, stencilSize, this.mainActivity.getAugmentedBizzApplication());
-			this.initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
+			getGlSurfaceView().setup(true, 
+									 depthSize, 
+									 stencilSize, 
+									 RenderManager.this.mainActivity.getAugmentedBizzApplication());
+			//initialize the native components synchronized in the GL thread as we otherwise get context errors
+			getGlSurfaceView().queueEvent(new Runnable() {
+				@Override
+				public void run() {
+					initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
+					synchronized(RenderManager.this) {
+						RenderManager.this.notify();
+					}
+				}
+			});
+			synchronized(this) {
+				try {
+					wait();
+				}
+				catch (InterruptedException e) {
+				}
+			}
 			initialized = true;
 		}
+
 		return true;
 	}
 	
@@ -89,7 +108,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
     		.getQRScanner().scanForQRCode(width, height, bitmapData, RenderManager.this);
 
     }
-
+    		
 	@Override
 	public void onModelData(final OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
 		
@@ -99,6 +118,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 			getGlSurfaceView().queueEvent(new Runnable() {
 				@Override
 				public void run() {
+					//set the new model data
 					setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
 					setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
 					setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
@@ -116,6 +136,9 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		}
 	}
 	
+	/**
+	 * Native methods for setting the model data
+	 */
 	private native void setScaleFactor(float scaleFactor);
 	private native void setModel(float[] vertices, float[] normals, float [] texcoords, short[] indices);
 	private native void setTexture(Texture texture);
@@ -127,13 +150,11 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 
 	@Override
 	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
-		// TODO
 		if(nextState.equals(ApplicationState.INITIALIZED) && lastState.equals(ApplicationState.INITIALIZING)) {
 			DebugLog.logi("Starting camera.");
 			startCamera();
 			this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
-		}
-		else if(nextState.equals(ApplicationState.DEINITIALIZING)) {
+		} else if(nextState.equals(ApplicationState.DEINITIALIZING)) {
 			DebugLog.logi("Stopping camera.");
 			stopCamera();
 		}
@@ -141,11 +162,12 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 
 	@Override
 	public void onScanningSuccess(int targetId) {
-		//change the state to SCANNED only if the SCAN state wasn't lost in the meantime
-		ApplicationState currentState = this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
-				.getApplicationState();
+		//change the state to SCANNED only if the SCANNING state wasn't lost in the meantime
+		ApplicationState currentState = this.mainActivity.getAugmentedBizzApplication()
+				.getApplicationStateManager().getApplicationState();
 		if(currentState.equals(ApplicationState.SCANNING)) {
-			this.mainActivity.getAugmentedBizzApplication().getApplicationStateManager()
+			this.mainActivity.getAugmentedBizzApplication()
+				.getApplicationStateManager()
 				.setApplicationState(ApplicationState.SCANNED);
 			this.mainActivity.getAugmentedBizzApplication().getDataManager().loadTarget(targetId);
 		}
@@ -170,6 +192,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		if(this.mainActivity.getAugmentedBizzApplication()
 			.getApplicationStateManager().
 			getApplicationState().equals(ApplicationState.LOADING_INDICATORS)) {
+			
 			// TODO show indicators
 			
 			this.mainActivity.getAugmentedBizzApplication()

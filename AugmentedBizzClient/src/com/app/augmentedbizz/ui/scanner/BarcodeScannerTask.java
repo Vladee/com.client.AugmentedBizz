@@ -43,7 +43,6 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object> {
 	@Override
 	protected Object doInBackground(Object... params) {
 		try {
-			DebugLog.logi("Scanning for QRCodes.");
 			Integer width = (Integer)params[0];
 			Integer height = (Integer)params[1];
 			ByteArrayBuffer data = (ByteArrayBuffer)params[2];
@@ -110,6 +109,8 @@ public class BarcodeScannerTask extends AsyncTask<Object, Object, Object> {
 		if(cameraImage == null || width != cameraImage.getWidth() || height != cameraImage.getHeight()) {
 			cameraImage = Bitmap.createBitmap(width, height, bitmapConfig);
 		}
-		cameraImage.copyPixelsFromBuffer(ByteBuffer.wrap(bitmapData));
+		
+		ByteBuffer byteBuffer = ByteBuffer.wrap(bitmapData);
+		cameraImage.copyPixelsFromBuffer(byteBuffer);
 	}
 }

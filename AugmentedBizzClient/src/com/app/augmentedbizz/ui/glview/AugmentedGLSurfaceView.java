@@ -37,6 +37,7 @@ public class AugmentedGLSurfaceView extends GLSurfaceView {
     public void setup(boolean translucent, int depth, int stencil, ApplicationFacade application) {
         setTranslucent(translucent);
         setEGLContextFactory(createContextFactory());
+        getHolder().setFormat(PixelFormat.TRANSLUCENT);
         setEGLConfigChooser(createConfigChooser(translucent, depth, stencil));
         setupRenderer(application);
     }

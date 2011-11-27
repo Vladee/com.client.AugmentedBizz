@@ -6,10 +6,11 @@
 #include <QCAR/Renderer.h>
 #include <QCAR/Trackable.h>
 #include <QCAR/Tracker.h>
-#include "Texture.h"
+#include <pthread.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "../application/ApplicationStateManager.h"
+#include "Texture.h"
 
 class RenderManager;
 class RenderManagerJavaInterface;
@@ -18,10 +19,13 @@ class RenderManager {
 	public:
 		RenderManager(ApplicationStateManager*, ObjectLoader*, jobject);
 		~RenderManager();
-		void initizializeNative(unsigned short, unsigned short);
+		void inititializeNative(unsigned short, unsigned short);
+		void initRendering();
 		void updateRendering(unsigned short, unsigned short);
 		void scanFrameForBarcode(QCAR::State& state);
 		void renderFrame();
+		void renderModel(QCAR::State& state);
+		void releaseModel();
 		void startCamera();
 		void stopCamera();
 		void setTexture(jobject);
@@ -51,12 +55,17 @@ class RenderManager {
 
 		unsigned short maxTrackableCount;
 		int numModelElementsToDraw;
-		float *vertices;
-		float *normals;
-		float *texcoords;
+		jfloatArray jVertices;
+		jfloatArray jNormals;
+		jfloatArray jTexcoords;
+		jshortArray jIndices;
+		float* vertices;
+		float* normals;
+		float* texcoords;
 		unsigned short *indices;
 		bool hasIndices;
 		float scaleFactor;
+		bool newTextureAvailable;
 };
 
 class RenderManagerJavaInterface: public JavaInterface {

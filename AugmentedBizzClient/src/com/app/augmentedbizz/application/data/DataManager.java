@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.app.augmentedbizz.R;
 import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.application.AugmentedBizzApplication;
-import com.app.augmentedbizz.application.data.cache.CacheDbAdapter;
 import com.app.augmentedbizz.application.data.cache.CacheResponseListener;
 import com.app.augmentedbizz.application.data.cache.CacheStorageManager;
 import com.app.augmentedbizz.application.status.ApplicationState;
@@ -70,7 +68,7 @@ CacheResponseListener {
 	}
 
 	public void addModelDataListener(ModelDataListener listener) {
-		this.modelDataListeners.add(listener);
+		this.modelDataListeners.add(0, listener);
 	}
 	
 	public void removeModelDataListener(ModelDataListener listener) {
@@ -78,7 +76,7 @@ CacheResponseListener {
 	}
 	
 	public void addTargetDataListener(TargetDataListener listener) {
-		this.targetDataListeners.add(listener);
+		this.targetDataListeners.add(0, listener);
 	}
 	
 	public void removeTargetDataListener(TargetDataListener listener) {
@@ -86,7 +84,7 @@ CacheResponseListener {
 	}
 	
 	public void addIndicatorDataListener(IndicatorDataListener listener) {
-		this.indicatorDataListeners.add(listener);
+		this.indicatorDataListeners.add(0, listener);
 	}
 	
 	public void removeIndicatorDataListener(IndicatorDataListener listener) {
@@ -226,6 +224,7 @@ CacheResponseListener {
 	@Override
 	public void onModelError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorModelRetrieval);
+		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the model was being loaded.");
 	}
 
@@ -238,6 +237,7 @@ CacheResponseListener {
 	@Override
 	public void onIndicatorError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the indicators were being loaded.");
 	}
 	
@@ -252,6 +252,7 @@ CacheResponseListener {
 	@Override
 	public void onTargetError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the target was being loaded.");
 	}
 	

@@ -44,6 +44,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
     jclass textureClass = env->GetObjectClass(textureObject);
 
     // Get width:
+    //TODO
     jfieldID widthID = env->GetFieldID(textureClass, "width", "I");
     if (!widthID)
     {
@@ -53,6 +54,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
     newTexture->mWidth = env->GetIntField(textureObject, widthID);
 
     // Get height:
+    //TODO
     jfieldID heightID = env->GetFieldID(textureClass, "height", "I");
     if (!heightID)
     {
@@ -65,7 +67,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
     newTexture->mChannelCount = 4;
 
     // Get data:
-    jmethodID texBufferMethodId = env->GetMethodID(textureClass , "getData", "()[B");
+    jmethodID texBufferMethodId = env->GetMethodID(textureClass , "getRGBAdata", "()[B");
     if (!texBufferMethodId)
     {
         DebugLog::loge("Function getData() not found.");

@@ -75,30 +75,18 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 	@Override
 	protected Object doInBackground(Object... arg0) {
 		try {
-			// Why? Managers are set up before the initializer is called.
-			// Plus, avoid direct calls between threads.
-//			while(facade.getUIManager().getMainActivity() == null) {
-//				Thread.sleep(10);
-//			}
 			publishProgress(1);
-			Thread.sleep(10);
+			Thread.sleep(1000);
 			long preTimePoint = System.currentTimeMillis();
 			initializeApplicationNative(facade);
 			initializeMainQCARComponents();
 			initializeQCARTracker();
-			// Why calling the garbage collection during initialization?
-//			System.gc();
+			System.gc();
 			long postTimePoints = System.currentTimeMillis();
 			if(postTimePoints - preTimePoint < 2000) {
 				Thread.sleep(2000 - (postTimePoints - preTimePoint));
 			}
 			publishProgress(2);
-			// This is _NOT_ thread safe! Call it after returning to the UI thread or wrap in in another
-			// AsyncTask afterwards.
-//			while(!facade.getUIManager().getMainActivity().getRenderManager().initialize()) {
-//				DebugLog.logi("Immernoch Inietzscheleising");
-//				Thread.sleep(10);
-//			}
 		}
 		catch(Exception e) {
 			return e;
@@ -110,8 +98,7 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 	protected void onProgressUpdate(Integer... values) {
 		if(values[0] == 1) {
 			facade.getUIManager().getMainActivity().showSplashScreen();
-		}
-		else if(values[0] == 2) {
+		} else if(values[0] == 2) {
 			facade.getUIManager().getMainActivity().showMainScreen();
 			// Wrap in another AsyncTask if this call causes performance issues
 			facade.getUIManager().getMainActivity().getRenderManager().initialize();
@@ -146,6 +133,8 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 		if(process < 0) {
 			throw(new Exception("Main QCAR initialization failed"));
 		}
+		
+		DebugLog.logi("Main QCAR initialized");
 	}
 	
 	/**
@@ -162,5 +151,6 @@ public class Initializer extends AsyncTask<Object, Integer, Object> {
 		if(process < -1) {
 			throw(new Exception("QCAR Tracker initialization failed"));
 		}
+		DebugLog.logi("QCAR Tracker initialized");
 	}
 }

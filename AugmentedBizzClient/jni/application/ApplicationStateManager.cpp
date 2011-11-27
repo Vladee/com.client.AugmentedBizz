@@ -23,25 +23,17 @@ ApplicationStateManager::ApplicationStateManager(ObjectLoader *objectLoader, job
 	this->applicationStateNames[12] = "Exiting";
 
 	this->applicationStateListeners.push_back(this);
-
-	//initialize the state mutex
-	pthread_mutex_init(this->stateMutex, NULL);
 }
 
 ApplicationStateManager::~ApplicationStateManager() {
 	delete this->applicationStateManagerJavaInterface;
 	this->applicationStateManagerJavaInterface = 0;
-
-	//destroy the state mutex
-	pthread_mutex_destroy(this->stateMutex);
 }
 
 void ApplicationStateManager::setApplicationState(ApplicationState nextState) {
 	if(nextState != currentState) {
-		pthread_mutex_lock(this->stateMutex);
 		this->fireApplicationStateChangedEvent(nextState);
 		this->applicationStateManagerJavaInterface->setJavaApplicationState(nextState);
-		pthread_mutex_unlock(this->stateMutex);
 	}
 }
 

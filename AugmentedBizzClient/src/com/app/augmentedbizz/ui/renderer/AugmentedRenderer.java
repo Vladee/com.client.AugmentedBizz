@@ -6,7 +6,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView.Renderer;
 
 import com.app.augmentedbizz.application.ApplicationFacade;
-import com.app.augmentedbizz.application.status.ApplicationState;
 import com.qualcomm.QCAR.QCAR;
 
 /**
@@ -24,8 +23,9 @@ public class AugmentedRenderer implements Renderer {
 	}
 	
     /** 
-     * Native function to update the renderer. 
+     * Native function to init and update the rendering. 
      */
+    private native void initRendering();
     public native void updateRendering(int width, int height);
     
     /** 
@@ -35,8 +35,7 @@ public class AugmentedRenderer implements Renderer {
 
 	@Override
 	public void onDrawFrame(GL10 arg0) {
-		if(active)
-		{
+		if(active) {
 			renderFrame();		
 		}
 	}
@@ -46,13 +45,17 @@ public class AugmentedRenderer implements Renderer {
 	{	
 		//call native function to update rendering
         updateRendering(width, height);
-
+        
         // Call QCAR function to handle render surface size changes:
         QCAR.onSurfaceChanged(width, height);
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		
+		//TODO
+		initRendering();
+        
         //call QCAR function to (re)initialize rendering after first use
         //or after OpenGL ES context was lost (e.g. after onPause/onResume)
         QCAR.onSurfaceCreated();
@@ -66,10 +69,10 @@ public class AugmentedRenderer implements Renderer {
 	}
 
 	/**
-	 * @param active True, if the renderer should actively render the data
+	 * @param active the active to set
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-
+	
 }

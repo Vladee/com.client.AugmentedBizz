@@ -72,7 +72,7 @@ public class MainActivity extends AugmentedBizzActivity {
 		DebugLog.logi("MainActivity.onPause()");
 		super.onPause();
 	
-		//hide the main screen
+		//pause the GL surface view
 		if(mainLayout != null) {
 			getRenderManager().getGlSurfaceView().onPause();
 		}
