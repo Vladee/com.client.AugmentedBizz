@@ -44,7 +44,6 @@ Texture::create(JNIEnv* env, jobject textureObject)
     jclass textureClass = env->GetObjectClass(textureObject);
 
     // Get width:
-    //TODO
     jfieldID widthID = env->GetFieldID(textureClass, "width", "I");
     if (!widthID)
     {
@@ -54,7 +53,6 @@ Texture::create(JNIEnv* env, jobject textureObject)
     newTexture->mWidth = env->GetIntField(textureObject, widthID);
 
     // Get height:
-    //TODO
     jfieldID heightID = env->GetFieldID(textureClass, "height", "I");
     if (!heightID)
     {

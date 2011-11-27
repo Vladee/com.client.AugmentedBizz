@@ -52,8 +52,6 @@ public class AugmentedRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		
-		//TODO
 		initRendering();
         
         //call QCAR function to (re)initialize rendering after first use
