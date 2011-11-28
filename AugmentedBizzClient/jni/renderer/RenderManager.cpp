@@ -249,7 +249,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 		glEnableVertexAttribArray(textureCoordHandle);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
+		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
 
 		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
 						   (GLfloat*)&modelViewProjection.data[0] );
