@@ -63,6 +63,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 						} catch (IOException e) {
 							DebugLog.loge("Unable to open indicator.png.");
 						}
+						DebugLog.loge("indicator.png loaded.");
 						synchronized(RenderManager.this) {
 							RenderManager.this.notify();
 						}

@@ -37,6 +37,7 @@ class RenderManager {
 	private:
 		void configureVideoBackground();
 		void setScreenDimensions(unsigned short, unsigned short);
+		void addTexture(Texture* texture);
 
 		ApplicationStateManager* applicationStateManager;
 		RenderManagerJavaInterface* renderManagerJavaInterface;

@@ -162,26 +162,22 @@ void RenderManager::setModel(JNIEnv* env, jfloatArray jvertices, jfloatArray jno
 
 void RenderManager::setTexture(jobject jtexture) {
 	this->modelTexture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
-
-	glGenTextures(1, &(this->modelTexture->mTextureID));
-	glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->modelTexture->mWidth,
-			this->modelTexture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		(GLvoid*)  this->modelTexture->mData);
+	this->addTexture(this->modelTexture);
 }
 
 void RenderManager::setIndicatorTexture(jobject jtexture) {
 	this->indicatorTexture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
+	this->addTexture(this->indicatorTexture);
+}
 
-	glGenTextures(1, &(this->indicatorTexture->mTextureID));
-	glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+void RenderManager::addTexture(Texture* texture) {
+	glGenTextures(1, &(texture->mTextureID));
+	glBindTexture(GL_TEXTURE_2D, texture->mTextureID);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->indicatorTexture->mWidth,
-			this->indicatorTexture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		(GLvoid*)  this->indicatorTexture->mData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->mWidth,
+			texture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		(GLvoid*)  texture->mData);
 }
 
 void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
@@ -216,6 +212,67 @@ void RenderManager::scanFrameForBarcode(QCAR::State& state) {
 	}
 }
 
+void RenderManager::renderFrame() {
+    // Clear color and depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Render video background:
+	QCAR::State state = QCAR::Renderer::getInstance().begin();
+
+	if(state.getNumActiveTrackables() > 0) {
+		if(this->applicationStateManager->getCurrentApplicationState() == TRACKING) {
+			this->applicationStateManager->setApplicationState(TRACKED);
+			this->scanCounter = 0;
+			//focus the trackable
+			QCAR::CameraDevice::getInstance().startAutoFocus();
+		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
+			++this->scanCounter;
+			if(scanCounter > 8) {
+				QCAR::CameraDevice::getInstance().startAutoFocus();
+				this->scanCounter = 0;
+			}
+			scanFrameForBarcode(state);
+		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING_CACHE ||
+				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS) {
+
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			renderModel(state);
+		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glEnableVertexAttribArray(vertexHandle);
+			glEnableVertexAttribArray(normalHandle);
+			glEnableVertexAttribArray(textureCoordHandle);
+
+			renderModel(state);
+			renderIndicators(state);
+		}
+
+	} else if(this->applicationStateManager->getCurrentApplicationState() != TRACKING) {
+		this->applicationStateManager->setApplicationState(TRACKING);
+		releaseData();
+	}
+
+	SampleUtils::checkGlError("Augmented Bizz GL error");
+
+	glDisable(GL_DEPTH_TEST);
+
+	glDisableVertexAttribArray(vertexHandle);
+	glDisableVertexAttribArray(normalHandle);
+	glDisableVertexAttribArray(textureCoordHandle);
+
+	QCAR::Renderer::getInstance().end();
+
+	glFinish();
+}
+
 void RenderManager::renderModel(QCAR::State& state) {
 	if(this->vertices &&
 	   this->normals &&
@@ -244,12 +301,8 @@ void RenderManager::renderModel(QCAR::State& state) {
 		glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
 							  (const GLvoid*) this->texcoords);
 
-		glEnableVertexAttribArray(vertexHandle);
-		glEnableVertexAttribArray(normalHandle);
-		glEnableVertexAttribArray(textureCoordHandle);
-
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
 
 		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
 						   (GLfloat*)&modelViewProjection.data[0] );
@@ -282,28 +335,24 @@ void RenderManager::renderIndicators(QCAR::State& state) {
 		glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
 							  (const GLvoid*) indicatorTexcoords);
 
-		glEnableVertexAttribArray(vertexHandle);
-		glEnableVertexAttribArray(normalHandle);
-		glEnableVertexAttribArray(textureCoordHandle);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
 
 		SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
 				&modelViewMatrix.data[0]);
-		//SampleUtils::translatePoseMatrix(x, y, z,
-				//&modelViewMatrix.data[0]);
-		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
-									&modelViewMatrix.data[0] ,
-									&modelViewProjection.data[0]);
-		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
-								   (GLfloat*)&modelViewProjection.data[0] );
 
 		for(int i = 0; i < this->numIndicators / 3; i++) {
 			float x = this->indicators[3*i + 0];
 			float y = this->indicators[3*i + 1];
 			float z = this->indicators[3*i + 2];
 
+			SampleUtils::translatePoseMatrix(x, y, z,
+					&modelViewMatrix.data[0]);
+			SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
+										&modelViewMatrix.data[0] ,
+										&modelViewProjection.data[0]);
+			glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
+									   (GLfloat*)&modelViewProjection.data[0] );
 			glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) indicatorIndices);
 		}
 	}
@@ -354,64 +403,6 @@ void RenderManager::releaseData() {
 	this->numIndicators = 0;
 	setScaleFactor(1.0f);
 }
-
-void RenderManager::renderFrame() {
-    // Clear color and depth buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Render video background:
-	QCAR::State state = QCAR::Renderer::getInstance().begin();
-
-	if(state.getNumActiveTrackables() > 0) {
-		if(this->applicationStateManager->getCurrentApplicationState() == TRACKING) {
-			this->applicationStateManager->setApplicationState(TRACKED);
-			this->scanCounter = 0;
-			//focus the trackable
-			QCAR::CameraDevice::getInstance().startAutoFocus();
-		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
-			++this->scanCounter;
-			if(scanCounter > 8) {
-				QCAR::CameraDevice::getInstance().startAutoFocus();
-				this->scanCounter = 0;
-			}
-			scanFrameForBarcode(state);
-		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING_CACHE ||
-				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS) {
-
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_CULL_FACE);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			renderModel(state);
-		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_CULL_FACE);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			renderModel(state);
-			renderIndicators(state);
-		}
-
-	} else if(this->applicationStateManager->getCurrentApplicationState() != TRACKING) {
-		this->applicationStateManager->setApplicationState(TRACKING);
-		releaseData();
-	}
-
-	SampleUtils::checkGlError("Augmented Bizz GL error");
-
-	glDisable(GL_DEPTH_TEST);
-
-	glDisableVertexAttribArray(vertexHandle);
-	glDisableVertexAttribArray(normalHandle);
-	glDisableVertexAttribArray(textureCoordHandle);
-
-	QCAR::Renderer::getInstance().end();
-
-	glFinish();
-}
-
 
 void RenderManager::configureVideoBackground() {
     //get the default video mode:

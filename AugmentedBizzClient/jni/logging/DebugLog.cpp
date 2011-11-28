@@ -22,12 +22,12 @@ void DebugLog::logw(std::string message) {
 }
 
 void DebugLog::log(android_LogPriority logPriority, std::string message) {
-//	__android_log_print(logPriority,LOG_TAG,DebugLog::makeMessage(message));
+	//__android_log_print(logPriority,LOG_TAG,DebugLog::makeMessage(message));
 }
 
 char* DebugLog::makeMessage(std::string message) {
-//	std::string messageWithPrefix = LOG_PREFIX + message;
-//	char *result = new char[messageWithPrefix.length()];
-//	strcpy(result,messageWithPrefix.c_str());
-//	return result;
+	//std::string messageWithPrefix = LOG_PREFIX + message;
+	//char *result = new char[messageWithPrefix.length()];
+	//strcpy(result,messageWithPrefix.c_str());
+	//return result;
 }
