@@ -92,6 +92,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnModelDataEvent(OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
+		//continue if LOADING state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING)) {
+			return;
+		}
+		
 		Iterator<ModelDataListener> it = this.modelDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -100,6 +106,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnModelErrorEvent(Exception e) {
+		//continue if LOADING state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING)) {
+			return;
+		}
+		
 		Iterator<ModelDataListener> it = this.modelDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -108,6 +120,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnTargetDataEvent(Target target) {
+		//continue if LOADING state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING)) {
+			return;
+		}
+		
 		Iterator<TargetDataListener> it = this.targetDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -116,6 +134,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnTargetErrorEvent(Exception e) {
+		//continue if LOADING state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING)) {
+			return;
+		}
+		
 		Iterator<TargetDataListener> it = this.targetDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -124,6 +148,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnIndicatorDataEvent(List<TargetIndicator> indicators) {
+		//continue if LOADING_INDICATORS state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING_INDICATORS)) {
+			return;
+		}
+		
 		Iterator<IndicatorDataListener> it = this.indicatorDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -132,6 +162,12 @@ CacheResponseListener {
 	}
 	
 	private void fireOnIndicatorErrorEvent(Exception e) {
+		//continue if LOADING_INDICATORS state not lost
+		if(!facade.getApplicationStateManager()
+				.getApplicationState().equals(ApplicationState.LOADING_INDICATORS)) {
+			return;
+		}
+		
 		Iterator<IndicatorDataListener> it = this.indicatorDataListeners.iterator();
 		
 		while(it.hasNext()) {
@@ -224,6 +260,7 @@ CacheResponseListener {
 	@Override
 	public void onModelError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorModelRetrieval);
+		clearLocalBuffer();
 		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the model was being loaded.");
 	}
@@ -237,6 +274,7 @@ CacheResponseListener {
 	@Override
 	public void onIndicatorError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		clearLocalBuffer();
 		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the indicators were being loaded.");
 	}
@@ -252,6 +290,7 @@ CacheResponseListener {
 	@Override
 	public void onTargetError(Exception e) {
 		getApplicationFacade().getUIManager().showWarningToast(R.string.errorServiceUnreachable);
+		clearLocalBuffer();
 		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.TRACKING);
 		DebugLog.logi("An error ocurred while the target was being loaded.");
 	}
@@ -268,6 +307,16 @@ CacheResponseListener {
 	public void onCacheFailure(int modelId) {
 		// try to get the data from the service manager
 		serviceManager.callModelInformationService(modelId, this);
+	}
+	
+	/**
+	 * Clears the local buffer data by deleting the target, model and indicators
+	 */
+	private void clearLocalBuffer() {
+		currentTarget = null;
+		currentTargetId = -1;
+		openGLModelConfiguration = null;
+		indicators.clear();
 	}
 
 	/**

@@ -25,11 +25,13 @@ class RenderManager {
 		void scanFrameForBarcode(QCAR::State& state);
 		void renderFrame();
 		void renderModel(QCAR::State& state);
-		void releaseModel();
+		void renderIndicators(QCAR::State& state);
+		void releaseData();
 		void startCamera();
 		void stopCamera();
 		void setTexture(jobject);
 		void setModel(JNIEnv*, jfloatArray, jfloatArray, jfloatArray, jshortArray);
+		void setIndicators(JNIEnv*, jfloatArray);
 		void setScaleFactor(float);
 	private:
 		void configureVideoBackground();
@@ -38,8 +40,6 @@ class RenderManager {
 		ApplicationStateManager* applicationStateManager;
 		RenderManagerJavaInterface* renderManagerJavaInterface;
 
-		unsigned int numPixels;
-		jbyteArray pixelArray;
 		unsigned int scanCounter;
 
 		unsigned short screenWidth;
@@ -66,6 +66,9 @@ class RenderManager {
 		bool hasIndices;
 		float scaleFactor;
 		bool newTextureAvailable;
+		jfloatArray jIndicators;
+		float* indicators;
+		int numIndicators;
 };
 
 class RenderManagerJavaInterface: public JavaInterface {

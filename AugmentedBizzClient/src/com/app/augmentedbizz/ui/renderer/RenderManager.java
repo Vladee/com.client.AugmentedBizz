@@ -49,17 +49,17 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 									 depthSize, 
 									 stencilSize, 
 									 RenderManager.this.mainActivity.getAugmentedBizzApplication());
-			//initialize the native components synchronized in the GL thread as we otherwise get context errors
-			getGlSurfaceView().queueEvent(new Runnable() {
-				@Override
-				public void run() {
-					initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
-					synchronized(RenderManager.this) {
-						RenderManager.this.notify();
-					}
-				}
-			});
 			synchronized(this) {
+				//initialize the native components synchronized in the GL thread as we otherwise get context errors
+				getGlSurfaceView().queueEvent(new Runnable() {
+					@Override
+					public void run() {
+						initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
+						synchronized(RenderManager.this) {
+							RenderManager.this.notify();
+						}
+					}
+				});
 				try {
 					wait();
 				}
@@ -142,6 +142,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 	private native void setScaleFactor(float scaleFactor);
 	private native void setModel(float[] vertices, float[] normals, float [] texcoords, short[] indices);
 	private native void setTexture(Texture texture);
+	private native void setIndicators(float[] indicators);
 
 	@Override
 	public void onModelError(Exception e) {
@@ -193,7 +194,8 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 			.getApplicationStateManager().
 			getApplicationState().equals(ApplicationState.LOADING_INDICATORS)) {
 			
-			// TODO show indicators
+			//setup the indicators in the native side
+			processAndSetIndicators(targetIndicators);
 			
 			this.mainActivity.getAugmentedBizzApplication()
 				.getApplicationStateManager().
@@ -204,5 +206,20 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 	@Override
 	public void onIndicatorError(Exception e) {
 		DebugLog.loge("Unable to load indicator data", e);
+	}
+	
+	private void processAndSetIndicators(List<TargetIndicator> targetIndicators) {
+		if(targetIndicators.size() == 0) {
+			setIndicators(new float[0]);
+		} else {
+			float[] indicators = new float[targetIndicators.size() * 3];
+			for(int i = 0; i < targetIndicators.size(); ++i) {
+				TargetIndicator indicator = targetIndicators.get(i);
+				indicators[i] = indicator.getPositionX();
+				indicators[i + 1] = indicator.getPositionY();
+				indicators[i + 2] = indicator.getPositionZ();
+			}
+			setIndicators(indicators);
+		}
 	}
 }

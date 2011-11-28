@@ -66,6 +66,11 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setM
 	application->getRenderManager()->setModel(env, jvertices, jnormals, jtexcoords, jindices);
 }
 
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setIndicators(JNIEnv* env, jobject,
+			jfloatArray jIndicators) {
+	application->getRenderManager()->setIndicators(env, jIndicators);
+}
+
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setTexture(JNIEnv*, jobject, jobject jtexture) {
 	application->getRenderManager()->setTexture(jtexture);
 }

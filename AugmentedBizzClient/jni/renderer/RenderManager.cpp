@@ -20,8 +20,6 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 	this->applicationStateManager = applicationStateManager;
 	this->renderManagerJavaInterface = new RenderManagerJavaInterface(objectLoader, jrenderManager);
 
-	this->numPixels = 0;
-	this->pixelArray = 0;
 	this->scanCounter = 0;
 
 	this->screenWidth = 0;
@@ -29,22 +27,23 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 
 	this->maxTrackableCount = 1;
 
-	this->texture = 0;
-
 	this->numModelElementsToDraw = 0;
 	this->vertices = 0;
 	this->normals = 0;
 	this->texcoords = 0;
 	this->indices = 0;
 	this->hasIndices = false;
+	this->texture = 0;
 	this->scaleFactor = 5.0f;
+	this->indicators = 0;
+	this->numIndicators = 0;
 }
 
 RenderManager::~RenderManager() {
+	releaseData();
+
 	delete this->renderManagerJavaInterface;
 	this->renderManagerJavaInterface = 0;
-
-	releaseModel();
 }
 
 void RenderManager::inititializeNative(unsigned short screenWidth, unsigned short screenHeight) {
@@ -135,7 +134,7 @@ void RenderManager::stopCamera() {
 	DebugLog::logi("Camera stopped.");
 }
 
-void RenderManager::setModel(JNIEnv *env, jfloatArray jvertices, jfloatArray jnormals, jfloatArray jtexcoords, jshortArray jindices) {
+void RenderManager::setModel(JNIEnv* env, jfloatArray jvertices, jfloatArray jnormals, jfloatArray jtexcoords, jshortArray jindices) {
 	this->jVertices = jvertices;
 	this->jNormals = jnormals;
 	this->jTexcoords = jtexcoords;
@@ -152,10 +151,6 @@ void RenderManager::setModel(JNIEnv *env, jfloatArray jvertices, jfloatArray jno
 	if(jindices) {
 		this->indices = (unsigned short*)env->GetShortArrayElements(jindices, &copyArrays);
 		this->hasIndices = env->GetArrayLength(jindices) > 0;
-	}
-
-	if(hasIndices) {
-		DebugLog::logi("<GL> Loaded model with indices");
 	}
 
 	this->numModelElementsToDraw = this->hasIndices ?
@@ -175,6 +170,14 @@ void RenderManager::setTexture(jobject jtexture) {
 		(GLvoid*)  this->texture->mData);
 }
 
+void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
+	jboolean copyArrays = true;
+
+	this->indicators = env->GetFloatArrayElements(jIndicators, &copyArrays);
+
+	this->numIndicators = env->GetArrayLength(jIndicators);
+}
+
 void RenderManager::setScaleFactor(float scaleFactor) {
 	this->scaleFactor = scaleFactor;
 }
@@ -184,15 +187,12 @@ void RenderManager::scanFrameForBarcode(QCAR::State& state) {
 	for(int i = 0; i < frame.getNumImages(); i++) {
 		const QCAR::Image *frameImage = frame.getImage(i);
 		if(frameImage->getFormat() == QCAR::RGB565) {
-			jbyteArray pixelArray = NULL;
 			const char* pixels = (const char*) frameImage->getPixels();
 			int imageWidth = frameImage->getWidth();
 			int imageHeight = frameImage->getHeight();
 			int curNumPixels = imageWidth * imageHeight;
 			//build up the pixel array
-			if(pixelArray == NULL || curNumPixels != numPixels) {
-				pixelArray = this->renderManagerJavaInterface->getObjectLoader()->createByteArray(curNumPixels * 2);
-			}
+			jbyteArray pixelArray = this->renderManagerJavaInterface->getObjectLoader()->createByteArray(curNumPixels * 2);
 			//fill the pixel array
 			this->renderManagerJavaInterface->getObjectLoader()->setByteArrayRegion(pixelArray, 0, curNumPixels * 2, (const jbyte*)pixels);
 			this->renderManagerJavaInterface->callScanner(imageWidth, imageHeight, pixelArray);
@@ -248,7 +248,13 @@ void RenderManager::renderModel(QCAR::State& state) {
 	}
 }
 
-void RenderManager::releaseModel() {
+void RenderManager::renderIndicators(QCAR::State& state) {
+	if(this->numIndicators > 0) {
+		//TODO
+	}
+}
+
+void RenderManager::releaseData() {
 	JNIEnv* env = this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv();
 
 	if(this->vertices) {
@@ -278,6 +284,12 @@ void RenderManager::releaseModel() {
 		delete this->texture;
 		this->texture = 0;
 	}
+	if(this->indicators) {
+		env->ReleaseFloatArrayElements(this->jIndicators, this->indicators, 0);
+		this->indicators = 0;
+		this->jIndicators = 0;
+	}
+	this->numIndicators = 0;
 	setScaleFactor(1.0f);
 }
 
@@ -296,14 +308,13 @@ void RenderManager::renderFrame() {
 			QCAR::CameraDevice::getInstance().startAutoFocus();
 		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
 			++this->scanCounter;
-			if(scanCounter > 10) {
+			if(scanCounter > 8) {
 				QCAR::CameraDevice::getInstance().startAutoFocus();
 				this->scanCounter = 0;
 			}
 			scanFrameForBarcode(state);
 		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING_CACHE ||
-				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS ||
-				  this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
+				  this->applicationStateManager->getCurrentApplicationState() == LOADING_INDICATORS) {
 
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_CULL_FACE);
@@ -311,11 +322,19 @@ void RenderManager::renderFrame() {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			renderModel(state);
+		} else if(this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			renderModel(state);
+			renderIndicators(state);
 		}
 
 	} else if(this->applicationStateManager->getCurrentApplicationState() != TRACKING) {
 		this->applicationStateManager->setApplicationState(TRACKING);
-		releaseModel();
+		releaseData();
 	}
 
 	SampleUtils::checkGlError("Augmented Bizz GL error");
