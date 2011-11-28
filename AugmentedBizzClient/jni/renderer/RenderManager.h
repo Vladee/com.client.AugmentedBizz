@@ -30,6 +30,7 @@ class RenderManager {
 		void startCamera();
 		void stopCamera();
 		void setTexture(jobject);
+		void setIndicatorTexture(jobject);
 		void setModel(JNIEnv*, jfloatArray, jfloatArray, jfloatArray, jshortArray);
 		void setIndicators(JNIEnv*, jfloatArray);
 		void setScaleFactor(float);
@@ -44,7 +45,8 @@ class RenderManager {
 
 		unsigned short screenWidth;
 		unsigned short screenHeight;
-		Texture* texture;
+		Texture* modelTexture;
+		Texture* indicatorTexture;
 		QCAR::Matrix44F projectionMatrix;
 
 		unsigned int shaderProgramID;

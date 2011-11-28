@@ -1,5 +1,6 @@
 package com.app.augmentedbizz.ui.renderer;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.app.augmentedbizz.R;
@@ -13,6 +14,7 @@ import com.app.augmentedbizz.ui.MainActivity;
 import com.app.augmentedbizz.ui.glview.AugmentedGLSurfaceView;
 import com.app.augmentedbizz.ui.scanner.ScannerResultListener;
 import com.app.augmentedbizz.util.Display;
+import com.app.augmentedbizz.util.TypeConversion;
 
 /**
  * Manager for graphical rendering.
@@ -55,6 +57,12 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 					@Override
 					public void run() {
 						initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
+						try {
+							RenderManager.this.setIndicatorTexture(TypeConversion.toTextureFrom(
+									RenderManager.this.mainActivity.getAssets().open("indicator.png")));
+						} catch (IOException e) {
+							DebugLog.loge("Unable to open indicator.png.");
+						}
 						synchronized(RenderManager.this) {
 							RenderManager.this.notify();
 						}
@@ -93,6 +101,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 	 * @param height of the screen
 	 */
 	private native void initializeNative(short width, short height);
+	private native void setIndicatorTexture(Texture texture);
 	
 	/** 
 	 * Native methods for starting and stoping the camera. 

@@ -1,6 +1,7 @@
 #include "RenderManager.h"
 #include "../logging/DebugLog.h"
 #include "../application/ApplicationStateManager.h"
+#include "indicator.h"
 
 #include <QCAR/QCAR.h>
 #include <QCAR/CameraDevice.h>
@@ -33,7 +34,8 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 	this->texcoords = 0;
 	this->indices = 0;
 	this->hasIndices = false;
-	this->texture = 0;
+	this->modelTexture = 0;
+	this->indicatorTexture = 0;
 	this->scaleFactor = 5.0f;
 	this->indicators = 0;
 	this->numIndicators = 0;
@@ -159,15 +161,27 @@ void RenderManager::setModel(JNIEnv* env, jfloatArray jvertices, jfloatArray jno
 }
 
 void RenderManager::setTexture(jobject jtexture) {
-	this->texture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
+	this->modelTexture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
 
-	glGenTextures(1, &(this->texture->mTextureID));
-	glBindTexture(GL_TEXTURE_2D, this->texture->mTextureID);
+	glGenTextures(1, &(this->modelTexture->mTextureID));
+	glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture->mWidth,
-			this->texture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		(GLvoid*)  this->texture->mData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->modelTexture->mWidth,
+			this->modelTexture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		(GLvoid*)  this->modelTexture->mData);
+}
+
+void RenderManager::setIndicatorTexture(jobject jtexture) {
+	this->indicatorTexture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
+
+	glGenTextures(1, &(this->indicatorTexture->mTextureID));
+	glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->indicatorTexture->mWidth,
+			this->indicatorTexture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		(GLvoid*)  this->indicatorTexture->mData);
 }
 
 void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
@@ -206,7 +220,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 	if(this->vertices &&
 	   this->normals &&
 	   this->texcoords &&
-	   this->texture) {
+	   this->modelTexture) {
 		// Get the trackable (only one available)
 		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
 		QCAR::Matrix44F modelViewMatrix =
@@ -235,7 +249,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 		glEnableVertexAttribArray(textureCoordHandle);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture->mTextureID);
+		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
 
 		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
 						   (GLfloat*)&modelViewProjection.data[0] );
@@ -250,7 +264,48 @@ void RenderManager::renderModel(QCAR::State& state) {
 
 void RenderManager::renderIndicators(QCAR::State& state) {
 	if(this->numIndicators > 0) {
-		//TODO
+		// Get the trackable (only one available)
+		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
+		QCAR::Matrix44F modelViewMatrix =
+			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
+
+		QCAR::Matrix44F modelViewProjection;
+
+		SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
+									 &modelViewMatrix.data[0]);
+		glUseProgram(shaderProgramID);
+
+		glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
+							  (const GLvoid*) indicatorVertices);
+		glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
+							  (const GLvoid*) indicatorNormals);
+		glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
+							  (const GLvoid*) indicatorTexcoords);
+
+		glEnableVertexAttribArray(vertexHandle);
+		glEnableVertexAttribArray(normalHandle);
+		glEnableVertexAttribArray(textureCoordHandle);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
+
+		SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
+				&modelViewMatrix.data[0]);
+		//SampleUtils::translatePoseMatrix(x, y, z,
+				//&modelViewMatrix.data[0]);
+		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
+									&modelViewMatrix.data[0] ,
+									&modelViewProjection.data[0]);
+		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
+								   (GLfloat*)&modelViewProjection.data[0] );
+
+		for(int i = 0; i < this->numIndicators / 3; i++) {
+			float x = this->indicators[3*i + 0];
+			float y = this->indicators[3*i + 1];
+			float z = this->indicators[3*i + 2];
+
+			glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) indicatorIndices);
+		}
 	}
 }
 
@@ -277,13 +332,20 @@ void RenderManager::releaseData() {
 		this->indices = 0;
 		this->jIndices = 0;
 	}
-	if(this->texture) {
+	if(this->modelTexture) {
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glDeleteTextures(1, &(this->texture->mTextureID));
+		glDeleteTextures(1, &(this->modelTexture->mTextureID));
 
-		delete this->texture;
-		this->texture = 0;
+		delete this->modelTexture;
+		this->modelTexture = 0;
 	}
+	if(this->indicatorTexture) {
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glDeleteTextures(1, &(this->indicatorTexture->mTextureID));
+
+			delete this->indicatorTexture;
+			this->indicatorTexture = 0;
+		}
 	if(this->indicators) {
 		env->ReleaseFloatArrayElements(this->jIndicators, this->indicators, 0);
 		this->indicators = 0;

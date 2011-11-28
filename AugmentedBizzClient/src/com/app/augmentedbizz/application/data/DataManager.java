@@ -268,7 +268,7 @@ CacheResponseListener {
 	@Override
 	public void onIndicatorData(List<TargetIndicator> targetIndicators) {
 		this.indicators = targetIndicators;
-		DebugLog.logi("Indicator data received.");
+		DebugLog.logi("Indicator data received (" + targetIndicators.size() + ").");
 	}
 	
 	@Override

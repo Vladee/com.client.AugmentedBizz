@@ -75,6 +75,10 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setT
 	application->getRenderManager()->setTexture(jtexture);
 }
 
+JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setIndicatorTexture(JNIEnv*, jobject, jobject jtexture) {
+	application->getRenderManager()->setIndicatorTexture(jtexture);
+}
+
 JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setScaleFactor(JNIEnv*, jobject, jfloat jscaleFactor) {
 	application->getRenderManager()->setScaleFactor(jscaleFactor);
 }

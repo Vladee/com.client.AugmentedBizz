@@ -18,13 +18,14 @@
 
 #include <string.h>
 
+int jjasdhhKIadhasdjHKJkJADSKJ = 0;
+
 Texture::Texture() :
 mWidth(0),
 mHeight(0),
 mChannelCount(0),
 mData(0),
-mTextureID(0)
-{}
+mTextureID(0){};
 
 
 Texture::~Texture()
@@ -100,6 +101,8 @@ Texture::create(JNIEnv* env, jobject textureObject)
     // Release:
     env->ReleaseByteArrayElements(pixelBuffer, pixels, 0);
     
+    newTexture->mTextureID = jjasdhhKIadhasdjHKJkJADSKJ++;
+
     return newTexture;
 }
 

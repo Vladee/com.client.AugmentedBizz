@@ -52,7 +52,7 @@ public:
 
     /// The ID of the texture
     unsigned int mTextureID;
-};
 
+};
 
 #endif //_TEXTURE_H_
