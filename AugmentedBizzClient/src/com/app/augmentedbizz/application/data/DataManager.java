@@ -36,7 +36,7 @@ CacheResponseListener {
 	
 	private int currentTargetId = -1;
 	private Target currentTarget = null;
-	private List<TargetIndicator> indicators = new ArrayList<TargetIndicator>();
+	private List<TargetIndicator> indicators;
 	private OpenGLModelConfiguration openGLModelConfiguration = null;
 	private ServiceManager serviceManager;
 	private EntityConverter entityConverter;
@@ -318,6 +318,7 @@ CacheResponseListener {
 		openGLModelConfiguration = null;
 		if(indicators != null) {
 			indicators.clear();
+			indicators = null;
 		}
 	}
 
