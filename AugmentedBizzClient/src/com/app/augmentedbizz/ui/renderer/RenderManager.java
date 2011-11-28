@@ -119,7 +119,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 				@Override
 				public void run() {
 					//set the new model data
-					setScaleFactor(openGLModelConfiguration.getPreferredScaleFactor());
+					setScaleFactor(80);
 					setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
 					setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
 							openGLModelConfiguration.getOpenGLModel().getNormals(),
