@@ -8,6 +8,7 @@
 #include <QCAR/Renderer.h>
 #include <QCAR/VideoBackgroundConfig.h>
 #include <QCAR/Trackable.h>
+#include <QCAR/ImageTarget.h>
 #include <QCAR/Tool.h>
 #include <QCAR/Tracker.h>
 #include <QCAR/Image.h>
@@ -25,6 +26,9 @@ RenderManager::RenderManager(ApplicationStateManager* applicationStateManager,
 
 	this->screenWidth = 0;
 	this->screenHeight = 0;
+
+	this->trackableWidth = 0;
+	this->trackableHeight = 0;
 
 	this->maxTrackableCount = 1;
 
@@ -228,7 +232,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 
 		QCAR::Matrix44F modelViewProjection;
 
-		SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
+		SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,
 										 &modelViewMatrix.data[0]);
 		SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
 									 &modelViewMatrix.data[0]);
@@ -259,9 +263,32 @@ void RenderManager::renderModel(QCAR::State& state) {
 		} else {
 			glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
 		}
+	}
+}
 
-		if(this->numIndicators > 0 &&
-		   this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
+void RenderManager::renderIndicators(QCAR::State& state) {
+	if(this->numIndicators > 0) {
+		// Get the trackable (only one available)
+		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
+
+		//setup the indicator texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+
+		for(int i = 0; i < this->numIndicators; i++) {
+			QCAR::Matrix44F modelViewMatrix =
+			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
+			QCAR::Matrix44F modelViewProjection;
+
+			SampleUtils::translatePoseMatrix(this->indicators[3 * i] * this->scaleFactor,
+											 this->indicators[3 * i + 1] * this->scaleFactor,
+											 this->indicators[3 * i + 2] * this->scaleFactor,
+											 &modelViewMatrix.data[0]);
+			SampleUtils::scalePoseMatrix(15.0f, 15.0f, 15.0f,
+										 &modelViewMatrix.data[0]);
+			SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
+										&modelViewMatrix.data[0] ,
+										&modelViewProjection.data[0]);
 
 			glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
 								  (const GLvoid*) &indicatorVertices[0]);
@@ -270,26 +297,11 @@ void RenderManager::renderModel(QCAR::State& state) {
 			glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
 								  (const GLvoid*) &indicatorTexcoords[0]);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
-
 			glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
 					(GLfloat*)&modelViewProjection.data[0] );
 
-//			for(int i = 0; i < this->numIndicators / 3; i++) {
-//				float x = this->indicators[3*i + 0];
-//				float y = this->indicators[3*i + 1];
-//				float z = this->indicators[3*i + 2];
-
-				glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) &indicatorIndices[0]);
-//			}
+			glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) &indicatorIndices[0]);
 		}
-	}
-}
-
-void RenderManager::renderIndicators(QCAR::State& state) {
-	if(this->numIndicators > 0) {
-		//TODO
 	}
 }
 
@@ -336,6 +348,8 @@ void RenderManager::releaseData() {
 	}
 	this->numIndicators = 0;
 	setScaleFactor(1.0f);
+	this->trackableWidth = 0;
+	this->trackableHeight = 0;
 }
 
 void RenderManager::renderFrame() {
@@ -347,10 +361,18 @@ void RenderManager::renderFrame() {
 
 	if(state.getNumActiveTrackables() > 0) {
 		if(this->applicationStateManager->getCurrentApplicationState() == TRACKING) {
-			this->applicationStateManager->setApplicationState(TRACKED);
-			this->scanCounter = 0;
 			//focus the trackable
 			QCAR::CameraDevice::getInstance().startAutoFocus();
+			//set the trackable width and height
+			const QCAR::Trackable* trackable = state.getTrackable(0);
+			if(trackable->isOfType(QCAR::Trackable::IMAGE_TARGET)) {
+				const QCAR::ImageTarget* imageTarget = (const QCAR::ImageTarget*)trackable;
+				this->trackableWidth = imageTarget->getSize().data[0];
+				this->trackableHeight = imageTarget->getSize().data[1];
+			}
+			//update application state
+			this->applicationStateManager->setApplicationState(TRACKED);
+			this->scanCounter = 0;
 		} else if(this->applicationStateManager->getCurrentApplicationState() == TRACKED) {
 			++this->scanCounter;
 			if(scanCounter > 8) {
@@ -416,6 +438,14 @@ void RenderManager::configureVideoBackground() {
 
     //set the config:
     QCAR::Renderer::getInstance().setVideoBackgroundConfig(config);
+}
+
+int RenderManager::getTrackableWidth() {
+	return this->trackableWidth;
+}
+
+int RenderManager::getTrackableHeight() {
+	return this->trackableHeight;
 }
 
 // *************************************************************

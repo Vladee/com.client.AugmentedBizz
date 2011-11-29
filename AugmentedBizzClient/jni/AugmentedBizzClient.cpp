@@ -83,6 +83,14 @@ JNIEXPORT void JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_setS
 	application->getRenderManager()->setScaleFactor(jscaleFactor);
 }
 
+JNIEXPORT int JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_getTrackableWidth(JNIEnv*, jobject) {
+	return application->getRenderManager()->getTrackableWidth();
+}
+
+JNIEXPORT int JNICALL Java_com_app_augmentedbizz_ui_renderer_RenderManager_getTrackableHeight(JNIEnv*, jobject) {
+	return application->getRenderManager()->getTrackableHeight();
+}
+
 #ifdef __cplusplus
 }
 #endif

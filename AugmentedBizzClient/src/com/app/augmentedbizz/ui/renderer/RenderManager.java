@@ -97,6 +97,12 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 	private native void initializeNative(short width, short height);
 	private native void setIndicatorTexture(Texture texture);
 	
+	/**
+	 * Native method for trackable size retrieval
+	 */
+	private native int getTrackableWidth();
+	private native int getTrackableHeight();
+	
 	/** 
 	 * Native methods for starting and stoping the camera. 
 	 */ 
@@ -121,7 +127,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 				@Override
 				public void run() {
 					//set the new model data
-					setScaleFactor(80);
+					processAndSetScaleFactor(openGLModelConfiguration);
 					setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
 					setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
 							openGLModelConfiguration.getOpenGLModel().getNormals(),
@@ -210,6 +216,12 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		DebugLog.loge("Unable to load indicator data", e);
 	}
 	
+	private void processAndSetScaleFactor(final OpenGLModelConfiguration openGLModelConfiguration) {
+		//TODO
+		
+		setScaleFactor(80);
+	}
+	
 	private void processAndSetIndicators(final List<TargetIndicator> targetIndicators) {
 	
 		getGlSurfaceView().queueEvent(new Runnable() {
@@ -235,6 +247,5 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 				}
 			}
 		});
-
 	}
 }

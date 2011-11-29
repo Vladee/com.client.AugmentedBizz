@@ -34,6 +34,8 @@ class RenderManager {
 		void setModel(JNIEnv*, jfloatArray, jfloatArray, jfloatArray, jshortArray);
 		void setIndicators(JNIEnv*, jfloatArray);
 		void setScaleFactor(float);
+		int getTrackableWidth();
+		int getTrackableHeight();
 	private:
 		void configureVideoBackground();
 		void setScreenDimensions(unsigned short, unsigned short);
@@ -49,6 +51,8 @@ class RenderManager {
 		Texture* modelTexture;
 		Texture* indicatorTexture;
 		QCAR::Matrix44F projectionMatrix;
+		int trackableWidth;
+		int trackableHeight;
 
 		unsigned int shaderProgramID;
 		GLint vertexHandle;
