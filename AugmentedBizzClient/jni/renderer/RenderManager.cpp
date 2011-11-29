@@ -268,6 +268,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 
 void RenderManager::renderIndicators(QCAR::State& state) {
 	if(this->numIndicators > 0) {
+		glDisable(GL_DEPTH_TEST);
 		// Get the trackable (only one available)
 		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
 
