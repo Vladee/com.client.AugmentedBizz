@@ -5,5 +5,7 @@
     android:padding="10dp" 
     android:textSize="16sp"
     android:textColor="@android:color/black"
-    android:text="Info text item">
+    android:text="Info text item"
+    android:focusable="false"
+    android:focusableInTouchMode="false">
 </TextView>

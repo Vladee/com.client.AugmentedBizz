@@ -57,12 +57,6 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 					@Override
 					public void run() {
 						initializeNative((short)Display.getScreenWidth(mainActivity), (short)Display.getScreenHeight(mainActivity));
-						try {
-							RenderManager.this.setIndicatorTexture(TypeConversion.toTextureFrom(
-									RenderManager.this.mainActivity.getAssets().open("indicator.png")));
-						} catch (IOException e) {
-							DebugLog.loge("Unable to open indicator.png.");
-						}
 						synchronized(RenderManager.this) {
 							RenderManager.this.notify();
 						}
@@ -120,7 +114,6 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
     		
 	@Override
 	public void onModelData(final OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
-		
 		if(this.mainActivity.getAugmentedBizzApplication()
 			.getApplicationStateManager().
 			getApplicationState().equals(ApplicationState.LOADING)) {
@@ -217,18 +210,31 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		DebugLog.loge("Unable to load indicator data", e);
 	}
 	
-	private void processAndSetIndicators(List<TargetIndicator> targetIndicators) {
-		if(targetIndicators.size() == 0) {
-			setIndicators(new float[0]);
-		} else {
-			float[] indicators = new float[targetIndicators.size() * 3];
-			for(int i = 0; i < targetIndicators.size(); ++i) {
-				TargetIndicator indicator = targetIndicators.get(i);
-				indicators[i] = indicator.getPositionX();
-				indicators[i + 1] = indicator.getPositionY();
-				indicators[i + 2] = indicator.getPositionZ();
+	private void processAndSetIndicators(final List<TargetIndicator> targetIndicators) {
+	
+		getGlSurfaceView().queueEvent(new Runnable() {
+			@Override
+			public void run() {
+				if(targetIndicators.size() == 0) {
+					setIndicators(new float[0]);
+				} else {
+					try {
+					RenderManager.this.setIndicatorTexture(TypeConversion.toTextureFrom(
+							RenderManager.this.mainActivity.getAssets().open("indicator.png")));
+					} catch (IOException e) {
+						DebugLog.loge("Unable to open indicator.png.");
+					}
+					float[] indicators = new float[targetIndicators.size() * 3];
+					for(int i = 0; i < targetIndicators.size(); ++i) {
+						TargetIndicator indicator = targetIndicators.get(i);
+						indicators[i] = indicator.getPositionX();
+						indicators[i + 1] = indicator.getPositionY();
+						indicators[i + 2] = indicator.getPositionZ();
+					}
+					setIndicators(indicators);
+				}
 			}
-			setIndicators(indicators);
-		}
+		});
+
 	}
 }

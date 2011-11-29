@@ -3,7 +3,7 @@
 
 static short numIndicatorIndices = 36;
 
-static float indicatorVertices[] =
+static const float indicatorVertices[] =
 {
 -0.5f, 0.0f, 0.5f,
 -0.5f, 0.0f, -0.5f,
@@ -31,7 +31,7 @@ static float indicatorVertices[] =
 -0.5f, 0.5f, 0.0f
 };
 
-static float indicatorNormals[] =
+static const float indicatorNormals[] =
 {
 0.0f, -1.0f, 0.0f,
 0.0f, -1.0f, 0.0f,
@@ -59,7 +59,7 @@ static float indicatorNormals[] =
 1.0f, 0.0f, 0.0f
 };
 
-static float indicatorTexcoords[] =
+static const float indicatorTexcoords[] =
 {
 0.0f, 1.0f, 0.0f,
 0.0f, 1.0f, 0.0f,
@@ -79,7 +79,7 @@ static float indicatorTexcoords[] =
 0.0f, 0.0f, 1.0f
 };
 
-static unsigned short indicatorIndices[] =
+static const unsigned short indicatorIndices[] =
 {
 0, 1, 2,
 2, 3, 0,

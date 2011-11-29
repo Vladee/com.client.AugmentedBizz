@@ -3,6 +3,7 @@ package com.app.augmentedbizz.ui.widget;
 import java.util.List;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -270,7 +271,7 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 
 	@Override
 	public void onApplicationStateChange(ApplicationState lastState, ApplicationState nextState) {
-		ApplicationFacade facade = (ApplicationFacade)mainActivity.getAugmentedBizzApplication();
+		final ApplicationFacade facade = (ApplicationFacade)mainActivity.getAugmentedBizzApplication();
 		switch(nextState) {
 			case EXITING:
 			case UNINITIATED:
@@ -319,7 +320,14 @@ public class InfoPanelSlidingDrawer extends SlidingDrawer implements OnDrawerOpe
 			case SHOWING:
 				unlockDetailView();
 				setStateIndicatorValue(StateIndicatorValue.GREEN);
-				setDetailViewContent(createListViewFromIndicators(facade.getDataManager().getCurrentIndicators()));
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						setDetailViewContent(
+								createListViewFromIndicators(facade.getDataManager().getCurrentIndicators()));
+					}
+				}, 200);
+				
 		}
 	}
 }

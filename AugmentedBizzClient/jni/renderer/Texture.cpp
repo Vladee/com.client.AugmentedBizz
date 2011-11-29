@@ -100,7 +100,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
 
     // Release:
     env->ReleaseByteArrayElements(pixelBuffer, pixels, 0);
-    
+
     newTexture->mTextureID = jjasdhhKIadhasdjHKJkJADSKJ++;
 
     return newTexture;

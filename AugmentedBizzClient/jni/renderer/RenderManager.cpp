@@ -249,7 +249,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 		glEnableVertexAttribArray(textureCoordHandle);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
 
 		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
 						   (GLfloat*)&modelViewProjection.data[0] );
@@ -259,53 +259,37 @@ void RenderManager::renderModel(QCAR::State& state) {
 		} else {
 			glDrawArrays(GL_TRIANGLES, 0, this->numModelElementsToDraw);
 		}
+
+		if(this->numIndicators > 0 &&
+		   this->applicationStateManager->getCurrentApplicationState() == SHOWING) {
+
+			glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &indicatorVertices[0]);
+			glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &indicatorNormals[0]);
+			glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
+								  (const GLvoid*) &indicatorTexcoords[0]);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
+
+			glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
+					(GLfloat*)&modelViewProjection.data[0] );
+
+//			for(int i = 0; i < this->numIndicators / 3; i++) {
+//				float x = this->indicators[3*i + 0];
+//				float y = this->indicators[3*i + 1];
+//				float z = this->indicators[3*i + 2];
+
+				glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) &indicatorIndices[0]);
+//			}
+		}
 	}
 }
 
 void RenderManager::renderIndicators(QCAR::State& state) {
 	if(this->numIndicators > 0) {
-		// Get the trackable (only one available)
-		const QCAR::Trackable* trackable = state.getActiveTrackable(0);
-		QCAR::Matrix44F modelViewMatrix =
-			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
-
-		QCAR::Matrix44F modelViewProjection;
-
-		SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
-									 &modelViewMatrix.data[0]);
-		glUseProgram(shaderProgramID);
-
-		glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) indicatorVertices);
-		glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) indicatorNormals);
-		glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0,
-							  (const GLvoid*) indicatorTexcoords);
-
-		glEnableVertexAttribArray(vertexHandle);
-		glEnableVertexAttribArray(normalHandle);
-		glEnableVertexAttribArray(textureCoordHandle);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->modelTexture->mTextureID);
-
-		SampleUtils::translatePoseMatrix(0.0f, 0.0f, this->scaleFactor,
-				&modelViewMatrix.data[0]);
-		//SampleUtils::translatePoseMatrix(x, y, z,
-				//&modelViewMatrix.data[0]);
-		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
-									&modelViewMatrix.data[0] ,
-									&modelViewProjection.data[0]);
-		glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,
-								   (GLfloat*)&modelViewProjection.data[0] );
-
-		for(int i = 0; i < this->numIndicators / 3; i++) {
-			float x = this->indicators[3*i + 0];
-			float y = this->indicators[3*i + 1];
-			float z = this->indicators[3*i + 2];
-
-			glDrawElements(GL_TRIANGLES, numIndicatorIndices, GL_UNSIGNED_SHORT, (const GLvoid*) indicatorIndices);
-		}
+		//TODO
 	}
 }
 
@@ -340,12 +324,11 @@ void RenderManager::releaseData() {
 		this->modelTexture = 0;
 	}
 	if(this->indicatorTexture) {
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glDeleteTextures(1, &(this->indicatorTexture->mTextureID));
+		glDeleteTextures(1, &(this->indicatorTexture->mTextureID));
 
-			delete this->indicatorTexture;
-			this->indicatorTexture = 0;
-		}
+		delete this->indicatorTexture;
+		this->indicatorTexture = 0;
+	}
 	if(this->indicators) {
 		env->ReleaseFloatArrayElements(this->jIndicators, this->indicators, 0);
 		this->indicators = 0;
