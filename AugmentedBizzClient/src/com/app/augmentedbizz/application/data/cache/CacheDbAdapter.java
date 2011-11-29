@@ -32,7 +32,6 @@ public class CacheDbAdapter {
     public static final String KEY_TEXTURE = "texture";
     public static final String KEY_TEXTURE_WIDTH = "texture_width";
     public static final String KEY_TEXTURE_HEIGHT = "texture_height";
-    public static final String KEY_SCALE_FACTOR = "scale_factor";
 
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
@@ -55,8 +54,7 @@ public class CacheDbAdapter {
         		CacheDbAdapter.KEY_INDICES + " BLOB NOT NULL, " +
         		CacheDbAdapter.KEY_TEXTURE + " BLOB NOT NULL, " +
         		CacheDbAdapter.KEY_TEXTURE_WIDTH + " INT NOT NULL, " +
-        		CacheDbAdapter.KEY_TEXTURE_HEIGHT + " INT NOT NULL, " +
-        		CacheDbAdapter.KEY_SCALE_FACTOR + " REAL NOT NULL);";
+        		CacheDbAdapter.KEY_TEXTURE_HEIGHT + " INT NOT NULL);";
     
     /**
      * Database deletion SQL statement
@@ -129,8 +127,8 @@ public class CacheDbAdapter {
     public long insertModel(OpenGLModel model) {
         ContentValues initialValues = this.getContentValuesFrom(model);
         
-        long result = this.db.insert(CacheDbAdapter.DATABASE_TABLE, null, initialValues);
-        
+        long result = this.db.insertOrThrow(CacheDbAdapter.DATABASE_TABLE, null, initialValues);
+
         if(result == -1) {
         	DebugLog.loge("SQL failure: Could not insert model record no. " + model.getId() + ".");
         }
