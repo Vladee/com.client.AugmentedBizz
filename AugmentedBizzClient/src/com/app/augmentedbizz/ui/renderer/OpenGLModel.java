@@ -55,5 +55,61 @@ public class OpenGLModel {
 		return texture;
 	}
 	
+	public float getXAxisBoundingLength() {
+		if(vertices == null || 
+		   vertices.length == 0 ||
+		   vertices.length % 3 != 0) {
+			return 0.0f;
+		}
+		float minValue = -0.0f;
+		float maxValue = 0.0f;
+		for(int i = 0; i < vertices.length / 3; ++i) {
+			float verticeX = vertices[i * 3];
+			if(verticeX < minValue) {
+				minValue = verticeX;
+			} else if (verticeX > maxValue) {
+				maxValue = verticeX;
+			}
+		}
+		return Math.abs(minValue) + Math.abs(maxValue);
+	}
+	
+	public float getYAxisBoundingLength() {
+		if(vertices == null || 
+		   vertices.length == 0 ||
+		   vertices.length % 3 != 0) {
+			return 0.0f;
+		}
+		float minValue = -0.0f;
+		float maxValue = 0.0f;
+		for(int i = 0; i < vertices.length / 3; ++i) {
+			float verticeY = vertices[i * 3 + 1];
+			if(verticeY < minValue) {
+				minValue = verticeY;
+			} else if (verticeY > maxValue) {
+				maxValue = verticeY;
+			}
+		}
+		return Math.abs(minValue) + Math.abs(maxValue);
+	}
+	
+	public float getZAxisBoundingLength() {
+		if(vertices == null || 
+		   vertices.length == 0 ||
+		   vertices.length % 3 != 0) {
+			return 0.0f;
+		}
+		float minValue = -0.0f;
+		float maxValue = 0.0f;
+		for(int i = 0; i < vertices.length / 3; ++i) {
+			float verticeZ = vertices[i * 3 + 2];
+			if(verticeZ < minValue) {
+				minValue = verticeZ;
+			} else if (verticeZ > maxValue) {
+				maxValue = verticeZ;
+			}
+		}
+		return Math.abs(minValue) + Math.abs(maxValue);
+	}
 }
 

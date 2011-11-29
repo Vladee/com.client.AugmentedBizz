@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.ui.renderer.OpenGLModel;
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.TypeConversion;
 
@@ -127,13 +126,13 @@ public class CacheDbAdapter {
      * @param model The model information to insert.
      * @return rowId or -1 if failed
      */
-    public long insertModel(OpenGLModelConfiguration model) {
+    public long insertModel(OpenGLModel model) {
         ContentValues initialValues = this.getContentValuesFrom(model);
         
         long result = this.db.insert(CacheDbAdapter.DATABASE_TABLE, null, initialValues);
         
         if(result == -1) {
-        	DebugLog.loge("SQL failure: Could not insert model record no. " + model.getOpenGLModel().getId() + ".");
+        	DebugLog.loge("SQL failure: Could not insert model record no. " + model.getId() + ".");
         }
 
         return result;
@@ -175,7 +174,7 @@ public class CacheDbAdapter {
      * @return Cursor positioned to matching note, if found
      * @throws SQLException if note could not be found/retrieved
      */
-    public OpenGLModelConfiguration fetchModel(long id) throws SQLException {
+    public OpenGLModel fetchModel(long id) throws SQLException {
     	
         Cursor cursor = this.db.query(true,
         	CacheDbAdapter.DATABASE_TABLE,
@@ -193,18 +192,18 @@ public class CacheDbAdapter {
         		cursor.getInt(8),
         		cursor.getBlob(6));
         
-        OpenGLModelConfiguration openGLModelConfiguration = new OpenGLModelConfiguration(new OpenGLModel(
+        OpenGLModel openGLModel = new OpenGLModel(
         		cursor.getInt(0),
         		cursor.getInt(1),
         		TypeConversion.toFloatArrayFrom(cursor.getBlob(2)),
         		TypeConversion.toFloatArrayFrom(cursor.getBlob(3)),
         		TypeConversion.toFloatArrayFrom(cursor.getBlob(4)),
         		TypeConversion.toShortArrayFrom(cursor.getBlob(5)),
-        		texture), cursor.getFloat(9));
+        		texture);
         
         cursor.close();
         
-        return openGLModelConfiguration;
+        return openGLModel;
     }
     
     /**
@@ -242,12 +241,12 @@ public class CacheDbAdapter {
      * @param model The model information that should be inserted
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateModel(OpenGLModelConfiguration model) {
+    public boolean updateModel(OpenGLModel model) {
         ContentValues contentValues = this.getContentValuesFrom(model);
 
         return this.db.update(CacheDbAdapter.DATABASE_TABLE,
         		contentValues,
-        		CacheDbAdapter.KEY_ID + "=" + model.getOpenGLModel().getId(),
+        		CacheDbAdapter.KEY_ID + "=" + model.getId(),
         		null) > 0;
     }
     
@@ -258,29 +257,27 @@ public class CacheDbAdapter {
      * @param model The model to create the content values from.
      * @return A set of content values containing the model information.
      */
-    private ContentValues getContentValuesFrom(OpenGLModelConfiguration model) {
+    private ContentValues getContentValuesFrom(OpenGLModel model) {
     	ContentValues contentValues = new ContentValues();
     	
     	contentValues.put(CacheDbAdapter.KEY_ID,
-        		model.getOpenGLModel().getId());
+        		model.getId());
     	contentValues.put(CacheDbAdapter.KEY_VERSION,
-        		model.getOpenGLModel().getModelVersion());
+        		model.getModelVersion());
     	contentValues.put(CacheDbAdapter.KEY_VERTICES,
-        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getVertices()));
+        		TypeConversion.toByteArrayFrom(model.getVertices()));
     	contentValues.put(CacheDbAdapter.KEY_NORMALS,
-        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getNormals()));
+        		TypeConversion.toByteArrayFrom(model.getNormals()));
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE_COORDS,
-        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getTextureCoordinates()));
+        		TypeConversion.toByteArrayFrom(model.getTextureCoordinates()));
     	contentValues.put(CacheDbAdapter.KEY_INDICES,
-        		TypeConversion.toByteArrayFrom(model.getOpenGLModel().getIndices()));
+        		TypeConversion.toByteArrayFrom(model.getIndices()));
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE,
-        		model.getOpenGLModel().getTexture().getData());
+        		model.getTexture().getData());
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE_WIDTH,
-        		model.getOpenGLModel().getTexture().getWidth());
+        		model.getTexture().getWidth());
     	contentValues.put(CacheDbAdapter.KEY_TEXTURE_HEIGHT,
-        		model.getOpenGLModel().getTexture().getHeight());
-    	contentValues.put(CacheDbAdapter.KEY_SCALE_FACTOR,
-        		model.getPreferredScaleFactor());
+        		model.getTexture().getHeight());
         
         return contentValues;
     }
@@ -300,8 +297,7 @@ public class CacheDbAdapter {
                	CacheDbAdapter.KEY_INDICES,
                	CacheDbAdapter.KEY_TEXTURE,
                	CacheDbAdapter.KEY_TEXTURE_WIDTH,
-               	CacheDbAdapter.KEY_TEXTURE_HEIGHT,
-               	CacheDbAdapter.KEY_SCALE_FACTOR};
+               	CacheDbAdapter.KEY_TEXTURE_HEIGHT};
     }
 	
 }

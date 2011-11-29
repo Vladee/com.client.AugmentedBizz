@@ -193,7 +193,7 @@ void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
 
 	this->indicators = env->GetFloatArrayElements(jIndicators, &copyArrays);
 
-	this->numIndicators = env->GetArrayLength(jIndicators);
+	this->numIndicators = env->GetArrayLength(jIndicators) / 3;
 }
 
 void RenderManager::setScaleFactor(float scaleFactor) {

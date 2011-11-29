@@ -14,14 +14,13 @@ import com.app.augmentedbizz.services.entity.transfer.TargetServiceEntity;
 import com.app.augmentedbizz.services.service.BaseHttpService;
 import com.app.augmentedbizz.services.service.repository.ModelHttpService;
 import com.app.augmentedbizz.ui.renderer.OpenGLModel;
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
 import com.app.augmentedbizz.ui.renderer.Texture;
 import com.app.augmentedbizz.util.Base64;
 import com.app.augmentedbizz.util.TypeConversion;
 
 public class EntityConverter {
 	
-	public OpenGLModelConfiguration toOpenGLModelFrom(ServiceTransferEntity serviceTransferEntity, BaseHttpService calledService, int modelVersion) {
+	public OpenGLModel toOpenGLModelFrom(ServiceTransferEntity serviceTransferEntity, BaseHttpService calledService, int modelVersion) {
 		ModelServiceEntity modelTransferEntity = (ModelServiceEntity)serviceTransferEntity;
 		ModelHttpService modelHttpService = (ModelHttpService)calledService;
 		
@@ -35,14 +34,14 @@ public class EntityConverter {
 		}
 		
 		Texture texture = TypeConversion.toTextureFrom(inputStream);
-		OpenGLModelConfiguration model = new OpenGLModelConfiguration(new OpenGLModel(
+		OpenGLModel model = new OpenGLModel(
 				modelHttpService.getModelId(),
 				modelVersion,
 				modelTransferEntity.getVertices(),
 				modelTransferEntity.getNormals(),
 				modelTransferEntity.getTexCoords(),
 				modelTransferEntity.getIndices(),
-				texture), 1);
+				texture);
 		
 		return model;
 	}

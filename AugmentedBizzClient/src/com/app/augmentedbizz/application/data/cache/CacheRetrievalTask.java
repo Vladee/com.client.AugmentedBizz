@@ -2,7 +2,7 @@ package com.app.augmentedbizz.application.data.cache;
 
 import android.os.AsyncTask;
 
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 
 /**
  * Handles the asynchronous cache data retrieval of models.
@@ -24,7 +24,7 @@ public class CacheRetrievalTask extends AsyncTask<Object, Integer, Object> {
 	protected Object doInBackground(Object... params) {
 		if(params[0] instanceof Integer) {
 			modelId = (Integer)params[0];
-			OpenGLModelConfiguration model = null;
+			OpenGLModel model = null;
 			//fetch model
 			try {
 				dbAdapter.open();
@@ -45,9 +45,9 @@ public class CacheRetrievalTask extends AsyncTask<Object, Integer, Object> {
 	
 	@Override
 	protected void onPostExecute(Object result) {
-		if (result instanceof OpenGLModelConfiguration && responseListener != null) {
-			OpenGLModelConfiguration modelConfig = (OpenGLModelConfiguration)result;
-			responseListener.onModelConfigFromCache(modelConfig);
+		if (result instanceof OpenGLModel && responseListener != null) {
+			OpenGLModel model = (OpenGLModel)result;
+			responseListener.onModelConfigFromCache(model);
 		} else {
 			responseListener.onCacheFailure(modelId);
 		}

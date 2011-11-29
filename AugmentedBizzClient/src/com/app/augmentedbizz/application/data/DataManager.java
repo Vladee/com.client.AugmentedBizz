@@ -19,7 +19,7 @@ import com.app.augmentedbizz.services.service.BaseHttpService;
 import com.app.augmentedbizz.services.service.repository.IndicatorHttpService;
 import com.app.augmentedbizz.services.service.repository.ModelHttpService;
 import com.app.augmentedbizz.services.service.repository.TargetHttpService;
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 
 /**
  * The data manager presents an interface between the application facade, the cache and the service manager
@@ -37,7 +37,7 @@ CacheResponseListener {
 	private int currentTargetId = -1;
 	private Target currentTarget = null;
 	private List<TargetIndicator> indicators;
-	private OpenGLModelConfiguration openGLModelConfiguration = null;
+	private OpenGLModel openGLModel = null;
 	private ServiceManager serviceManager;
 	private EntityConverter entityConverter;
 	private ApplicationFacade facade;
@@ -91,7 +91,7 @@ CacheResponseListener {
 		this.indicatorDataListeners.remove(listener);
 	}
 	
-	private void fireOnModelDataEvent(OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
+	private void fireOnModelDataEvent(OpenGLModel openGLModel, boolean retrievingNewerVersion) {
 		//continue if LOADING state not lost
 		if(!facade.getApplicationStateManager()
 				.getApplicationState().equals(ApplicationState.LOADING)) {
@@ -101,7 +101,7 @@ CacheResponseListener {
 		Iterator<ModelDataListener> it = this.modelDataListeners.iterator();
 		
 		while(it.hasNext()) {
-			it.next().onModelData(openGLModelConfiguration, retrievingNewerVersion);
+			it.next().onModelData(openGLModel, retrievingNewerVersion);
 		}
 	}
 	
@@ -177,8 +177,8 @@ CacheResponseListener {
 	
 	public void loadModel(int modelId) {
 		//check for local buffer
-		if(this.openGLModelConfiguration != null) {
-			this.fireOnModelDataEvent(this.openGLModelConfiguration, false);
+		if(this.openGLModel != null && this.openGLModel.getId() == modelId) {
+			this.fireOnModelDataEvent(this.openGLModel, false);
 		} else {
 			cacheManager.readModelAsync(modelId, this);
 		}
@@ -186,12 +186,12 @@ CacheResponseListener {
 	
 	public void loadTarget(int targetId) {
 		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.LOADING);
-		currentTargetId = targetId;
-		
+
 		//check the local buffer
-		if(this.currentTarget != null) {
+		if(this.currentTarget != null && this.currentTargetId == targetId) {
 			this.fireOnTargetDataEvent(this.currentTarget);
 		} else {
+			currentTargetId = targetId;
 			this.serviceManager.callTargetInformationService(targetId, this);
 		}
 	}
@@ -209,7 +209,7 @@ CacheResponseListener {
 	
 	private void handleModelResponse(ServiceTransferEntity stEntity, BaseHttpService calledService) {
 		//convert service entity to model
-		OpenGLModelConfiguration model = entityConverter.toOpenGLModelFrom(stEntity, calledService, this.currentTarget.getLatestModelVersion());
+		OpenGLModel model = entityConverter.toOpenGLModelFrom(stEntity, calledService, this.currentTarget.getLatestModelVersion());
 		cacheManager.insertOrUpdateModelAsync(model);
 		this.fireOnModelDataEvent(model, false);
 	}
@@ -250,8 +250,7 @@ CacheResponseListener {
 	}
 
 	@Override
-	public void onModelData(OpenGLModelConfiguration openGLModelConfiguration, boolean retievingNewerVersion) {
-		this.openGLModelConfiguration = openGLModelConfiguration;
+	public void onModelData(OpenGLModel openGLModel, boolean retievingNewerVersion) {
 		DebugLog.logi("Model data received.");
 		
 		loadIndicators(currentTargetId);
@@ -296,10 +295,10 @@ CacheResponseListener {
 	}
 	
 	@Override
-	public void onModelConfigFromCache(OpenGLModelConfiguration model) {
+	public void onModelConfigFromCache(OpenGLModel model) {
 		//retrieved the model successfully from cache
 		boolean hasNewer = getCurrentTarget().getLatestModelVersion() > 
-						   model.getOpenGLModel().getModelVersion();
+						   model.getModelVersion();
 		this.fireOnModelDataEvent(model, hasNewer);
 	}
 
@@ -315,7 +314,7 @@ CacheResponseListener {
 	private void clearLocalBuffer() {
 		currentTarget = null;
 		currentTargetId = -1;
-		openGLModelConfiguration = null;
+		openGLModel = null;
 		if(indicators != null) {
 			indicators.clear();
 			indicators = null;

@@ -119,7 +119,7 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
     }
     		
 	@Override
-	public void onModelData(final OpenGLModelConfiguration openGLModelConfiguration, boolean retrievingNewerVersion) {
+	public void onModelData(final OpenGLModel openGLModel, boolean retrievingNewerVersion) {
 		if(this.mainActivity.getAugmentedBizzApplication()
 			.getApplicationStateManager().
 			getApplicationState().equals(ApplicationState.LOADING)) {
@@ -127,12 +127,12 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 				@Override
 				public void run() {
 					//set the new model data
-					processAndSetScaleFactor(openGLModelConfiguration);
-					setTexture(openGLModelConfiguration.getOpenGLModel().getTexture());
-					setModel(openGLModelConfiguration.getOpenGLModel().getVertices(),
-							openGLModelConfiguration.getOpenGLModel().getNormals(),
-							openGLModelConfiguration.getOpenGLModel().getTextureCoordinates(),
-							openGLModelConfiguration.getOpenGLModel().getIndices());
+					processAndSetScaleFactor(openGLModel);
+					setTexture(openGLModel.getTexture());
+					setModel(openGLModel.getVertices(),
+							openGLModel.getNormals(),
+							openGLModel.getTextureCoordinates(),
+							openGLModel.getIndices());
 				}
 			});
 			
@@ -216,10 +216,20 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 		DebugLog.loge("Unable to load indicator data", e);
 	}
 	
-	private void processAndSetScaleFactor(final OpenGLModelConfiguration openGLModelConfiguration) {
-		//TODO
+	private void processAndSetScaleFactor(final OpenGLModel openGLModel) {
+		int trackableWidth = getTrackableWidth();
+		int trackableHeight = getTrackableHeight();
+		float bboxXLength = openGLModel.getXAxisBoundingLength();
+		float bboxYLength = openGLModel.getYAxisBoundingLength();
+		float bboxZLength = openGLModel.getZAxisBoundingLength();
 		
-		setScaleFactor(80);
+		float scaleX = (float)trackableWidth / bboxXLength;
+		float scaleY = (float)trackableHeight / bboxYLength;
+		float scaleZ = (float)trackableHeight / bboxZLength;
+		
+		float scale = Math.min(scaleX, Math.min(scaleY, scaleZ)) * 0.75f;
+		
+		setScaleFactor(scale);
 	}
 	
 	private void processAndSetIndicators(final List<TargetIndicator> targetIndicators) {

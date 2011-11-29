@@ -1,6 +1,6 @@
 package com.app.augmentedbizz.application.data.cache;
 
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 
 /**
  * Response listener for the internal database cache.
@@ -14,7 +14,7 @@ public interface CacheResponseListener {
 	 * 
 	 * @param model The model object which was retrieved.
 	 */
-	public void onModelConfigFromCache(OpenGLModelConfiguration model);
+	public void onModelConfigFromCache(OpenGLModel model);
 	
 	/**
 	 * Gets called when a model retrieval couldn't be satsfied by the cache.

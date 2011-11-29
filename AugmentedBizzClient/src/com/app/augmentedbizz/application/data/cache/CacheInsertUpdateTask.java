@@ -1,7 +1,7 @@
 package com.app.augmentedbizz.application.data.cache;
 
 import com.app.augmentedbizz.logging.DebugLog;
-import com.app.augmentedbizz.ui.renderer.OpenGLModelConfiguration;
+import com.app.augmentedbizz.ui.renderer.OpenGLModel;
 
 import android.os.AsyncTask;
 
@@ -20,16 +20,16 @@ public class CacheInsertUpdateTask extends AsyncTask<Object, Integer, Object> {
 	
 	@Override
 	protected Object doInBackground(Object... params) {
-		if(params[0] instanceof OpenGLModelConfiguration) {
-			OpenGLModelConfiguration modelConfig = (OpenGLModelConfiguration)params[0];
+		if(params[0] instanceof OpenGLModel) {
+			OpenGLModel model = (OpenGLModel)params[0];
 			try {
 				//insert or update model
 				dbAdapter.open();
-				if(!dbAdapter.isModelExisting(modelConfig.getOpenGLModel().getId())) {
-					dbAdapter.insertModel((OpenGLModelConfiguration)params[0]);
+				if(!dbAdapter.isModelExisting(model.getId())) {
+					dbAdapter.insertModel(model);
 				}
 				else {
-					dbAdapter.updateModel(modelConfig);
+					dbAdapter.updateModel(model);
 				}
 				dbAdapter.close();
 			}
