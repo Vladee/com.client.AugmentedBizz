@@ -202,12 +202,8 @@ ApplicationStateListener {
 	public void loadIndicators(int targetId) {
 		getApplicationFacade().getApplicationStateManager().setApplicationState(ApplicationState.LOADING_INDICATORS);
 		
-		//check the local buffer
-		if(this.indicators != null) {
-			this.fireOnIndicatorDataEvent(this.indicators);
-		} else {
-			this.serviceManager.callIndicatorInformationService(targetId, this);
-		}
+		//indicators only from server as they might change in a short time
+		this.serviceManager.callIndicatorInformationService(targetId, this);
 	}
 	
 	private void handleModelResponse(ServiceTransferEntity stEntity, BaseHttpService calledService) {
