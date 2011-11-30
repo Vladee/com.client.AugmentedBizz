@@ -164,6 +164,15 @@ void RenderManager::setModel(JNIEnv* env, jfloatArray jvertices, jfloatArray jno
 			env->GetArrayLength(jvertices) / 3;
 }
 
+void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
+	jboolean copyArrays = true;
+	this->jIndicators = jIndicators;
+
+	this->indicators = env->GetFloatArrayElements(jIndicators, &copyArrays);
+
+	this->numIndicators = env->GetArrayLength(jIndicators) / 3;
+}
+
 void RenderManager::setTexture(jobject jtexture) {
 	this->modelTexture = Texture::create(this->renderManagerJavaInterface->getObjectLoader()->getJNIEnv(), jtexture);
 
@@ -186,14 +195,6 @@ void RenderManager::setIndicatorTexture(jobject jtexture) {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->indicatorTexture->mWidth,
 			this->indicatorTexture->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 		(GLvoid*)  this->indicatorTexture->mData);
-}
-
-void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
-	jboolean copyArrays = true;
-
-	this->indicators = env->GetFloatArrayElements(jIndicators, &copyArrays);
-
-	this->numIndicators = env->GetArrayLength(jIndicators) / 3;
 }
 
 void RenderManager::setScaleFactor(float scaleFactor) {
@@ -232,8 +233,6 @@ void RenderManager::renderModel(QCAR::State& state) {
 
 		QCAR::Matrix44F modelViewProjection;
 
-		SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,
-										 &modelViewMatrix.data[0]);
 		SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
 									 &modelViewMatrix.data[0]);
 		SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
@@ -276,16 +275,27 @@ void RenderManager::renderIndicators(QCAR::State& state) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
 
+		/*
+		float indicators[] = {
+				0.4746724,
+				0.1708820,
+				-0.1424017,
+				0.2848034,
+				-0.1424017,
+				0.0,
+				0.0,
+				0.1898689,
+				0.0};
+		*/
+
 		for(int i = 0; i < this->numIndicators; i++) {
 			QCAR::Matrix44F modelViewMatrix =
 					QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
 			QCAR::Matrix44F modelViewProjection;
 
-			SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,
-											 &modelViewMatrix.data[0]);
-			SampleUtils::translatePoseMatrix(this->indicators[3 * i] * this->scaleFactor,
-											 this->indicators[3 * i + 1] * this->scaleFactor,
-											 this->indicators[3 * i + 2] * this->scaleFactor,
+			SampleUtils::translatePoseMatrix(indicators[3 * i] * this->scaleFactor,
+											 indicators[3 * i + 1] * this->scaleFactor,
+											 indicators[3 * i + 2] * this->scaleFactor,
 											 &modelViewMatrix.data[0]);
 //			SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
 //										 &modelViewMatrix.data[0]);
