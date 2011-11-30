@@ -42,6 +42,13 @@ jmethodID ObjectLoader::getMethodID(jclass clazz, std::string methodName, std::s
 	}
 }
 
+jmethodID ObjectLoader::getStaticMethodID(jclass clazz, std::string methodName, std::string methodSignature) {
+	jmethodID methodID = this->getJNIEnv()->GetMethodID(clazz, methodName.c_str(), methodSignature.c_str());
+	if(methodID == 0) {
+		DebugLog::loge("Static method " + methodName + methodSignature + " could not be found.");
+	}
+}
+
 jbyteArray ObjectLoader::createByteArray(unsigned int size) {
 	return this->getJNIEnv()->NewByteArray(size);
 }
@@ -68,6 +75,11 @@ JavaInterface::JavaInterface(ObjectLoader* objectLoader) {
 }
 
 jmethodID JavaInterface::getMethodID(std::string methodName, std::string methodSignature) {
+	jclass clazz = this->getClass();
+	return this->objectLoader->getMethodID(clazz, methodName, methodSignature);
+}
+
+jmethodID JavaInterface::getStaticMethodID(std::string methodName, std::string methodSignature) {
 	jclass clazz = this->getClass();
 	return this->objectLoader->getMethodID(clazz, methodName, methodSignature);
 }

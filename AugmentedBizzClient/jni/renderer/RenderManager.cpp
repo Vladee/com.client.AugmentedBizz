@@ -2,6 +2,7 @@
 #include "../logging/DebugLog.h"
 #include "../application/ApplicationStateManager.h"
 #include "indicator.h"
+#include "android/log.h"
 
 #include <QCAR/QCAR.h>
 #include <QCAR/CameraDevice.h>
@@ -171,6 +172,7 @@ void RenderManager::setIndicators(JNIEnv* env, jfloatArray jIndicators) {
 	this->indicators = env->GetFloatArrayElements(jIndicators, &copyArrays);
 
 	this->numIndicators = env->GetArrayLength(jIndicators) / 3;
+
 }
 
 void RenderManager::setTexture(jobject jtexture) {
@@ -265,6 +267,7 @@ void RenderManager::renderModel(QCAR::State& state) {
 	}
 }
 
+
 void RenderManager::renderIndicators(QCAR::State& state) {
 	if(this->numIndicators > 0) {
 		glDisable(GL_DEPTH_TEST);
@@ -274,19 +277,6 @@ void RenderManager::renderIndicators(QCAR::State& state) {
 		//setup the indicator texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, this->indicatorTexture->mTextureID);
-
-		/*
-		float indicators[] = {
-				0.4746724,
-				0.1708820,
-				-0.1424017,
-				0.2848034,
-				-0.1424017,
-				0.0,
-				0.0,
-				0.1898689,
-				0.0};
-		*/
 
 		for(int i = 0; i < this->numIndicators; i++) {
 			QCAR::Matrix44F modelViewMatrix =

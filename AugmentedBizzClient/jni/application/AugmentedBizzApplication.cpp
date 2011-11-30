@@ -1,14 +1,17 @@
 #include "AugmentedBizzApplication.h"
 #include "../logging/DebugLog.h"
+#include "android/log.h"
 
 AugmentedBizzApplication::AugmentedBizzApplication(JNIEnv *env, jobject jAugmentedBizzApplication) {
 	this->initializeApplication(env, jAugmentedBizzApplication);
 }
 
 void AugmentedBizzApplication::initializeApplication(JNIEnv *env, jobject jAugmentedBizzApplication) {
+	this->objectLoader = new ObjectLoader(env);
+	DebugLog::initialize(objectLoader);
+
 	DebugLog::logi("Initializing application.");
 
-	this->objectLoader = new ObjectLoader(env);
 	this->augmentedBizzApplicationJavaInterface = \
 			new AugmentedBizzApplicationJavaInterface(jAugmentedBizzApplication, this->objectLoader);
 

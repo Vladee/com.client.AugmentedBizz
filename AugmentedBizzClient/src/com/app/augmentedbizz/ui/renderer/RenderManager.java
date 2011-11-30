@@ -248,12 +248,13 @@ public class RenderManager implements IndicatorDataListener, ModelDataListener, 
 					}
 					float[] indicators = new float[targetIndicators.size() * 3];
 					for(int i = 0; i < targetIndicators.size(); ++i) {
-						TargetIndicator indicator = targetIndicators.get(i);
-						indicators[i] = indicator.getPositionX();
-						indicators[i + 1] = indicator.getPositionY();
-						indicators[i + 2] = indicator.getPositionZ();
+					TargetIndicator indicator = targetIndicators.get(i);
+						indicators[3*i] = indicator.getPositionX();
+						indicators[3*i + 1] = indicator.getPositionZ();
+						indicators[3*i + 2] = indicator.getPositionY();
 					}
-					setIndicators(indicators);
+					
+					RenderManager.this.setIndicators(indicators);
 				}
 			}
 		});

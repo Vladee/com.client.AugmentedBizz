@@ -39,7 +39,9 @@ class ObjectLoader {
 		jclass getObjectClass(jobject);
 		JNIEnv* getJNIEnv();
 		jmethodID getMethodID(jclass, std::string, std::string);
+		jmethodID getStaticMethodID(jclass, std::string, std::string);
 		void callVoidMethod(jobject, jmethodID, ...);
+		void callStaticVoidMethod(jclass, jmethodID, ...);
 		jobject callObjectMethod(jobject, jmethodID, ...);
 
 		jbyteArray createByteArray(unsigned int);
@@ -54,6 +56,7 @@ class JavaInterface {
 		ObjectLoader* getObjectLoader();
 	protected:
 		jmethodID getMethodID(std::string, std::string);
+		jmethodID getStaticMethodID(std::string, std::string);
 		virtual jclass getClass() = 0;
 	private:
 		ObjectLoader* objectLoader;
