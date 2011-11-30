@@ -54,4 +54,11 @@ public class ServiceManager {
 	public void callIndicatorInformationService(int targetId, ServiceResponseListener responseListener) {
 		serviceHandler.processRequestAsynch(new IndicatorHttpService(facade.getContext(), new Long(targetId)), responseListener);
 	}
+	
+	/**
+	 * Stops all current service calls.
+	 */
+	public void stopAllCalls() {
+		serviceHandler.stopAll();
+	}
 }

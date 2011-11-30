@@ -9,6 +9,7 @@ import com.app.augmentedbizz.application.ApplicationFacade;
 import com.app.augmentedbizz.application.data.cache.CacheResponseListener;
 import com.app.augmentedbizz.application.data.cache.CacheStorageManager;
 import com.app.augmentedbizz.application.status.ApplicationState;
+import com.app.augmentedbizz.application.status.ApplicationStateListener;
 import com.app.augmentedbizz.logging.DebugLog;
 import com.app.augmentedbizz.services.ServiceManager;
 import com.app.augmentedbizz.services.entity.ServiceTransferEntity;
@@ -32,7 +33,8 @@ public class DataManager implements ServiceResponseListener,
 ModelDataListener,
 TargetDataListener,
 IndicatorDataListener,
-CacheResponseListener {
+CacheResponseListener,
+ApplicationStateListener {
 	
 	private int currentTargetId = -1;
 	private Target currentTarget = null;
@@ -58,6 +60,7 @@ CacheResponseListener {
 		this.addModelDataListener(this);
 		this.addTargetDataListener(this);
 		this.addIndicatorDataListener(this);
+		facade.getApplicationStateManager().addApplicationStateListener(this);
 	}
 	
 	/**
@@ -333,6 +336,14 @@ CacheResponseListener {
 	 */
 	public List<TargetIndicator> getCurrentIndicators() {
 		return indicators;
+	}
+
+	@Override
+	public void onApplicationStateChange(ApplicationState lastState,
+			ApplicationState nextState) {
+		if(nextState.equals(ApplicationState.TRACKING) && lastState.equals(ApplicationState.INITIALIZING)) {
+			serviceManager.stopAllCalls();
+		}
 	}
 	
 }

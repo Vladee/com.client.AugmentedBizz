@@ -49,6 +49,10 @@ public class HttpGetTask extends AsyncTask<HttpGet, Integer, Object> {
             DebugLog.logw("Exception while service processing: " + e.getMessage());
             return e;
         }
+		catch(OutOfMemoryError oomError) {
+			DebugLog.logw("Exception while service processing: " + oomError.getMessage());
+            return new Exception("No memory for model loading");
+		}
 	}
 	
 	@Override

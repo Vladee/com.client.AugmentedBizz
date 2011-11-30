@@ -278,15 +278,19 @@ void RenderManager::renderIndicators(QCAR::State& state) {
 
 		for(int i = 0; i < this->numIndicators; i++) {
 			QCAR::Matrix44F modelViewMatrix =
-			QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
+					QCAR::Tool::convertPose2GLMatrix(trackable->getPose());
 			QCAR::Matrix44F modelViewProjection;
 
+			SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,
+											 &modelViewMatrix.data[0]);
 			SampleUtils::translatePoseMatrix(this->indicators[3 * i] * this->scaleFactor,
 											 this->indicators[3 * i + 1] * this->scaleFactor,
 											 this->indicators[3 * i + 2] * this->scaleFactor,
 											 &modelViewMatrix.data[0]);
-			SampleUtils::scalePoseMatrix(15.0f, 15.0f, 15.0f,
-										 &modelViewMatrix.data[0]);
+//			SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
+//										 &modelViewMatrix.data[0]);
+//			SampleUtils::scalePoseMatrix(this->scaleFactor, this->scaleFactor, this->scaleFactor,
+//										 &modelViewMatrix.data[0]);
 			SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
 										&modelViewMatrix.data[0] ,
 										&modelViewProjection.data[0]);
